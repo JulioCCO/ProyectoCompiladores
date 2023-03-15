@@ -1,0 +1,47 @@
+﻿<Window x:Class="Compilador.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Compilador"
+        mc:Ignorable="d"
+        Background="Teal"
+        ResizeMode="NoResize"
+        Title="MainWindow" Height="460" Width="830">
+    <Grid>
+        <TextBox
+            Background="Aquamarine"
+            HorizontalAlignment="Left"
+            Height="400"
+            Width="700"
+            Margin="10,10,0,0"
+            TextWrapping="Wrap" 
+            VerticalAlignment="Top" 
+            AcceptsTab="True" 
+            AcceptsReturn="True"
+            Text="Begin&#xD;&#xA;&#xD;&#xA;End"
+            VerticalScrollBarVisibility="Visible"
+        ></TextBox>
+        <Button Background="Linen" 
+                Content="Run" 
+                HorizontalAlignment="Right" 
+                Margin="10,10,15,10" 
+                VerticalAlignment="Top" 
+                Width="75"
+                />
+        
+        <Button Background="Linen" 
+                Content="Build" 
+                HorizontalAlignment="Right" 
+                Margin="10,40,15,10" 
+                VerticalAlignment="Top" 
+                Width="75"/>
+        <Button Background="Linen" 
+                Content="Exit" 
+                HorizontalAlignment="Right" 
+                Margin="10,70,15,10" 
+                VerticalAlignment="Top" 
+                Width="75"/>
+    </Grid>
+</Window>
+
