@@ -3,13 +3,13 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Compilador"
         mc:Ignorable="d"
         Background="Teal"
         ResizeMode="NoResize"
         Title="MainWindow" Height="460" Width="830">
     <Grid>
         <TextBox
+            Name="TxtBox"
             Background="Aquamarine"
             HorizontalAlignment="Left"
             Height="400"
@@ -23,7 +23,8 @@
             VerticalScrollBarVisibility="Visible"
         ></TextBox>
         <Button Background="Linen" 
-                Content="Run" 
+                Content="Run"
+                Click="Run_Button_Click"
                 HorizontalAlignment="Right" 
                 Margin="10,10,15,10" 
                 VerticalAlignment="Top" 
@@ -32,12 +33,14 @@
         
         <Button Background="Linen" 
                 Content="Build" 
+                Click="Build_Button_Click"
                 HorizontalAlignment="Right" 
                 Margin="10,40,15,10" 
                 VerticalAlignment="Top" 
                 Width="75"/>
         <Button Background="Linen" 
-                Content="Exit" 
+                Content="Exit"
+                Click="Exit_Button_Click"
                 HorizontalAlignment="Right" 
                 Margin="10,70,15,10" 
                 VerticalAlignment="Top" 

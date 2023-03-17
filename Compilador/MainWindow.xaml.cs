@@ -1,28 +1,30 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace Compilador
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
-    {
-        public MainWindow()
-        {
+    public partial class MainWindow {
+        public MainWindow() {
             InitializeComponent();
+        }
+
+        private void Run_Button_Click(object sender, RoutedEventArgs e) {
+            // Get the text from the TxtBox
+            var text = TxtBox.Text;
+
+            MessageBox.Show(text);
+            // Write the text to the console
+            Console.WriteLine(text);
+        }
+        private void Build_Button_Click(object sender, RoutedEventArgs e) {
+
+        }
+        private void Exit_Button_Click(object sender, RoutedEventArgs e)
+        {
+            Application.Current.MainWindow.Close();
         }
     }
 }
