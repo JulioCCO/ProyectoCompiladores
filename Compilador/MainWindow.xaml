@@ -10,7 +10,7 @@
     <Grid>
         <TextBox
             Name="TxtBox"
-            Background="Aquamarine"
+            Background="Azure"
             HorizontalAlignment="Left"
             Height="400"
             Width="700"

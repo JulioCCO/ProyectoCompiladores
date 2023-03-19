@@ -39,3 +39,33 @@ E:\Compi\Compilador\Compilador\obj\Debug\net7.0-windows\refint\Compilador.dll
 E:\Compi\Compilador\Compilador\obj\Debug\net7.0-windows\Compilador.pdb
 E:\Compi\Compilador\Compilador\obj\Debug\net7.0-windows\Compilador.genruntimeconfig.cache
 E:\Compi\Compilador\Compilador\obj\Debug\net7.0-windows\ref\Compilador.dll
+C:\Proyecto Compi\ProyectoCompiladores\Compilador\bin\Debug\net7.0-windows\Compilador.exe
+C:\Proyecto Compi\ProyectoCompiladores\Compilador\bin\Debug\net7.0-windows\Compilador.deps.json
+C:\Proyecto Compi\ProyectoCompiladores\Compilador\bin\Debug\net7.0-windows\Compilador.runtimeconfig.json
+C:\Proyecto Compi\ProyectoCompiladores\Compilador\bin\Debug\net7.0-windows\Compilador.dll
+C:\Proyecto Compi\ProyectoCompiladores\Compilador\bin\Debug\net7.0-windows\Compilador.pdb
+C:\Proyecto Compi\ProyectoCompiladores\Compilador\obj\Debug\net7.0-windows\Compilador.csproj.AssemblyReference.cache
+C:\Proyecto Compi\ProyectoCompiladores\Compilador\obj\Debug\net7.0-windows\MainWindow.baml
+C:\Proyecto Compi\ProyectoCompiladores\Compilador\obj\Debug\net7.0-windows\MainWindow.g.cs
+C:\Proyecto Compi\ProyectoCompiladores\Compilador\obj\Debug\net7.0-windows\App.g.cs
+C:\Proyecto Compi\ProyectoCompiladores\Compilador\obj\Debug\net7.0-windows\Compilador_MarkupCompile.cache
+C:\Proyecto Compi\ProyectoCompiladores\Compilador\obj\Debug\net7.0-windows\Compilador.g.resources
+C:\Proyecto Compi\ProyectoCompiladores\Compilador\obj\Debug\net7.0-windows\Compilador.GeneratedMSBuildEditorConfig.editorconfig
+C:\Proyecto Compi\ProyectoCompiladores\Compilador\obj\Debug\net7.0-windows\Compilador.AssemblyInfoInputs.cache
+C:\Proyecto Compi\ProyectoCompiladores\Compilador\obj\Debug\net7.0-windows\Compilador.AssemblyInfo.cs
+C:\Proyecto Compi\ProyectoCompiladores\Compilador\obj\Debug\net7.0-windows\Compilador.csproj.CoreCompileInputs.cache
+C:\Proyecto Compi\ProyectoCompiladores\Compilador\obj\Debug\net7.0-windows\Compilador.dll
+C:\Proyecto Compi\ProyectoCompiladores\Compilador\obj\Debug\net7.0-windows\refint\Compilador.dll
+C:\Proyecto Compi\ProyectoCompiladores\Compilador\obj\Debug\net7.0-windows\Compilador.pdb
+C:\Proyecto Compi\ProyectoCompiladores\Compilador\obj\Debug\net7.0-windows\Compilador.genruntimeconfig.cache
+C:\Proyecto Compi\ProyectoCompiladores\Compilador\obj\Debug\net7.0-windows\ref\Compilador.dll
+C:\Proyecto Compi\ProyectoCompiladores\Compilador\bin\Debug\net7.0-windows\Antlr4.Runtime.dll
+C:\Proyecto Compi\ProyectoCompiladores\Compilador\obj\Debug\net7.0-windows\Scanner.cs
+C:\Proyecto Compi\ProyectoCompiladores\Compilador\obj\Debug\net7.0-windows\ParserLexer.cs
+C:\Proyecto Compi\ProyectoCompiladores\Compilador\obj\Debug\net7.0-windows\ParserParser.cs
+C:\Proyecto Compi\ProyectoCompiladores\Compilador\obj\Debug\net7.0-windows\ParserListener.cs
+C:\Proyecto Compi\ProyectoCompiladores\Compilador\obj\Debug\net7.0-windows\ParserBaseListener.cs
+C:\Proyecto Compi\ProyectoCompiladores\Compilador\obj\Debug\net7.0-windows\ParserVisitor.cs
+C:\Proyecto Compi\ProyectoCompiladores\Compilador\obj\Debug\net7.0-windows\ParserBaseVisitor.cs
+C:\Proyecto Compi\ProyectoCompiladores\Compilador\obj\Debug\net7.0-windows\Compilador.csproj.Antlr4GeneratedCodeFileListAbsolute.txt
+C:\Proyecto Compi\ProyectoCompiladores\Compilador\obj\Debug\net7.0-windows\Compilador.csproj.CopyComplete
