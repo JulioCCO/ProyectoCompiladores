@@ -69,3 +69,11 @@ C:\Proyecto Compi\ProyectoCompiladores\Compilador\obj\Debug\net7.0-windows\Parse
 C:\Proyecto Compi\ProyectoCompiladores\Compilador\obj\Debug\net7.0-windows\ParserBaseVisitor.cs
 C:\Proyecto Compi\ProyectoCompiladores\Compilador\obj\Debug\net7.0-windows\Compilador.csproj.Antlr4GeneratedCodeFileListAbsolute.txt
 C:\Proyecto Compi\ProyectoCompiladores\Compilador\obj\Debug\net7.0-windows\Compilador.csproj.CopyComplete
+E:\Compi\Compilador\Compilador\obj\Debug\net7.0-windows\Compilador.csproj.CopyComplete
+E:\Compi\Compilador\Compilador\obj\Debug\net7.0-windows\Compilador_Content.g.cs
+E:\Compi\Compilador\Compilador\bin\Debug\net7.0-windows\Antlr3.Runtime.dll
+E:\Compi\Compilador\Compilador\bin\Debug\net7.0-windows\Antlr4.Runtime.Standard.dll
+E:\Compi\Compilador\Compilador\bin\Debug\net7.0-windows\Antlr4BuildTasks.dll
+E:\Compi\Compilador\Compilador\bin\Debug\net7.0-windows\Microsoft.Build.Framework.dll
+E:\Compi\Compilador\Compilador\bin\Debug\net7.0-windows\Microsoft.Build.Utilities.Core.dll
+E:\Compi\Compilador\Compilador\bin\Debug\net7.0-windows\Microsoft.NET.StringTools.dll

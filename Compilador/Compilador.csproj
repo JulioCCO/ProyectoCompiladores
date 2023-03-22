@@ -17,15 +17,14 @@
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="Antlr4" Version="4.6.6">
-        <PrivateAssets>all</PrivateAssets>
-        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-      </PackageReference>
-      <PackageReference Include="Antlr4.CodeGenerator" Version="4.6.6">
-        <PrivateAssets>all</PrivateAssets>
-        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-      </PackageReference>
-      <PackageReference Include="Antlr4.Runtime" Version="4.6.6" />
+      <Content Include="Components\AlphaParser.g4" />
+      <Content Include="Components\AlphaScanner.g4" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Antlr" Version="3.5.0.2" />
+      <PackageReference Include="Antlr4.Runtime.Standard" Version="4.12.0" />
+      <PackageReference Include="Antlr4BuildTasks" Version="12.2.0" />
     </ItemGroup>
 
 </Project>

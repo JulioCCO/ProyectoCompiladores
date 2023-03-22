@@ -1,7 +1,0 @@
-C:\Proyecto Compi\ProyectoCompiladores\Compilador\obj\Debug\net7.0-windows\Scanner.cs
-C:\Proyecto Compi\ProyectoCompiladores\Compilador\obj\Debug\net7.0-windows\ParserLexer.cs
-C:\Proyecto Compi\ProyectoCompiladores\Compilador\obj\Debug\net7.0-windows\ParserParser.cs
-C:\Proyecto Compi\ProyectoCompiladores\Compilador\obj\Debug\net7.0-windows\ParserListener.cs
-C:\Proyecto Compi\ProyectoCompiladores\Compilador\obj\Debug\net7.0-windows\ParserBaseListener.cs
-C:\Proyecto Compi\ProyectoCompiladores\Compilador\obj\Debug\net7.0-windows\ParserVisitor.cs
-C:\Proyecto Compi\ProyectoCompiladores\Compilador\obj\Debug\net7.0-windows\ParserBaseVisitor.cs

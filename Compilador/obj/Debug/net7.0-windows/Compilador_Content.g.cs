@@ -7,7 +7,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("components/parser.g4")]
-[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("components/scanner.g4")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("components/alphaparser.g4")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("components/alphascanner.g4")]
 
 

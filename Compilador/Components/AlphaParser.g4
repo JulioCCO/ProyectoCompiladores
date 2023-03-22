@@ -1,12 +1,8 @@
-
-parser grammar Parser;
+parser grammar AlphaParser;
 
 
 options {
-    language = CSharp;
-    tokenVocab = Scanner;
-    output = AST;
-    
+    tokenVocab = AlphaScanner;
 }
 
 program : using? CLASS ident LEFT_BRACE (varDecl | classDecl | methodDecl)* RIGHT_BRACE;
@@ -25,7 +21,7 @@ type : ident array?;
 
 block : LEFT_BRACE (varDecl | statement)* RIGHT_BRACE;
 
-statement : designator (ASSIGN expr | LEFT_PAREN actPars? RIGHT_PAREN | INCREMENT | DECREMENT) SEMICOLON
+statement : designator (ASSIGN expr | LEFT_PAREN actPars? RIGHT_PAREN | INC | DEC) SEMICOLON
           | IF LEFT_PAREN condition RIGHT_PAREN statement (ELSE statement)?
           | FOR LEFT_PAREN expr SEMICOLON condition? SEMICOLON statement? RIGHT_PAREN statement
           | WHILE LEFT_PAREN condition RIGHT_PAREN statement
