@@ -1,22 +1,27 @@
-grammar Parser;
+
+parser grammar Parser;
+
 
 options {
+    language = CSharp;
     tokenVocab = Scanner;
+    output = AST;
+    
 }
 
-program : usingClause? CLASS identifier LEFT_BRACE (varDecl | classDecl | methodDecl)* RIGHT_BRACE;
+program : using? CLASS ident LEFT_BRACE (varDecl | classDecl | methodDecl)* RIGHT_BRACE;
 
-usingClause : USING identifier SEMICOLON;
+using : USING ident SEMICOLON;
 
-varDecl : type identifier (COMMA identifier)* SEMICOLON;
+varDecl : type ident (COMMA ident)* SEMICOLON;
 
-classDecl : CLASS identifier LEFT_BRACE varDecl* RIGHT_BRACE;
+classDecl : CLASS ident LEFT_BRACE varDecl* RIGHT_BRACE;
 
-methodDecl : (type | VOID) identifier LEFT_PAREN formPars? RIGHT_PAREN block;
+methodDecl : (type | VOID) ident LEFT_PAREN formPars? RIGHT_PAREN block;
 
-formPars : type identifier (COMMA type identifier)*;
+formPars : type ident (COMMA type ident)*;
 
-type : identifier array?;
+type : ident array?;
 
 block : LEFT_BRACE (varDecl | statement)* RIGHT_BRACE;
 
@@ -30,12 +35,12 @@ statement : designator (ASSIGN expr | LEFT_PAREN actPars? RIGHT_PAREN | INCREMEN
           | WRITE LEFT_PAREN expr (COMMA NUMBER)? RIGHT_PAREN SEMICOLON
           | block
           | SEMICOLON;
+ 
+actPars : expr (COMMA expr)*; 
 
-actPars : expr (COMMA expr)*;
+condition : condTerm (LOGICAL_OR condTerm)*;
 
-condition : condTerm (OR condTerm)*;
-
-condTerm : condFact (AND condFact)*;
+condTerm : condFact (LOGICAL_AND condFact)*;
 
 condFact : expr relop expr;
 
@@ -49,24 +54,21 @@ factor : designator (LEFT_PAREN actPars? RIGHT_PAREN)?
        | NUMBER
        | CHAR_CONST
        | STRING_CONST
-       | TRUE
-       | FALSE
-       | NEW identifier
+       | (TRUE | FALSE)
+       | NEW ident
        | LEFT_PAREN expr RIGHT_PAREN;
 
-designator : identifier (DOT identifier | LEFT_BRACKET expr RIGHT_BRACKET)*;
+designator : ident (DOT ident | LEFT_BRACKET expr RIGHT_BRACKET)*;
 
-relop : EQ | NE | GT | GE | LT | LE;
+relop : EQUALS | NOT_EQUALS | GREATER_THAN | GREATER_OR_EQUALS | LESS_THAN | LESS_OR_EQUALS;
 
 addop : PLUS | MINUS;
 
 mulop : MULT | DIV | MOD;
 
-identifier : IDENTIFIER;
+ident : IDENTIFIER;
 
 array : LEFT_BRACKET RIGHT_BRACKET;
 
-// Whitespace and comments
-WS : [ \t\r\n]+ -> skip;
-COMMENT : '/*' .*? '*/' -> skip;
-LINE_COMMENT : '//' .*? ( '\r' | '\n' ) -> skip;
+
+
