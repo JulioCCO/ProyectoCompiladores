@@ -1,10 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "q3vzPPJIMBe/Sis4tJHgZYp0plMkaTbMCPVcd3Aofl+x+TNMaxvGy1xfHQFcAN9lXa0j9iw+e9sCNpeoagflZg==",
+  "dgSpecHash": "yWGCnEaUqdWhFjh+V6DYT59cRGK7DJdssIaNp1cbFmQRXKbrCOZp4bZpDpg6OFW1isZ1H/Jg/nTc5NjkfMa8hg==",
   "success": true,
   "projectFilePath": "E:\\Compi\\Compilador\\Compilador\\Compilador.csproj",
   "expectedPackageFiles": [
-    "C:\\Users\\jjuli\\.nuget\\packages\\antlr\\3.5.0.2\\antlr.3.5.0.2.nupkg.sha512",
+    "C:\\Users\\jjuli\\.nuget\\packages\\antlr\\3.4.1.9004\\antlr.3.4.1.9004.nupkg.sha512",
     "C:\\Users\\jjuli\\.nuget\\packages\\antlr4.runtime.standard\\4.12.0\\antlr4.runtime.standard.4.12.0.nupkg.sha512",
     "C:\\Users\\jjuli\\.nuget\\packages\\antlr4buildtasks\\12.2.0\\antlr4buildtasks.12.2.0.nupkg.sha512",
     "C:\\Users\\jjuli\\.nuget\\packages\\microsoft.build.framework\\17.2.0\\microsoft.build.framework.17.2.0.nupkg.sha512",
@@ -47,7 +47,7 @@
       "code": "NU1701",
       "level": "Warning",
       "warningLevel": 1,
-      "message": "Package 'Antlr 3.5.0.2' was restored using '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8, .NETFramework,Version=v4.8.1' instead of the project target framework 'net7.0-windows7.0'. This package may not be fully compatible with your project.",
+      "message": "Package 'Antlr 3.4.1.9004' was restored using '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8, .NETFramework,Version=v4.8.1' instead of the project target framework 'net7.0-windows7.0'. This package may not be fully compatible with your project.",
       "libraryId": "Antlr",
       "targetGraphs": [
         "net7.0-windows7.0"

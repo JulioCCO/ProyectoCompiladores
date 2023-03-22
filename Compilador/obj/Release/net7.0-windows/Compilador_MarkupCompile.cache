@@ -4,11 +4,11 @@
 winexe
 C#
 .cs
-E:\Compi\Compilador\Compilador\obj\Debug\net7.0-windows\
+E:\Compi\Compilador\Compilador\obj\Release\net7.0-windows\
 Compilador
 none
 false
-TRACE;DEBUG;NET;NET7_0;NETCOREAPP
+TRACE;RELEASE;NET;NET7_0;NETCOREAPP
 E:\Compi\Compilador\Compilador\App.xaml
 11407045341
 2-1218781194
