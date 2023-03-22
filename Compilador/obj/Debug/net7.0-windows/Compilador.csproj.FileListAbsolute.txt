@@ -77,3 +77,31 @@ E:\Compi\Compilador\Compilador\bin\Debug\net7.0-windows\Antlr4BuildTasks.dll
 E:\Compi\Compilador\Compilador\bin\Debug\net7.0-windows\Microsoft.Build.Framework.dll
 E:\Compi\Compilador\Compilador\bin\Debug\net7.0-windows\Microsoft.Build.Utilities.Core.dll
 E:\Compi\Compilador\Compilador\bin\Debug\net7.0-windows\Microsoft.NET.StringTools.dll
+C:\Users\Josue\Escritorio\TEC2\Semestre VIII\Compi\ProyectoC#\ProyectoCompiladores\Compilador\bin\Debug\net7.0-windows\Compilador.exe
+C:\Users\Josue\Escritorio\TEC2\Semestre VIII\Compi\ProyectoC#\ProyectoCompiladores\Compilador\bin\Debug\net7.0-windows\Compilador.deps.json
+C:\Users\Josue\Escritorio\TEC2\Semestre VIII\Compi\ProyectoC#\ProyectoCompiladores\Compilador\bin\Debug\net7.0-windows\Compilador.runtimeconfig.json
+C:\Users\Josue\Escritorio\TEC2\Semestre VIII\Compi\ProyectoC#\ProyectoCompiladores\Compilador\bin\Debug\net7.0-windows\Compilador.dll
+C:\Users\Josue\Escritorio\TEC2\Semestre VIII\Compi\ProyectoC#\ProyectoCompiladores\Compilador\bin\Debug\net7.0-windows\Compilador.pdb
+C:\Users\Josue\Escritorio\TEC2\Semestre VIII\Compi\ProyectoC#\ProyectoCompiladores\Compilador\bin\Debug\net7.0-windows\Antlr3.Runtime.dll
+C:\Users\Josue\Escritorio\TEC2\Semestre VIII\Compi\ProyectoC#\ProyectoCompiladores\Compilador\bin\Debug\net7.0-windows\Antlr4.Runtime.Standard.dll
+C:\Users\Josue\Escritorio\TEC2\Semestre VIII\Compi\ProyectoC#\ProyectoCompiladores\Compilador\bin\Debug\net7.0-windows\Antlr4BuildTasks.dll
+C:\Users\Josue\Escritorio\TEC2\Semestre VIII\Compi\ProyectoC#\ProyectoCompiladores\Compilador\bin\Debug\net7.0-windows\Microsoft.Build.Framework.dll
+C:\Users\Josue\Escritorio\TEC2\Semestre VIII\Compi\ProyectoC#\ProyectoCompiladores\Compilador\bin\Debug\net7.0-windows\Microsoft.Build.Utilities.Core.dll
+C:\Users\Josue\Escritorio\TEC2\Semestre VIII\Compi\ProyectoC#\ProyectoCompiladores\Compilador\bin\Debug\net7.0-windows\Microsoft.NET.StringTools.dll
+C:\Users\Josue\Escritorio\TEC2\Semestre VIII\Compi\ProyectoC#\ProyectoCompiladores\Compilador\obj\Debug\net7.0-windows\Compilador.csproj.AssemblyReference.cache
+C:\Users\Josue\Escritorio\TEC2\Semestre VIII\Compi\ProyectoC#\ProyectoCompiladores\Compilador\obj\Debug\net7.0-windows\MainWindow.baml
+C:\Users\Josue\Escritorio\TEC2\Semestre VIII\Compi\ProyectoC#\ProyectoCompiladores\Compilador\obj\Debug\net7.0-windows\MainWindow.g.cs
+C:\Users\Josue\Escritorio\TEC2\Semestre VIII\Compi\ProyectoC#\ProyectoCompiladores\Compilador\obj\Debug\net7.0-windows\App.g.cs
+C:\Users\Josue\Escritorio\TEC2\Semestre VIII\Compi\ProyectoC#\ProyectoCompiladores\Compilador\obj\Debug\net7.0-windows\Compilador_Content.g.cs
+C:\Users\Josue\Escritorio\TEC2\Semestre VIII\Compi\ProyectoC#\ProyectoCompiladores\Compilador\obj\Debug\net7.0-windows\Compilador_MarkupCompile.cache
+C:\Users\Josue\Escritorio\TEC2\Semestre VIII\Compi\ProyectoC#\ProyectoCompiladores\Compilador\obj\Debug\net7.0-windows\Compilador.g.resources
+C:\Users\Josue\Escritorio\TEC2\Semestre VIII\Compi\ProyectoC#\ProyectoCompiladores\Compilador\obj\Debug\net7.0-windows\Compilador.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Josue\Escritorio\TEC2\Semestre VIII\Compi\ProyectoC#\ProyectoCompiladores\Compilador\obj\Debug\net7.0-windows\Compilador.AssemblyInfoInputs.cache
+C:\Users\Josue\Escritorio\TEC2\Semestre VIII\Compi\ProyectoC#\ProyectoCompiladores\Compilador\obj\Debug\net7.0-windows\Compilador.AssemblyInfo.cs
+C:\Users\Josue\Escritorio\TEC2\Semestre VIII\Compi\ProyectoC#\ProyectoCompiladores\Compilador\obj\Debug\net7.0-windows\Compilador.csproj.CoreCompileInputs.cache
+C:\Users\Josue\Escritorio\TEC2\Semestre VIII\Compi\ProyectoC#\ProyectoCompiladores\Compilador\obj\Debug\net7.0-windows\Compilador.csproj.CopyComplete
+C:\Users\Josue\Escritorio\TEC2\Semestre VIII\Compi\ProyectoC#\ProyectoCompiladores\Compilador\obj\Debug\net7.0-windows\Compilador.dll
+C:\Users\Josue\Escritorio\TEC2\Semestre VIII\Compi\ProyectoC#\ProyectoCompiladores\Compilador\obj\Debug\net7.0-windows\refint\Compilador.dll
+C:\Users\Josue\Escritorio\TEC2\Semestre VIII\Compi\ProyectoC#\ProyectoCompiladores\Compilador\obj\Debug\net7.0-windows\Compilador.pdb
+C:\Users\Josue\Escritorio\TEC2\Semestre VIII\Compi\ProyectoC#\ProyectoCompiladores\Compilador\obj\Debug\net7.0-windows\Compilador.genruntimeconfig.cache
+C:\Users\Josue\Escritorio\TEC2\Semestre VIII\Compi\ProyectoC#\ProyectoCompiladores\Compilador\obj\Debug\net7.0-windows\ref\Compilador.dll

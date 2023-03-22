@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Windows;
 using Antlr4.Runtime;
+using System.IO;
+using Microsoft.Win32;
 
 
 namespace Compilador
@@ -22,7 +24,7 @@ namespace Compilador
             {
                 ICharStream input =
                     CharStreams.fromPath(
-                        "C:\\Users\\jjuli\\RiderProjects\\MiniCSharp\\MiniCSharp\\Components\\data.txt");
+                        "C:\\Users\\Josue\\Escritorio\\TEC2\\Semestre VIII\\Compi\\ProyectoC#\\ProyectoCompiladores\\Compilador\\Components\\data.text");
                 AlphaScanner lexer = new AlphaScanner(input);
                 CommonTokenStream tokens = new CommonTokenStream(lexer);
                 AlphaParser parser = new AlphaParser(tokens);
@@ -43,8 +45,26 @@ namespace Compilador
             
         }
         private void Build_Button_Click(object? sender, RoutedEventArgs e) {
-                 //aqui va el codigo para cargar el data.txt en el txtbox
-                   
+            OpenFileDialog openFileDialog1 = new OpenFileDialog();
+            openFileDialog1.Title = "Buscar archivo .txt";
+            openFileDialog1.ShowDialog();
+            string texto = openFileDialog1.FileName;
+            try
+            {
+                if (File.Exists(openFileDialog1.FileName))
+                {
+                    TextReader leer = new StreamReader(texto);
+                    Pantalla.Text = leer.ReadToEnd();
+                    leer.Close();
+                }
+            }
+            
+            catch (Exception  )
+            {
+                MessageBox.Show("Error al abrir el archivo de texto");
+            }
+            
+
         }
         private void Exit_Button_Click(object? sender, RoutedEventArgs e)
         {

@@ -9,7 +9,7 @@
         Title="MainWindow" Height="460" Width="830">
     <Grid>
         <TextBox
-            Name="TxtBox"
+            Name="Pantalla"
             Background="Azure"
             HorizontalAlignment="Left"
             Height="400"
