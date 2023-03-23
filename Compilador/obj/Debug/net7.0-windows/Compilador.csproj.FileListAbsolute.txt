@@ -105,3 +105,6 @@ C:\Users\Josue\Escritorio\TEC2\Semestre VIII\Compi\ProyectoC#\ProyectoCompilador
 C:\Users\Josue\Escritorio\TEC2\Semestre VIII\Compi\ProyectoC#\ProyectoCompiladores\Compilador\obj\Debug\net7.0-windows\Compilador.pdb
 C:\Users\Josue\Escritorio\TEC2\Semestre VIII\Compi\ProyectoC#\ProyectoCompiladores\Compilador\obj\Debug\net7.0-windows\Compilador.genruntimeconfig.cache
 C:\Users\Josue\Escritorio\TEC2\Semestre VIII\Compi\ProyectoC#\ProyectoCompiladores\Compilador\obj\Debug\net7.0-windows\ref\Compilador.dll
+E:\Compi\Compilador\Compilador\obj\Debug\net7.0-windows\Consola.baml
+E:\Compi\Compilador\Compilador\obj\Debug\net7.0-windows\Consola.g.cs
+E:\Compi\Compilador\Compilador\obj\Debug\net7.0-windows\Compilador_MarkupCompile.lref

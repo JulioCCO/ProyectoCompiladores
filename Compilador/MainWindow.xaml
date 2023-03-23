@@ -3,12 +3,17 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:compilador="clr-namespace:Compilador"
         mc:Ignorable="d"
         Background="Teal"
         ResizeMode="NoResize"
         Title="MainWindow" Height="460" Width="830">
     <Grid>
         <TextBox
+            TextChanged="Pantalla_TextChanged"
+            SelectionChanged="Pantalla_SelectionChanged"
+            FontFamily="Consolas"
+            FontSize="14"
             Name="Pantalla"
             Background="Azure"
             HorizontalAlignment="Left"
@@ -43,6 +48,16 @@
                 Margin="10,70,15,10" 
                 VerticalAlignment="Top" 
                 Width="75"/>
+        <Label
+            BorderThickness="1"
+            Name="Output"
+            FontWeight="Bold"
+            FontSize="14"
+            HorizontalAlignment="Right"
+            VerticalAlignment="Bottom"
+            Margin="0,0,10,10"
+            ></Label>
     </Grid>
+
 </Window>
 

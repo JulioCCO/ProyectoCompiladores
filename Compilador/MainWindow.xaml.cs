@@ -2,6 +2,8 @@
 using System.Windows;
 using Antlr4.Runtime;
 using System.IO;
+using System.Windows.Controls;
+using Compilador.Components;
 using Microsoft.Win32;
 
 
@@ -12,37 +14,89 @@ namespace Compilador
     /// </summary>
     public partial class MainWindow {
         public MainWindow() {
+            System.Diagnostics.Debug.WriteLine("System Diagnostics Debug");
             InitializeComponent();
         }
 
+        private void Pantalla_SelectionChanged(object sender, EventArgs e)
+        {
+            UpdateCursorPosition();
+        }
+        private void Pantalla_TextChanged(object sender, EventArgs e)
+        {
+            UpdateCursorPosition();
+        }   
+        
+        private void UpdateCursorPosition()
+        {
+            
+            int index = Pantalla.SelectionStart;
+            int line = Pantalla.GetLineIndexFromCharacterIndex(index) + 1;
+            int column = index - Pantalla.GetCharacterIndexFromLineIndex(Pantalla.GetLineIndexFromCharacterIndex(index)) + 1;
+            //int column = index - Pantalla.GetCharacterIndexFromLineIndex(line) + 1;
+            // Actualiza el texto de un label o de otro TextBox con el número de línea y columna.
+            Output.Content = $"Línea: {line} \nColumna: {column}";
+        }
+        
         private void Run_Button_Click(object? sender, RoutedEventArgs e) {
-            Console.WriteLine("Success!");
-            // Get the text from the TxtBox
-            // object TxtBox = this.FindName("TxtBox");
-            // var text = TxtBox.ToString();
+            
             try
             {
-                ICharStream input =
-                    CharStreams.fromPath(
-                        "C:\\Users\\Josue\\Escritorio\\TEC2\\Semestre VIII\\Compi\\ProyectoC#\\ProyectoCompiladores\\Compilador\\Components\\data.text");
-                AlphaScanner lexer = new AlphaScanner(input);
+                // Get the text from the TxtBox
+                string text = Pantalla.Text;
+                
+                // debemos guardar lo del textBox en el Txt que se subio al TextBox
+                
+                
+                System.Diagnostics.Debug.WriteLine("\nInformacion tomada del TextBox:  \n" + text + "\n");
+                ICharStream input2 = CharStreams.fromString(text);
+                AlphaScanner lexer = new AlphaScanner(input2);
                 CommonTokenStream tokens = new CommonTokenStream(lexer);
                 AlphaParser parser = new AlphaParser(tokens);
-                parser.program();
+                
+                // Error Listener
+                MyErrorListener errorListener = new MyErrorListener();
+                // Add the error listener to the lexer and parser
+                lexer.RemoveErrorListeners();
+                //lexer.ErrorListeners.Add(errorListener);
+                parser.RemoveErrorListeners();
+                parser.AddErrorListener(errorListener);
+                
                 AlphaParser.ProgramContext tree = parser.program();
-                // Print the result
-                Console.Write("Success!");
 
-                //Print the tree
-                Console.Write(tree.ToStringTree(parser));
+                // Check for errors
+                if (!errorListener.HasErrors)
+                {
+                    // Crear una instancia de la nueva ventana
+                    var consola = new Consola();
+                    consola.SalidaConsola.Text = "Compilación exitosa\n" + tree.ToStringTree();
+                    System.Diagnostics.Debug.WriteLine("\nImprimiendo Tree en consola " 
+                                                       + tree.ToStringTree() + " \n");
+                    
+                    // Mostrar la ventana
+                    consola.Show();
+                }else
+                {
+                    // Crear una instancia de la nueva ventana
+                    var consola = new Consola();
+                    consola.SalidaConsola.Text = errorListener.ToString();
+                    // Mostrar la ventana
+                    consola.Show();                    
+                }
+                
+
             }
             catch (Exception exception)
             {
-                Console.Write("Error!");
-                Console.Write(exception);
+                // Crear una instancia de la nueva ventana
+                var consola = new Consola();
+                consola.SalidaConsola.Text = "No hay archivo";
+                consola.SalidaConsola.Text = exception.ToString();
+                // Mostrar la ventana
+                consola.Show(); 
+                System.Diagnostics.Debug.WriteLine(exception);
                 throw;
             }
-            
         }
         private void Build_Button_Click(object? sender, RoutedEventArgs e) {
             OpenFileDialog openFileDialog1 = new OpenFileDialog();
@@ -58,17 +112,18 @@ namespace Compilador
                     leer.Close();
                 }
             }
-            
-            catch (Exception  )
+            catch (Exception exception )
             {
-                MessageBox.Show("Error al abrir el archivo de texto");
+                System.Diagnostics.Debug.WriteLine(exception);
+                throw;
             }
-            
-
         }
         private void Exit_Button_Click(object? sender, RoutedEventArgs e)
         {
+            System.Diagnostics.Debug.WriteLine("Exit Button Clicked");
             Application.Current.Shutdown();
         }
     }
+
+
 }

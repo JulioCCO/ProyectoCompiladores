@@ -1,0 +1,22 @@
+﻿using System;  
+
+class Test {      
+	int pan, carro;
+	float num;
+	string perro;
+
+	int Main(int pan, float num) {          
+            
+           		int[] pan, carro;
+		carro blanco;
+		if(carro == 1){
+			a = 2;
+			a++;
+			return a;
+		}
+		break;
+	
+   	 }
+
+      
+ }
