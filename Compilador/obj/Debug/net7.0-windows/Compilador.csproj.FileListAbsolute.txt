@@ -108,3 +108,6 @@ C:\Users\Josue\Escritorio\TEC2\Semestre VIII\Compi\ProyectoC#\ProyectoCompilador
 E:\Compi\Compilador\Compilador\obj\Debug\net7.0-windows\Consola.baml
 E:\Compi\Compilador\Compilador\obj\Debug\net7.0-windows\Consola.g.cs
 E:\Compi\Compilador\Compilador\obj\Debug\net7.0-windows\Compilador_MarkupCompile.lref
+C:\Users\Josue\Escritorio\TEC2\Semestre VIII\Compi\ProyectoC#\ProyectoCompiladores\Compilador\obj\Debug\net7.0-windows\Consola.g.cs
+C:\Users\Josue\Escritorio\TEC2\Semestre VIII\Compi\ProyectoC#\ProyectoCompiladores\Compilador\obj\Debug\net7.0-windows\Compilador_MarkupCompile.lref
+C:\Users\Josue\Escritorio\TEC2\Semestre VIII\Compi\ProyectoC#\ProyectoCompiladores\Compilador\obj\Debug\net7.0-windows\Consola.baml

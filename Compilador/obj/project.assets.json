@@ -2202,19 +2202,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\jjuli\\.nuget\\packages\\": {}
+    "C:\\Users\\Josue\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "E:\\Compi\\Compilador\\Compilador\\Compilador.csproj",
+      "projectUniqueName": "C:\\Users\\Josue\\Escritorio\\TEC2\\Semestre VIII\\Compi\\ProyectoC#\\ProyectoCompiladores\\Compilador\\Compilador.csproj",
       "projectName": "Compilador",
-      "projectPath": "E:\\Compi\\Compilador\\Compilador\\Compilador.csproj",
-      "packagesPath": "C:\\Users\\jjuli\\.nuget\\packages\\",
-      "outputPath": "E:\\Compi\\Compilador\\Compilador\\obj\\",
+      "projectPath": "C:\\Users\\Josue\\Escritorio\\TEC2\\Semestre VIII\\Compi\\ProyectoC#\\ProyectoCompiladores\\Compilador\\Compilador.csproj",
+      "packagesPath": "C:\\Users\\Josue\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\Josue\\Escritorio\\TEC2\\Semestre VIII\\Compi\\ProyectoC#\\ProyectoCompiladores\\Compilador\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\jjuli\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        "C:\\Users\\Josue\\AppData\\Roaming\\NuGet\\NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net7.0-windows"
@@ -2270,7 +2270,7 @@
             "privateAssets": "none"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Users\\jjuli\\.dotnet\\sdk\\7.0.200\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Users\\Josue\\.dotnet\\sdk\\7.0.200\\RuntimeIdentifierGraph.json"
       }
     }
   },

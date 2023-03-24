@@ -3,8 +3,10 @@ using System.Windows;
 using Antlr4.Runtime;
 using System.IO;
 using System.Windows.Controls;
+using System.Windows.Input;
 using Compilador.Components;
 using Microsoft.Win32;
+
 
 
 namespace Compilador
@@ -12,11 +14,18 @@ namespace Compilador
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow {
+    public partial class MainWindow
+    {
+        public string texto = "";
         public MainWindow() {
             System.Diagnostics.Debug.WriteLine("System Diagnostics Debug");
             InitializeComponent();
         }
+
+        public void AddLineNumbers()  
+        {  
+            
+        } 
 
         private void Pantalla_SelectionChanged(object sender, EventArgs e)
         {
@@ -38,14 +47,40 @@ namespace Compilador
             Output.Content = $"Línea: {line} \nColumna: {column}";
         }
         
-        private void Run_Button_Click(object? sender, RoutedEventArgs e) {
+        public void Build_Button_Click(object? sender, RoutedEventArgs e) {
+            OpenFileDialog openFileDialog1 = new OpenFileDialog();
+            openFileDialog1.Title = "Buscar archivo .txt";
+            openFileDialog1.ShowDialog();
+            texto = openFileDialog1.FileName;
             
             try
             {
-                // Get the text from the TxtBox
-                string text = Pantalla.Text;
+                if (File.Exists(openFileDialog1.FileName))
+                {
+                    TextReader leer = new StreamReader(texto);
+                   
+                    Pantalla.Text = leer.ReadToEnd();
+                    leer.Close();
+                    
+                }
+            }
+            catch (Exception exception )
+            {
+                System.Diagnostics.Debug.WriteLine(exception);
+                throw;
+            }
+        }
+        
+        private void Run_Button_Click(object? sender, RoutedEventArgs e) {
+            string text = Pantalla.Text;
+            
+            using (StreamWriter writer = new StreamWriter(texto))
+            {
+                writer.WriteLine(text);
+            }
+            try
+            {
                 
-                // debemos guardar lo del textBox en el Txt que se subio al TextBox
                 
                 
                 System.Diagnostics.Debug.WriteLine("\nInformacion tomada del TextBox:  \n" + text + "\n");
@@ -98,32 +133,14 @@ namespace Compilador
                 throw;
             }
         }
-        private void Build_Button_Click(object? sender, RoutedEventArgs e) {
-            OpenFileDialog openFileDialog1 = new OpenFileDialog();
-            openFileDialog1.Title = "Buscar archivo .txt";
-            openFileDialog1.ShowDialog();
-            string texto = openFileDialog1.FileName;
-            try
-            {
-                if (File.Exists(openFileDialog1.FileName))
-                {
-                    TextReader leer = new StreamReader(texto);
-                    Pantalla.Text = leer.ReadToEnd();
-                    leer.Close();
-                }
-            }
-            catch (Exception exception )
-            {
-                System.Diagnostics.Debug.WriteLine(exception);
-                throw;
-            }
-        }
+        
         private void Exit_Button_Click(object? sender, RoutedEventArgs e)
         {
             System.Diagnostics.Debug.WriteLine("Exit Button Clicked");
             Application.Current.Shutdown();
         }
     }
+    
 
 
 }

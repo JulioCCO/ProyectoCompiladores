@@ -1,4 +1,4 @@
-﻿using System;  
+using System;  
 
 class Test {      
 	int pan, carro;
@@ -20,3 +20,4 @@ class Test {
 
       
  }
+julio te quiero mucho
