@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         Background="Teal"
         ResizeMode="NoResize"
-        Title="MainWindow" Height="460" Width="830">
+        Title="MainWindow" Height="460" Width="870">
     <Grid>
         <TextBox
             TextChanged="Pantalla_TextChanged"
@@ -19,13 +19,23 @@
             HorizontalAlignment="Left"
             Height="400"
             Width="700"
-            Margin="10,10,0,0"
+            Margin="50,10,0,0"
             TextWrapping="Wrap" 
             VerticalAlignment="Top" 
             AcceptsTab="True" 
             AcceptsReturn="True"
             VerticalScrollBarVisibility="Visible"
         ></TextBox>
+        <TextBox
+            Name="NumeroFilas"
+            Height= "400" 
+            Width="30"
+            Margin="17,10,0,0"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Top"
+            Focusable="False"
+            >
+        </TextBox>
         <Button Background="Linen" 
                 Content="Upload file"
                 Click="Build_Button_Click"

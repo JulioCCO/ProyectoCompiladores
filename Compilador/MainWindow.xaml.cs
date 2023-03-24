@@ -33,7 +33,7 @@ namespace Compilador
             int index = Pantalla.SelectionStart;
             int line = Pantalla.GetLineIndexFromCharacterIndex(index) + 1;
             int column = index - Pantalla.GetCharacterIndexFromLineIndex(Pantalla.GetLineIndexFromCharacterIndex(index)) + 1;
-            //int column = index - Pantalla.GetCharacterIndexFromLineIndex(line) + 1;
+         
             // Actualiza el texto de un label o de otro TextBox con el número de línea y columna.
             Output.Content = $"Línea: {line} \nColumna: {column}";
         }
