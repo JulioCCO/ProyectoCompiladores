@@ -12,7 +12,7 @@ public class MyErrorListener : BaseErrorListener
     {
         this.ErrorMsgs = new LinkedList<string>();
     }
-
+    
     public override void SyntaxError(TextWriter output, IRecognizer recognizer, IToken offendingSymbol, int line, int charPositionInLine,
         string msg, RecognitionException e)
     {

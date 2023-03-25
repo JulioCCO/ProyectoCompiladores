@@ -75,9 +75,10 @@ ident : INT_IDENT
         | BOOL_IDENT 
         | STRING_IDENT
         | IDENTIFIER
+        | array?
         ;
 
-array : LEFT_BRACKET RIGHT_BRACKET;
+array : LEFT_BRACKET IDENTIFIER? RIGHT_BRACKET;
 
 
 
