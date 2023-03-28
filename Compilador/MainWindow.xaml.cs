@@ -157,14 +157,15 @@ namespace Compilador
                 // Add the error listener to the lexer and parser
                 lexer.RemoveErrorListeners();
                 //lexer.ErrorListeners.Add(errorListener);
-                parser.RemoveErrorListeners();
-                parser.AddErrorListener(errorListener);
+                lexer.RemoveErrorListeners();
+                lexer.AddErrorListener(errorListener);
                 
                 AlphaParser.ProgramContext tree = parser.program();
 
                 // Check for errors
-                if (!errorListener.HasErrors)
+                if (errorListener.HasErrors() == false)
                 {
+                    
                     // Crear una instancia de la nueva ventana
                     var consola = new Consola();
                     consola.SalidaConsola.Text = "Compilación exitosa\n" + tree.ToStringTree(parser);
