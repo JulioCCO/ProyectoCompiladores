@@ -18,7 +18,7 @@
             VerticalAlignment="Top"
             Margin="20,10,0,0"
         >
-            <TabItem Header= "Principal">
+            <TabItem Header= "Principal" Name="Principal">
                 <TextBox
                     TextChanged="Pantalla_TextChanged"
                     SelectionChanged="Pantalla_SelectionChanged"

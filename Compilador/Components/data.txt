@@ -1,40 +1,24 @@
-using otraClase;
+using System;  
 
-class P
-{
-	class Table {
-		int[] pos;
-		int[] neg;
-	}
-	
-	Table val;
-	
-  void Main ()
-	{
-		int x, i;
-	
-		//---------- Initialize val ----------
-		val = new Table;
-		val.pos = new int; 
-		val.neg = new int;
-		i = (int)0.0;
+class Test {      
+	int pan, carro;
+	float num;
+	string perro;
 
-		while (i < size) {
-			add(val.pos,0); 
-			val.neg[i] = 0;
-			i++;	
+	int Main(int pan, float num) {          
+            
+           		int[] pan, carro;
+		carro blanco;
+		if(carro == 1){
+			a = 2;
+			a++;
+			return a;
 		}
+		break;
+   	 }
+ }
 
-		/*---------- Read /*values*/ ---------- */
-		read(x);
-		while (-size < x && x < size) {
-			if (0 <= x) val.pos[x]++;
-			else val.neg[-x]++;
-			read(x);
-	write("Valor de x: "); 
-	write(x,2);
-		}
-	}
-}
+
+
 
 

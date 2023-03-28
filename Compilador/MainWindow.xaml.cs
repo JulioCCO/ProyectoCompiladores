@@ -74,8 +74,20 @@ namespace Compilador
         
         private void closeButton_Click(object sender, EventArgs e)
         {
-            // Eliminar la pestaña seleccionada
-            Tab.Items.Remove(Tab.SelectedItem);
+            // Obtener el TabItem seleccionado
+            TabItem? item = Tab.SelectedItem as TabItem;
+
+            if (item?.Name == "Principal")
+            {
+                // Si es el TabItem que no se puede eliminar, mostrar un mensaje de advertencia
+                MessageBox.Show("Este TabItem no se puede eliminar.", "Advertencia");
+            }
+            else
+            {
+                // Eliminar la pestaña seleccionada
+                Tab.Items.Remove(Tab.SelectedItem);
+            }
+            
         }
 
         private void Pantalla_SelectionChanged(object sender, EventArgs e)
