@@ -1,5 +1,11 @@
 lexer grammar AlphaScanner;
  
+ @lexer::members {
+                 public override void NotifyListeners(LexerNoViableAltException e){
+                 this.ErrorListenerDispatch.SyntaxError(this.ErrorOutput, (IRecognizer) this, 0, TokenStartLine, this.TokenStartColumn, "reconocimiento de token : '" + this.GetErrorDisplay(this.EmitEOF().InputStream.GetText(Interval.Of(this.TokenStartCharIndex, this.InputStream.Index)))  + "'", (RecognitionException) e);
+                }
+ }
+ 
 
 // Keywords
 USING: 'using';

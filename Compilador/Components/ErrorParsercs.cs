@@ -1,17 +1,16 @@
-﻿using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
 using System.Text;
 using Antlr4.Runtime;
 using Antlr4.Runtime.Misc;
 
 namespace Compilador.Components;
 
-public class MyErrorListener : IAntlrErrorListener<int>
+public class ErrorParser : BaseErrorListener
 {
     public ArrayList<string>  ErrorMsgs = new ArrayList<string>();
     
     
-    public MyErrorListener()
+    public ErrorParser()
     {
         this.ErrorMsgs = new ArrayList<string>();
     }
@@ -24,8 +23,8 @@ public class MyErrorListener : IAntlrErrorListener<int>
     public void SyntaxError(TextWriter output, IRecognizer recognizer, int offendingSymbol, int line, int charPositionInLine,
         string msg, RecognitionException e)
     {
-        if (recognizer is AlphaScanner)
-            ErrorMsgs.Add($"SCANNER ERROR - line {line}:{charPositionInLine} {msg}");
+        if (recognizer is AlphaParser)
+            ErrorMsgs.Add($"PARSER ERROR - line {line}:{charPositionInLine} {msg}");
         
         else
             ErrorMsgs.Add("Other Error");
