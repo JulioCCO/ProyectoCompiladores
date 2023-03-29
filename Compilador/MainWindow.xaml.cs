@@ -34,6 +34,7 @@ namespace Compilador
                     
                     TabItem tabItem = new TabItem();
                     tabItem.Header = openFileDialog1.SafeFileName;
+                    
 
                     // Crear una instancia de TextBox
                     TextBox nuevoTextBox = new TextBox();

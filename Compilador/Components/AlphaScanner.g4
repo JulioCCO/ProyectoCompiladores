@@ -62,7 +62,7 @@ NUMBER: DIGIT+;
 
 // CONSTANTS
 CHAR_CONST: MINIQUOMARK CHAR MINIQUOMARK;  // 'a'
-STRING_CONST: QUOMARK (LETTER|DIGIT|LETTER|WS)* QUOMARK; // "Hello World"
+STRING_CONST: QUOMARK (LETTER|DIGIT|LETTER|WS|SPECIAL)* QUOMARK; // "Hello World"
 INT_CONST: (MINUS)? DIGIT+; // 123 O -123
 DOUBLE_CONST: (MINUS)? DIGIT+ ( '.' DIGIT)* ; // 123.123 O -123.123 O 123.
 BOOL_CONST: TRUE | FALSE;  // true | false
@@ -85,6 +85,7 @@ fragment DIGIT: [0-9];
 fragment LETTER: [a-zA-Z_];
 fragment QUOMARK : '"';
 fragment MINIQUOMARK: '\'';
+fragment SPECIAL  : [\p{P}\p{S}];
 
 // Whitespace and comments
 WS : [ \t\r\n]+ -> skip; // skip spaces, tabs, newlines
