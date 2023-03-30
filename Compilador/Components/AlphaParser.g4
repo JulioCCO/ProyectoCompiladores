@@ -17,7 +17,7 @@ methodDecl : (type | VOID) ident LEFT_PAREN formPars? RIGHT_PAREN block;
 
 formPars : type ident (COMMA type ident)*;
 
-type : ident (array)*;
+type : ident ;
 
 statement : designator (ASSIGN expr | LEFT_PAREN actPars? RIGHT_PAREN | INC | DEC) SEMICOLON
           | IF LEFT_PAREN condition RIGHT_PAREN statement (ELSE statement)?

@@ -85,7 +85,7 @@ fragment DIGIT: [0-9];
 fragment LETTER: [a-zA-Z_];
 fragment QUOMARK : '"';
 fragment MINIQUOMARK: '\'';
-fragment SPECIAL  : [\p{P}\p{S}];
+
 
 // Whitespace and comments
 WS : [ \t\r\n]+ -> skip; // skip spaces, tabs, newlines

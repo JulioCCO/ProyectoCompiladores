@@ -151,7 +151,7 @@ public class MyDefaultErrorStrategy : DefaultErrorStrategy
           this.ReportFailedPredicate(recognizer, (FailedPredicateException) e);
           break;
         default:
-          Console.Error.WriteLine("unknown recognition error type: " + e.GetType().FullName);
+          Console.Error.WriteLine("tipo de error de reconocimiento desconocido: " + e.GetType().FullName);
           this.NotifyErrorListeners(recognizer, e.Message, e);
           break;
       }
@@ -283,7 +283,7 @@ public class MyDefaultErrorStrategy : DefaultErrorStrategy
       NoViableAltException e)
     {
       ITokenStream inputStream = (ITokenStream) recognizer.InputStream;
-      string message = "no viable alternative at input " + this.EscapeWSAndQuote(inputStream == null ? "<unknown input>" : (e.StartToken.Type != -1 ? inputStream.GetText(e.StartToken, e.OffendingToken) : "<EOF>"));
+      string message = "ninguna alternativa viable en la entrada" + this.EscapeWSAndQuote(inputStream == null ? "<entrada desconocida>" : (e.StartToken.Type != -1 ? inputStream.GetText(e.StartToken, e.OffendingToken) : "<EOF>"));
       this.NotifyErrorListeners(recognizer, message, (RecognitionException) e);
     }
 
@@ -299,7 +299,7 @@ public class MyDefaultErrorStrategy : DefaultErrorStrategy
     /// <param name="e">the recognition exception</param>
     protected internal virtual void ReportInputMismatch(Parser recognizer, InputMismatchException e)
     {
-      string message = "mismatched input " + this.GetTokenErrorDisplay(e.OffendingToken) + " expecting " + e.GetExpectedTokens().ToString(recognizer.Vocabulary);
+      string message = "entrada no coincidente " + this.GetTokenErrorDisplay(e.OffendingToken) + " esperando " + e.GetExpectedTokens().ToString(recognizer.Vocabulary);
       this.NotifyErrorListeners(recognizer, message, (RecognitionException) e);
     }
 
@@ -317,7 +317,7 @@ public class MyDefaultErrorStrategy : DefaultErrorStrategy
       Parser recognizer,
       FailedPredicateException e)
     {
-      string message = "rule " + recognizer.RuleNames[recognizer.RuleContext.RuleIndex] + " " + e.Message;
+      string message = "regla " + recognizer.RuleNames[recognizer.RuleContext.RuleIndex] + " " + e.Message;
       this.NotifyErrorListeners(recognizer, message, (RecognitionException) e);
     }
 
@@ -354,7 +354,7 @@ public class MyDefaultErrorStrategy : DefaultErrorStrategy
         return;
       this.BeginErrorCondition(recognizer);
       IToken currentToken = recognizer.CurrentToken;
-      string msg = "extraneous input " + this.GetTokenErrorDisplay(currentToken) + " expecting " + this.GetExpectedTokens(recognizer).ToString(recognizer.Vocabulary);
+      string msg = "entrada extraña " + this.GetTokenErrorDisplay(currentToken) + " esperando " + this.GetExpectedTokens(recognizer).ToString(recognizer.Vocabulary);
       recognizer.NotifyErrorListeners(currentToken, msg, (RecognitionException) null);
     }
 
@@ -389,7 +389,7 @@ public class MyDefaultErrorStrategy : DefaultErrorStrategy
         return;
       this.BeginErrorCondition(recognizer);
       IToken currentToken = recognizer.CurrentToken;
-      string msg = "missing " + this.GetExpectedTokens(recognizer).ToString(recognizer.Vocabulary) + " at " + this.GetTokenErrorDisplay(currentToken);
+      string msg = "Falta " + this.GetExpectedTokens(recognizer).ToString(recognizer.Vocabulary) + " en " + this.GetTokenErrorDisplay(currentToken);
       recognizer.NotifyErrorListeners(currentToken, msg, (RecognitionException) null);
     }
 
@@ -597,7 +597,7 @@ public class MyDefaultErrorStrategy : DefaultErrorStrategy
     {
       IToken currentToken = recognizer.CurrentToken;
       int minElement = this.GetExpectedTokens(recognizer).MinElement;
-      string tokenText = minElement != -1 ? "<missing " + recognizer.Vocabulary.GetDisplayName(minElement) + ">" : "<missing EOF>";
+      string tokenText = minElement != -1 ? "<Falta " + recognizer.Vocabulary.GetDisplayName(minElement) + ">" : "<Falta EOF>";
       IToken current = currentToken;
       IToken token = ((ITokenStream) recognizer.InputStream).LT(-1);
       if (current.Type == -1 && token != null)
