@@ -2,11 +2,10 @@ lexer grammar AlphaScanner;
  
  @lexer::members {
                  public override void NotifyListeners(LexerNoViableAltException e){
-                 this.ErrorListenerDispatch.SyntaxError(this.ErrorOutput, (IRecognizer) this, 0, TokenStartLine, this.TokenStartColumn, "reconocimiento de token : '" + this.GetErrorDisplay(this.EmitEOF().InputStream.GetText(Interval.Of(this.TokenStartCharIndex, this.InputStream.Index)))  + "'", (RecognitionException) e);
+                 this.ErrorListenerDispatch.SyntaxError(this.ErrorOutput, (IRecognizer) this, 0, TokenStartLine, this.TokenStartColumn,"token invalido: '" + this.GetErrorDisplay(this.EmitEOF().InputStream.GetText(Interval.Of(this.TokenStartCharIndex,this.InputStream.Index)))  + "'", (RecognitionException) e);
                 }
  }
  
-
 // Keywords
 USING: 'using';
 CLASS: 'class';
@@ -68,11 +67,11 @@ DOUBLE_CONST: (MINUS)? DIGIT+ ( '.' DIGIT)* ; // 123.123 O -123.123 O 123.
 BOOL_CONST: TRUE | FALSE;  // true | false
 
 // BASIC TYPES
-INT_IDENT: 'int';
-CHAR_IDENT: 'char';
-DOUBLE_IDENT: 'double';
-BOOL_IDENT: 'bool';
-STRING_IDENT: 'string';
+//INT_IDENT: 'int';
+//CHAR_IDENT: 'char';
+//DOUBLE_IDENT: 'double';
+//BOOL_IDENT: 'bool';
+//STRING_IDENT: 'string';
 
 // Arrays
 ARRAY: 'array'; 
@@ -85,11 +84,11 @@ fragment DIGIT: [0-9];
 fragment LETTER: [a-zA-Z_];
 fragment QUOMARK : '"';
 fragment MINIQUOMARK: '\'';
-
+fragment SPECIAL  : [\p{P}\p{S}];
 
 // Whitespace and comments
 WS : [ \t\r\n]+ -> skip; // skip spaces, tabs, newlines
-COMMENT : '/*' .*? '*/' -> skip; // skip comments
+COMMENT : '/*' ~[\r\n]* '*/' -> skip; // skip comments
 LINE_COMMENT : '//' .*? ( '\r' | '\n' ) -> skip;  // skip line comments
 
 

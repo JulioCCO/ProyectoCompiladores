@@ -1,4 +1,39 @@
-System;  
+using sys;
+
+class Perro {
+    int perro;
+    int[] cago;
+    class P {
+        
+        int zorro;
+        
+    }
+    void main(){
+
+        int x, i;
+        val = new Table;
+        // perroaawdawdaw
+        while(i< size){
+            i++;
+            
+        }
+        /*---------- Read /*values*/ ---------- */
+        if (0 <= x) val.pos[x]++;
+            else val.neg[-x]++;
+        read(x);
+        write("Valor de x");
+        write(x, 2);
+    }
+}
+
+
+
+
+
+
+
+
+
 
 
 

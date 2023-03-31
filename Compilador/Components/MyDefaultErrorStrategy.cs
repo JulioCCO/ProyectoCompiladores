@@ -16,9 +16,6 @@ public class MyDefaultErrorStrategy : DefaultErrorStrategy
 // XML documentation location: C:\Users\Josue\.nuget\packages\antlr4.runtime.standard\4.12.0\lib\netstandard2.0\Antlr4.Runtime.Standard.xml
 
 
-
-
-
   /// <summary>
   /// This is the default implementation of
   /// <see cref="T:Antlr4.Runtime.IAntlrErrorStrategy" />

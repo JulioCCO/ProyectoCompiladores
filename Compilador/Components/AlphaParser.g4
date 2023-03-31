@@ -6,7 +6,7 @@ options {
 }
 
 program : (using)* CLASS ident LEFT_BRACE (varDecl | classDecl | methodDecl)* RIGHT_BRACE EOF;
-
+    
 using : USING ident SEMICOLON;
 
 varDecl : type ident (COMMA ident)* SEMICOLON;
@@ -17,7 +17,7 @@ methodDecl : (type | VOID) ident LEFT_PAREN formPars? RIGHT_PAREN block;
 
 formPars : type ident (COMMA type ident)*;
 
-type : ident ;
+type : ident array?;
 
 statement : designator (ASSIGN expr | LEFT_PAREN actPars? RIGHT_PAREN | INC | DEC) SEMICOLON
           | IF LEFT_PAREN condition RIGHT_PAREN statement (ELSE statement)?
@@ -26,12 +26,12 @@ statement : designator (ASSIGN expr | LEFT_PAREN actPars? RIGHT_PAREN | INC | DE
           | BREAK SEMICOLON
           | RETURN expr? SEMICOLON
           | READ LEFT_PAREN designator RIGHT_PAREN SEMICOLON
-          | WRITE LEFT_PAREN expr (COMMA NUMBER)? RIGHT_PAREN SEMICOLON
+          | WRITE LEFT_PAREN expr (COMMA (NUMBER|STRING_CONST))? RIGHT_PAREN SEMICOLON
           | block
           | SEMICOLON;
           
 block : LEFT_BRACE (varDecl | statement)* RIGHT_BRACE;
- 
+
 actPars : expr (COMMA expr)*; 
 
 condition : condTerm (LOGICAL_OR condTerm)*;
@@ -46,7 +46,7 @@ expr : MINUS? cast? term (addop term)*;
 
 term : factor (mulop factor)*;
 
-factor : designator (LEFT_PAREN (actPars)? RIGHT_PAREN)?
+factor : designator (LEFT_PAREN actPars? RIGHT_PAREN)?
        | NUMBER
        | CHAR_CONST
        | STRING_CONST
@@ -69,14 +69,7 @@ addop : PLUS | MINUS;
 
 mulop : MULT | DIV | MOD;
 
-ident : INT_IDENT 
-        | CHAR_IDENT 
-        | DOUBLE_IDENT  
-        | BOOL_IDENT 
-        | STRING_IDENT
-        | IDENTIFIER
-        | array?
-        ;
+ident : IDENTIFIER;
 
 array : LEFT_BRACKET IDENTIFIER? RIGHT_BRACKET;
 

@@ -8,7 +8,7 @@
     ".NETCoreApp,Version=v7.0": {
       "Compilador/1.0.0": {
         "dependencies": {
-          "Antlr": "3.4.1.9004",
+          "Antlr": "3.5.0.2",
           "Antlr4.Runtime.Standard": "4.12.0",
           "Antlr4BuildTasks": "12.2.0"
         },
@@ -16,11 +16,11 @@
           "Compilador.dll": {}
         }
       },
-      "Antlr/3.4.1.9004": {
+      "Antlr/3.5.0.2": {
         "runtime": {
           "lib/Antlr3.Runtime.dll": {
-            "assemblyVersion": "3.4.1.9004",
-            "fileVersion": "3.4.1.9004"
+            "assemblyVersion": "3.5.0.2",
+            "fileVersion": "3.5.0.2"
           }
         }
       },
@@ -272,12 +272,12 @@
       "serviceable": false,
       "sha512": ""
     },
-    "Antlr/3.4.1.9004": {
+    "Antlr/3.5.0.2": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-c1S+HBE+KYA5EBxtn25LEK02hHPH/tDQ6RviUTTCJpZIPoputtn8ArsQJy9lVJWZOnw37ufByO2Fmf1M8wpr8Q==",
-      "path": "antlr/3.4.1.9004",
-      "hashPath": "antlr.3.4.1.9004.nupkg.sha512"
+      "sha512": "sha512-CSfrVuDVMx3OrQhT84zed+tOdM1clljyRLWWlQM22fJsmG836RVDGQlE6tzysXh8X8p9UjkHbLr6OqEIVhtdEA==",
+      "path": "antlr/3.5.0.2",
+      "hashPath": "antlr.3.5.0.2.nupkg.sha512"
     },
     "Antlr4.Runtime.Standard/4.12.0": {
       "type": "package",
