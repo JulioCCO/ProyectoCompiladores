@@ -2,8 +2,7 @@
 using System.IO;
 using System.Text;
 using Antlr4.Runtime;
-
-namespace Compilador.Components;
+using generated;
 
 public class MyErrorListener : IAntlrErrorListener<int>
 {

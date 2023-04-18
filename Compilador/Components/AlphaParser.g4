@@ -5,58 +5,58 @@ options {
     tokenVocab = AlphaScanner;
 }
 
-program : (using)* CLASS ident LEFT_BRACE (varDecl | classDecl | methodDecl)* RIGHT_BRACE EOF;
+program : (using)* CLASS ident LEFT_BRACE (varDecl | classDecl | methodDecl)* RIGHT_BRACE EOF   #ProgramClassAST;
     
-using : USING ident SEMICOLON;
+using : USING ident SEMICOLON                                                                   #UsingClassAST;
 
-varDecl : type ident (COMMA ident)* SEMICOLON;
+varDecl : type ident (COMMA ident)* SEMICOLON                                                   #VarDeclAST;
 
-classDecl : CLASS ident LEFT_BRACE (varDecl)* RIGHT_BRACE;
+classDecl : CLASS ident LEFT_BRACE (varDecl)* RIGHT_BRACE                                       #ClassDeclAST;
 
-methodDecl : (type | VOID) ident LEFT_PAREN formPars? RIGHT_PAREN block;
+methodDecl : (type | VOID) ident LEFT_PAREN formPars? RIGHT_PAREN block                         #MethodDeclAST;
 
-formPars : type ident (COMMA type ident)*;
+formPars : type ident (COMMA type ident)*                                                       #FormParsAST;
 
-type : ident array?;
+type : ident array?                                                                             #TypeAST;                                 
 
-statement : designator (ASSIGN expr | LEFT_PAREN actPars? RIGHT_PAREN | INC | DEC) SEMICOLON
-          | IF LEFT_PAREN condition RIGHT_PAREN statement (ELSE statement)?
-          | FOR LEFT_PAREN expr SEMICOLON condition? SEMICOLON statement? RIGHT_PAREN statement
-          | WHILE LEFT_PAREN condition RIGHT_PAREN statement
-          | BREAK SEMICOLON
-          | RETURN expr? SEMICOLON
-          | READ LEFT_PAREN designator RIGHT_PAREN SEMICOLON
-          | WRITE LEFT_PAREN expr (COMMA (NUMBER|STRING_CONST))? RIGHT_PAREN SEMICOLON
-          | block
-          | SEMICOLON;
+statement : designator (ASSIGN expr | LEFT_PAREN actPars? RIGHT_PAREN | INC | DEC) SEMICOLON    #AssignStatementAST
+          | IF LEFT_PAREN condition RIGHT_PAREN statement (ELSE statement)?                     #IfStatementAST
+          | FOR LEFT_PAREN expr SEMICOLON condition? SEMICOLON statement? RIGHT_PAREN statement #ForStatementAST
+          | WHILE LEFT_PAREN condition RIGHT_PAREN statement                                    #WhileStatementAST
+          | BREAK SEMICOLON                                                                     #BreakStatementAST
+          | RETURN expr? SEMICOLON                                                              #ReturnStatementAST
+          | READ LEFT_PAREN designator RIGHT_PAREN SEMICOLON                                    #ReadStatementAST   
+          | WRITE LEFT_PAREN expr (COMMA (NUMBER|STRING_CONST))? RIGHT_PAREN SEMICOLON          #WriteStatementAST
+          | block                                                                               #BlockStatementAST
+          | SEMICOLON                                                                           #BlockStatementAST;
           
-block : LEFT_BRACE (varDecl | statement)* RIGHT_BRACE;
+block : LEFT_BRACE (varDecl | statement)* RIGHT_BRACE                                           #BlockAST;
 
-actPars : expr (COMMA expr)*; 
+actPars : expr (COMMA expr)*                                                                    #ActParsAST; 
 
-condition : condTerm (LOGICAL_OR condTerm)*;
+condition : condTerm (LOGICAL_OR condTerm)*                                                     #ConditionAST;
 
-condTerm : condFact (LOGICAL_AND condFact)*;
+condTerm : condFact (LOGICAL_AND condFact)*                                                     #CondTermAST;
 
-condFact : expr relop expr;
+condFact : expr relop expr                                                                      #CondFactAST;
 
-cast : LEFT_PAREN type RIGHT_PAREN;
+cast : LEFT_PAREN type RIGHT_PAREN                                                              #CastAST;
 
-expr : MINUS? cast? term (addop term)*;
+expr : MINUS? cast? term (addop term)*                                                          #ExprAST;
 
-term : factor (mulop factor)*;
+term : factor (mulop factor)*                                                                   #TermAST;
 
-factor : designator (LEFT_PAREN actPars? RIGHT_PAREN)?
-       | NUMBER
-       | CHAR_CONST
-       | STRING_CONST
-       | INT_CONST
-       | DOUBLE_CONST
-       | BOOL_CONST
-       | NEW ident
-       | LEFT_PAREN expr RIGHT_PAREN;
+factor : designator (LEFT_PAREN actPars? RIGHT_PAREN)?                                          #DesignatorFactorAST                                       
+       | NUMBER                                                                                 #NumberFactorAST
+       | CHAR_CONST                                                                             #CharFactorAST
+       | STRING_CONST                                                                           #StringFactorAST
+       | INT_CONST                                                                              #IntFactorAST   
+       | DOUBLE_CONST                                                                           #DoubleFactorAST    
+       | BOOL_CONST                                                                             #BoolFactorAST
+       | NEW ident                                                                              #NewFactorAST
+       | LEFT_PAREN expr RIGHT_PAREN                                                            #ParenFactorAST;
 
-designator : ident (DOT ident | LEFT_BRACKET expr RIGHT_BRACKET)*;
+designator : ident (DOT ident | LEFT_BRACKET expr RIGHT_BRACKET)*                               #DesignatorAST;
 
 relop : EQUALS 
         | NOT_EQUALS 

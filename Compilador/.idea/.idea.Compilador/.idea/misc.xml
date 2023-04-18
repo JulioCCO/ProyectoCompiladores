@@ -49,7 +49,7 @@
           <option name="outputDir" value="E:\Compi\Compilador\Compilador\Components" />
           <option name="libDir" value="" />
           <option name="encoding" value="" />
-          <option name="pkg" value="" />
+          <option name="pkg" value="generated" />
           <option name="language" value="CSharp" />
           <option name="generateListener" value="false" />
         </PerGrammarGenerationSettings>
@@ -59,9 +59,10 @@
           <option name="outputDir" value="E:\Compi\Compilador\Compilador\Components" />
           <option name="libDir" value="" />
           <option name="encoding" value="" />
-          <option name="pkg" value="" />
+          <option name="pkg" value="generated" />
           <option name="language" value="CSharp" />
           <option name="generateListener" value="false" />
+          <option name="generateVisitor" value="true" />
         </PerGrammarGenerationSettings>
       </list>
     </option>

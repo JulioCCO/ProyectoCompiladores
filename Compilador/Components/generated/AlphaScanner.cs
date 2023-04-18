@@ -19,6 +19,7 @@
 // Ambiguous reference in cref attribute
 #pragma warning disable 419
 
+namespace generated {
 using System;
 using System.IO;
 using System.Text;
@@ -304,3 +305,4 @@ public partial class AlphaScanner : Lexer {
 
 
 }
+} // namespace generated

@@ -3,7 +3,7 @@ using System.IO;
 using System.Text;
 using Antlr4.Runtime;
 using Antlr4.Runtime.Misc;
-
+using generated;
 namespace Compilador.Components;
 
 public class MyErrorParser : BaseErrorListener

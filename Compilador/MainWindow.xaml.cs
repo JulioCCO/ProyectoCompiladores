@@ -4,6 +4,7 @@ using Antlr4.Runtime;
 using System.IO;
 using System.Windows.Controls;
 using Compilador.Components;
+using generated;
 using Microsoft.Win32;
 
 
@@ -167,8 +168,7 @@ namespace Compilador
                     parser.ErrorHandler = _errorStrategy;
 
                     AlphaParser.ProgramContext tree = parser.program();
-                    TreeView treeView = new TreeView();
-
+                    AContextual context = new AContextual();
                     // Check for errors
 
                     var consola = new Consola();
@@ -181,9 +181,15 @@ namespace Compilador
                     {
                         // Crear una instancia de la nueva ventana
                         consola.SalidaConsola.Text =
-                            "Compilación exitosa\n" + tree.ToStringTree(parser) + "\n" + txtPath;
+                            "Compilación exitosa\n\n" + tree.ToStringTree(parser) + "\n\n" +"Path del archivo:" + txtPath + "\n\n" +
+                                                           "Visitando el arbol: " + context.Visit(tree) + " \n";
+                        
                         System.Diagnostics.Debug.WriteLine("\nImprimiendo Tree en consola "
-                                                           + tree.ToStringTree(parser) + " \n");
+                                                           + tree.ToStringTree(parser) + " \n" +
+                                                           "Visitando el arbol:" + context.Visit(tree) + " \n"
+                                                           );
+                        
+                        
                         // Mostrar la ventana
                         consola.Show();
                     }

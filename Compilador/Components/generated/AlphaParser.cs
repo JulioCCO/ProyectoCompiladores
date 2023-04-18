@@ -19,6 +19,7 @@
 // Ambiguous reference in cref attribute
 #pragma warning disable 419
 
+namespace generated {
 using System;
 using System.IO;
 using System.Text;
@@ -110,6 +111,18 @@ public partial class AlphaParser : Parser {
 	}
 
 	public partial class ProgramContext : ParserRuleContext {
+		public ProgramContext(ParserRuleContext parent, int invokingState)
+			: base(parent, invokingState)
+		{
+		}
+		public override int RuleIndex { get { return RULE_program; } }
+	 
+		public ProgramContext() { }
+		public virtual void CopyFrom(ProgramContext context) {
+			base.CopyFrom(context);
+		}
+	}
+	public partial class ProgramClassASTContext : ProgramContext {
 		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode CLASS() { return GetToken(AlphaParser.CLASS, 0); }
 		[System.Diagnostics.DebuggerNonUserCode] public IdentContext ident() {
 			return GetRuleContext<IdentContext>(0);
@@ -141,11 +154,13 @@ public partial class AlphaParser : Parser {
 		[System.Diagnostics.DebuggerNonUserCode] public MethodDeclContext methodDecl(int i) {
 			return GetRuleContext<MethodDeclContext>(i);
 		}
-		public ProgramContext(ParserRuleContext parent, int invokingState)
-			: base(parent, invokingState)
-		{
+		public ProgramClassASTContext(ProgramContext context) { CopyFrom(context); }
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IAlphaParserVisitor<TResult> typedVisitor = visitor as IAlphaParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitProgramClassAST(this);
+			else return visitor.VisitChildren(this);
 		}
-		public override int RuleIndex { get { return RULE_program; } }
 	}
 
 	[RuleVersion(0)]
@@ -154,6 +169,7 @@ public partial class AlphaParser : Parser {
 		EnterRule(_localctx, 0, RULE_program);
 		int _la;
 		try {
+			_localctx = new ProgramClassASTContext(_localctx);
 			EnterOuterAlt(_localctx, 1);
 			{
 			State = 49;
@@ -226,16 +242,30 @@ public partial class AlphaParser : Parser {
 	}
 
 	public partial class UsingContext : ParserRuleContext {
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode USING() { return GetToken(AlphaParser.USING, 0); }
-		[System.Diagnostics.DebuggerNonUserCode] public IdentContext ident() {
-			return GetRuleContext<IdentContext>(0);
-		}
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode SEMICOLON() { return GetToken(AlphaParser.SEMICOLON, 0); }
 		public UsingContext(ParserRuleContext parent, int invokingState)
 			: base(parent, invokingState)
 		{
 		}
 		public override int RuleIndex { get { return RULE_using; } }
+	 
+		public UsingContext() { }
+		public virtual void CopyFrom(UsingContext context) {
+			base.CopyFrom(context);
+		}
+	}
+	public partial class UsingClassASTContext : UsingContext {
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode USING() { return GetToken(AlphaParser.USING, 0); }
+		[System.Diagnostics.DebuggerNonUserCode] public IdentContext ident() {
+			return GetRuleContext<IdentContext>(0);
+		}
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode SEMICOLON() { return GetToken(AlphaParser.SEMICOLON, 0); }
+		public UsingClassASTContext(UsingContext context) { CopyFrom(context); }
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IAlphaParserVisitor<TResult> typedVisitor = visitor as IAlphaParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitUsingClassAST(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -243,6 +273,7 @@ public partial class AlphaParser : Parser {
 		UsingContext _localctx = new UsingContext(Context, State);
 		EnterRule(_localctx, 2, RULE_using);
 		try {
+			_localctx = new UsingClassASTContext(_localctx);
 			EnterOuterAlt(_localctx, 1);
 			{
 			State = 66;
@@ -265,6 +296,18 @@ public partial class AlphaParser : Parser {
 	}
 
 	public partial class VarDeclContext : ParserRuleContext {
+		public VarDeclContext(ParserRuleContext parent, int invokingState)
+			: base(parent, invokingState)
+		{
+		}
+		public override int RuleIndex { get { return RULE_varDecl; } }
+	 
+		public VarDeclContext() { }
+		public virtual void CopyFrom(VarDeclContext context) {
+			base.CopyFrom(context);
+		}
+	}
+	public partial class VarDeclASTContext : VarDeclContext {
 		[System.Diagnostics.DebuggerNonUserCode] public TypeContext type() {
 			return GetRuleContext<TypeContext>(0);
 		}
@@ -279,11 +322,13 @@ public partial class AlphaParser : Parser {
 		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode COMMA(int i) {
 			return GetToken(AlphaParser.COMMA, i);
 		}
-		public VarDeclContext(ParserRuleContext parent, int invokingState)
-			: base(parent, invokingState)
-		{
+		public VarDeclASTContext(VarDeclContext context) { CopyFrom(context); }
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IAlphaParserVisitor<TResult> typedVisitor = visitor as IAlphaParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitVarDeclAST(this);
+			else return visitor.VisitChildren(this);
 		}
-		public override int RuleIndex { get { return RULE_varDecl; } }
 	}
 
 	[RuleVersion(0)]
@@ -292,6 +337,7 @@ public partial class AlphaParser : Parser {
 		EnterRule(_localctx, 4, RULE_varDecl);
 		int _la;
 		try {
+			_localctx = new VarDeclASTContext(_localctx);
 			EnterOuterAlt(_localctx, 1);
 			{
 			State = 70;
@@ -330,6 +376,18 @@ public partial class AlphaParser : Parser {
 	}
 
 	public partial class ClassDeclContext : ParserRuleContext {
+		public ClassDeclContext(ParserRuleContext parent, int invokingState)
+			: base(parent, invokingState)
+		{
+		}
+		public override int RuleIndex { get { return RULE_classDecl; } }
+	 
+		public ClassDeclContext() { }
+		public virtual void CopyFrom(ClassDeclContext context) {
+			base.CopyFrom(context);
+		}
+	}
+	public partial class ClassDeclASTContext : ClassDeclContext {
 		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode CLASS() { return GetToken(AlphaParser.CLASS, 0); }
 		[System.Diagnostics.DebuggerNonUserCode] public IdentContext ident() {
 			return GetRuleContext<IdentContext>(0);
@@ -342,11 +400,13 @@ public partial class AlphaParser : Parser {
 		[System.Diagnostics.DebuggerNonUserCode] public VarDeclContext varDecl(int i) {
 			return GetRuleContext<VarDeclContext>(i);
 		}
-		public ClassDeclContext(ParserRuleContext parent, int invokingState)
-			: base(parent, invokingState)
-		{
+		public ClassDeclASTContext(ClassDeclContext context) { CopyFrom(context); }
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IAlphaParserVisitor<TResult> typedVisitor = visitor as IAlphaParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitClassDeclAST(this);
+			else return visitor.VisitChildren(this);
 		}
-		public override int RuleIndex { get { return RULE_classDecl; } }
 	}
 
 	[RuleVersion(0)]
@@ -355,6 +415,7 @@ public partial class AlphaParser : Parser {
 		EnterRule(_localctx, 6, RULE_classDecl);
 		int _la;
 		try {
+			_localctx = new ClassDeclASTContext(_localctx);
 			EnterOuterAlt(_localctx, 1);
 			{
 			State = 81;
@@ -393,6 +454,18 @@ public partial class AlphaParser : Parser {
 	}
 
 	public partial class MethodDeclContext : ParserRuleContext {
+		public MethodDeclContext(ParserRuleContext parent, int invokingState)
+			: base(parent, invokingState)
+		{
+		}
+		public override int RuleIndex { get { return RULE_methodDecl; } }
+	 
+		public MethodDeclContext() { }
+		public virtual void CopyFrom(MethodDeclContext context) {
+			base.CopyFrom(context);
+		}
+	}
+	public partial class MethodDeclASTContext : MethodDeclContext {
 		[System.Diagnostics.DebuggerNonUserCode] public IdentContext ident() {
 			return GetRuleContext<IdentContext>(0);
 		}
@@ -408,11 +481,13 @@ public partial class AlphaParser : Parser {
 		[System.Diagnostics.DebuggerNonUserCode] public FormParsContext formPars() {
 			return GetRuleContext<FormParsContext>(0);
 		}
-		public MethodDeclContext(ParserRuleContext parent, int invokingState)
-			: base(parent, invokingState)
-		{
+		public MethodDeclASTContext(MethodDeclContext context) { CopyFrom(context); }
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IAlphaParserVisitor<TResult> typedVisitor = visitor as IAlphaParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitMethodDeclAST(this);
+			else return visitor.VisitChildren(this);
 		}
-		public override int RuleIndex { get { return RULE_methodDecl; } }
 	}
 
 	[RuleVersion(0)]
@@ -421,6 +496,7 @@ public partial class AlphaParser : Parser {
 		EnterRule(_localctx, 8, RULE_methodDecl);
 		int _la;
 		try {
+			_localctx = new MethodDeclASTContext(_localctx);
 			EnterOuterAlt(_localctx, 1);
 			{
 			State = 94;
@@ -473,6 +549,18 @@ public partial class AlphaParser : Parser {
 	}
 
 	public partial class FormParsContext : ParserRuleContext {
+		public FormParsContext(ParserRuleContext parent, int invokingState)
+			: base(parent, invokingState)
+		{
+		}
+		public override int RuleIndex { get { return RULE_formPars; } }
+	 
+		public FormParsContext() { }
+		public virtual void CopyFrom(FormParsContext context) {
+			base.CopyFrom(context);
+		}
+	}
+	public partial class FormParsASTContext : FormParsContext {
 		[System.Diagnostics.DebuggerNonUserCode] public TypeContext[] type() {
 			return GetRuleContexts<TypeContext>();
 		}
@@ -489,11 +577,13 @@ public partial class AlphaParser : Parser {
 		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode COMMA(int i) {
 			return GetToken(AlphaParser.COMMA, i);
 		}
-		public FormParsContext(ParserRuleContext parent, int invokingState)
-			: base(parent, invokingState)
-		{
+		public FormParsASTContext(FormParsContext context) { CopyFrom(context); }
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IAlphaParserVisitor<TResult> typedVisitor = visitor as IAlphaParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitFormParsAST(this);
+			else return visitor.VisitChildren(this);
 		}
-		public override int RuleIndex { get { return RULE_formPars; } }
 	}
 
 	[RuleVersion(0)]
@@ -502,6 +592,7 @@ public partial class AlphaParser : Parser {
 		EnterRule(_localctx, 10, RULE_formPars);
 		int _la;
 		try {
+			_localctx = new FormParsASTContext(_localctx);
 			EnterOuterAlt(_localctx, 1);
 			{
 			State = 104;
@@ -540,17 +631,31 @@ public partial class AlphaParser : Parser {
 	}
 
 	public partial class TypeContext : ParserRuleContext {
+		public TypeContext(ParserRuleContext parent, int invokingState)
+			: base(parent, invokingState)
+		{
+		}
+		public override int RuleIndex { get { return RULE_type; } }
+	 
+		public TypeContext() { }
+		public virtual void CopyFrom(TypeContext context) {
+			base.CopyFrom(context);
+		}
+	}
+	public partial class TypeASTContext : TypeContext {
 		[System.Diagnostics.DebuggerNonUserCode] public IdentContext ident() {
 			return GetRuleContext<IdentContext>(0);
 		}
 		[System.Diagnostics.DebuggerNonUserCode] public ArrayContext array() {
 			return GetRuleContext<ArrayContext>(0);
 		}
-		public TypeContext(ParserRuleContext parent, int invokingState)
-			: base(parent, invokingState)
-		{
+		public TypeASTContext(TypeContext context) { CopyFrom(context); }
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IAlphaParserVisitor<TResult> typedVisitor = visitor as IAlphaParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitTypeAST(this);
+			else return visitor.VisitChildren(this);
 		}
-		public override int RuleIndex { get { return RULE_type; } }
 	}
 
 	[RuleVersion(0)]
@@ -559,6 +664,7 @@ public partial class AlphaParser : Parser {
 		EnterRule(_localctx, 12, RULE_type);
 		int _la;
 		try {
+			_localctx = new TypeASTContext(_localctx);
 			EnterOuterAlt(_localctx, 1);
 			{
 			State = 115;
@@ -587,13 +693,22 @@ public partial class AlphaParser : Parser {
 	}
 
 	public partial class StatementContext : ParserRuleContext {
+		public StatementContext(ParserRuleContext parent, int invokingState)
+			: base(parent, invokingState)
+		{
+		}
+		public override int RuleIndex { get { return RULE_statement; } }
+	 
+		public StatementContext() { }
+		public virtual void CopyFrom(StatementContext context) {
+			base.CopyFrom(context);
+		}
+	}
+	public partial class AssignStatementASTContext : StatementContext {
 		[System.Diagnostics.DebuggerNonUserCode] public DesignatorContext designator() {
 			return GetRuleContext<DesignatorContext>(0);
 		}
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode[] SEMICOLON() { return GetTokens(AlphaParser.SEMICOLON); }
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode SEMICOLON(int i) {
-			return GetToken(AlphaParser.SEMICOLON, i);
-		}
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode SEMICOLON() { return GetToken(AlphaParser.SEMICOLON, 0); }
 		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode ASSIGN() { return GetToken(AlphaParser.ASSIGN, 0); }
 		[System.Diagnostics.DebuggerNonUserCode] public ExprContext expr() {
 			return GetRuleContext<ExprContext>(0);
@@ -605,10 +720,140 @@ public partial class AlphaParser : Parser {
 		[System.Diagnostics.DebuggerNonUserCode] public ActParsContext actPars() {
 			return GetRuleContext<ActParsContext>(0);
 		}
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode IF() { return GetToken(AlphaParser.IF, 0); }
+		public AssignStatementASTContext(StatementContext context) { CopyFrom(context); }
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IAlphaParserVisitor<TResult> typedVisitor = visitor as IAlphaParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitAssignStatementAST(this);
+			else return visitor.VisitChildren(this);
+		}
+	}
+	public partial class ForStatementASTContext : StatementContext {
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode FOR() { return GetToken(AlphaParser.FOR, 0); }
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode LEFT_PAREN() { return GetToken(AlphaParser.LEFT_PAREN, 0); }
+		[System.Diagnostics.DebuggerNonUserCode] public ExprContext expr() {
+			return GetRuleContext<ExprContext>(0);
+		}
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode[] SEMICOLON() { return GetTokens(AlphaParser.SEMICOLON); }
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode SEMICOLON(int i) {
+			return GetToken(AlphaParser.SEMICOLON, i);
+		}
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode RIGHT_PAREN() { return GetToken(AlphaParser.RIGHT_PAREN, 0); }
+		[System.Diagnostics.DebuggerNonUserCode] public StatementContext[] statement() {
+			return GetRuleContexts<StatementContext>();
+		}
+		[System.Diagnostics.DebuggerNonUserCode] public StatementContext statement(int i) {
+			return GetRuleContext<StatementContext>(i);
+		}
 		[System.Diagnostics.DebuggerNonUserCode] public ConditionContext condition() {
 			return GetRuleContext<ConditionContext>(0);
 		}
+		public ForStatementASTContext(StatementContext context) { CopyFrom(context); }
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IAlphaParserVisitor<TResult> typedVisitor = visitor as IAlphaParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitForStatementAST(this);
+			else return visitor.VisitChildren(this);
+		}
+	}
+	public partial class ReadStatementASTContext : StatementContext {
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode READ() { return GetToken(AlphaParser.READ, 0); }
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode LEFT_PAREN() { return GetToken(AlphaParser.LEFT_PAREN, 0); }
+		[System.Diagnostics.DebuggerNonUserCode] public DesignatorContext designator() {
+			return GetRuleContext<DesignatorContext>(0);
+		}
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode RIGHT_PAREN() { return GetToken(AlphaParser.RIGHT_PAREN, 0); }
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode SEMICOLON() { return GetToken(AlphaParser.SEMICOLON, 0); }
+		public ReadStatementASTContext(StatementContext context) { CopyFrom(context); }
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IAlphaParserVisitor<TResult> typedVisitor = visitor as IAlphaParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitReadStatementAST(this);
+			else return visitor.VisitChildren(this);
+		}
+	}
+	public partial class ReturnStatementASTContext : StatementContext {
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode RETURN() { return GetToken(AlphaParser.RETURN, 0); }
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode SEMICOLON() { return GetToken(AlphaParser.SEMICOLON, 0); }
+		[System.Diagnostics.DebuggerNonUserCode] public ExprContext expr() {
+			return GetRuleContext<ExprContext>(0);
+		}
+		public ReturnStatementASTContext(StatementContext context) { CopyFrom(context); }
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IAlphaParserVisitor<TResult> typedVisitor = visitor as IAlphaParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitReturnStatementAST(this);
+			else return visitor.VisitChildren(this);
+		}
+	}
+	public partial class BreakStatementASTContext : StatementContext {
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode BREAK() { return GetToken(AlphaParser.BREAK, 0); }
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode SEMICOLON() { return GetToken(AlphaParser.SEMICOLON, 0); }
+		public BreakStatementASTContext(StatementContext context) { CopyFrom(context); }
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IAlphaParserVisitor<TResult> typedVisitor = visitor as IAlphaParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitBreakStatementAST(this);
+			else return visitor.VisitChildren(this);
+		}
+	}
+	public partial class WriteStatementASTContext : StatementContext {
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode WRITE() { return GetToken(AlphaParser.WRITE, 0); }
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode LEFT_PAREN() { return GetToken(AlphaParser.LEFT_PAREN, 0); }
+		[System.Diagnostics.DebuggerNonUserCode] public ExprContext expr() {
+			return GetRuleContext<ExprContext>(0);
+		}
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode RIGHT_PAREN() { return GetToken(AlphaParser.RIGHT_PAREN, 0); }
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode SEMICOLON() { return GetToken(AlphaParser.SEMICOLON, 0); }
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode COMMA() { return GetToken(AlphaParser.COMMA, 0); }
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode NUMBER() { return GetToken(AlphaParser.NUMBER, 0); }
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode STRING_CONST() { return GetToken(AlphaParser.STRING_CONST, 0); }
+		public WriteStatementASTContext(StatementContext context) { CopyFrom(context); }
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IAlphaParserVisitor<TResult> typedVisitor = visitor as IAlphaParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitWriteStatementAST(this);
+			else return visitor.VisitChildren(this);
+		}
+	}
+	public partial class BlockStatementASTContext : StatementContext {
+		[System.Diagnostics.DebuggerNonUserCode] public BlockContext block() {
+			return GetRuleContext<BlockContext>(0);
+		}
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode SEMICOLON() { return GetToken(AlphaParser.SEMICOLON, 0); }
+		public BlockStatementASTContext(StatementContext context) { CopyFrom(context); }
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IAlphaParserVisitor<TResult> typedVisitor = visitor as IAlphaParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitBlockStatementAST(this);
+			else return visitor.VisitChildren(this);
+		}
+	}
+	public partial class WhileStatementASTContext : StatementContext {
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode WHILE() { return GetToken(AlphaParser.WHILE, 0); }
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode LEFT_PAREN() { return GetToken(AlphaParser.LEFT_PAREN, 0); }
+		[System.Diagnostics.DebuggerNonUserCode] public ConditionContext condition() {
+			return GetRuleContext<ConditionContext>(0);
+		}
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode RIGHT_PAREN() { return GetToken(AlphaParser.RIGHT_PAREN, 0); }
+		[System.Diagnostics.DebuggerNonUserCode] public StatementContext statement() {
+			return GetRuleContext<StatementContext>(0);
+		}
+		public WhileStatementASTContext(StatementContext context) { CopyFrom(context); }
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IAlphaParserVisitor<TResult> typedVisitor = visitor as IAlphaParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitWhileStatementAST(this);
+			else return visitor.VisitChildren(this);
+		}
+	}
+	public partial class IfStatementASTContext : StatementContext {
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode IF() { return GetToken(AlphaParser.IF, 0); }
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode LEFT_PAREN() { return GetToken(AlphaParser.LEFT_PAREN, 0); }
+		[System.Diagnostics.DebuggerNonUserCode] public ConditionContext condition() {
+			return GetRuleContext<ConditionContext>(0);
+		}
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode RIGHT_PAREN() { return GetToken(AlphaParser.RIGHT_PAREN, 0); }
 		[System.Diagnostics.DebuggerNonUserCode] public StatementContext[] statement() {
 			return GetRuleContexts<StatementContext>();
 		}
@@ -616,23 +861,13 @@ public partial class AlphaParser : Parser {
 			return GetRuleContext<StatementContext>(i);
 		}
 		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode ELSE() { return GetToken(AlphaParser.ELSE, 0); }
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode FOR() { return GetToken(AlphaParser.FOR, 0); }
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode WHILE() { return GetToken(AlphaParser.WHILE, 0); }
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode BREAK() { return GetToken(AlphaParser.BREAK, 0); }
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode RETURN() { return GetToken(AlphaParser.RETURN, 0); }
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode READ() { return GetToken(AlphaParser.READ, 0); }
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode WRITE() { return GetToken(AlphaParser.WRITE, 0); }
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode COMMA() { return GetToken(AlphaParser.COMMA, 0); }
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode NUMBER() { return GetToken(AlphaParser.NUMBER, 0); }
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode STRING_CONST() { return GetToken(AlphaParser.STRING_CONST, 0); }
-		[System.Diagnostics.DebuggerNonUserCode] public BlockContext block() {
-			return GetRuleContext<BlockContext>(0);
+		public IfStatementASTContext(StatementContext context) { CopyFrom(context); }
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IAlphaParserVisitor<TResult> typedVisitor = visitor as IAlphaParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitIfStatementAST(this);
+			else return visitor.VisitChildren(this);
 		}
-		public StatementContext(ParserRuleContext parent, int invokingState)
-			: base(parent, invokingState)
-		{
-		}
-		public override int RuleIndex { get { return RULE_statement; } }
 	}
 
 	[RuleVersion(0)]
@@ -645,6 +880,7 @@ public partial class AlphaParser : Parser {
 			ErrorHandler.Sync(this);
 			switch (TokenStream.LA(1)) {
 			case IDENTIFIER:
+				_localctx = new AssignStatementASTContext(_localctx);
 				EnterOuterAlt(_localctx, 1);
 				{
 				State = 119;
@@ -698,6 +934,7 @@ public partial class AlphaParser : Parser {
 				}
 				break;
 			case IF:
+				_localctx = new IfStatementASTContext(_localctx);
 				EnterOuterAlt(_localctx, 2);
 				{
 				State = 133;
@@ -725,6 +962,7 @@ public partial class AlphaParser : Parser {
 				}
 				break;
 			case FOR:
+				_localctx = new ForStatementASTContext(_localctx);
 				EnterOuterAlt(_localctx, 3);
 				{
 				State = 142;
@@ -764,6 +1002,7 @@ public partial class AlphaParser : Parser {
 				}
 				break;
 			case WHILE:
+				_localctx = new WhileStatementASTContext(_localctx);
 				EnterOuterAlt(_localctx, 4);
 				{
 				State = 156;
@@ -779,6 +1018,7 @@ public partial class AlphaParser : Parser {
 				}
 				break;
 			case BREAK:
+				_localctx = new BreakStatementASTContext(_localctx);
 				EnterOuterAlt(_localctx, 5);
 				{
 				State = 162;
@@ -788,6 +1028,7 @@ public partial class AlphaParser : Parser {
 				}
 				break;
 			case RETURN:
+				_localctx = new ReturnStatementASTContext(_localctx);
 				EnterOuterAlt(_localctx, 6);
 				{
 				State = 164;
@@ -807,6 +1048,7 @@ public partial class AlphaParser : Parser {
 				}
 				break;
 			case READ:
+				_localctx = new ReadStatementASTContext(_localctx);
 				EnterOuterAlt(_localctx, 7);
 				{
 				State = 169;
@@ -822,6 +1064,7 @@ public partial class AlphaParser : Parser {
 				}
 				break;
 			case WRITE:
+				_localctx = new WriteStatementASTContext(_localctx);
 				EnterOuterAlt(_localctx, 8);
 				{
 				State = 175;
@@ -856,6 +1099,7 @@ public partial class AlphaParser : Parser {
 				}
 				break;
 			case LEFT_BRACE:
+				_localctx = new BlockStatementASTContext(_localctx);
 				EnterOuterAlt(_localctx, 9);
 				{
 				State = 185;
@@ -863,6 +1107,7 @@ public partial class AlphaParser : Parser {
 				}
 				break;
 			case SEMICOLON:
+				_localctx = new BlockStatementASTContext(_localctx);
 				EnterOuterAlt(_localctx, 10);
 				{
 				State = 186;
@@ -885,6 +1130,18 @@ public partial class AlphaParser : Parser {
 	}
 
 	public partial class BlockContext : ParserRuleContext {
+		public BlockContext(ParserRuleContext parent, int invokingState)
+			: base(parent, invokingState)
+		{
+		}
+		public override int RuleIndex { get { return RULE_block; } }
+	 
+		public BlockContext() { }
+		public virtual void CopyFrom(BlockContext context) {
+			base.CopyFrom(context);
+		}
+	}
+	public partial class BlockASTContext : BlockContext {
 		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode LEFT_BRACE() { return GetToken(AlphaParser.LEFT_BRACE, 0); }
 		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode RIGHT_BRACE() { return GetToken(AlphaParser.RIGHT_BRACE, 0); }
 		[System.Diagnostics.DebuggerNonUserCode] public VarDeclContext[] varDecl() {
@@ -899,11 +1156,13 @@ public partial class AlphaParser : Parser {
 		[System.Diagnostics.DebuggerNonUserCode] public StatementContext statement(int i) {
 			return GetRuleContext<StatementContext>(i);
 		}
-		public BlockContext(ParserRuleContext parent, int invokingState)
-			: base(parent, invokingState)
-		{
+		public BlockASTContext(BlockContext context) { CopyFrom(context); }
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IAlphaParserVisitor<TResult> typedVisitor = visitor as IAlphaParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitBlockAST(this);
+			else return visitor.VisitChildren(this);
 		}
-		public override int RuleIndex { get { return RULE_block; } }
 	}
 
 	[RuleVersion(0)]
@@ -912,6 +1171,7 @@ public partial class AlphaParser : Parser {
 		EnterRule(_localctx, 16, RULE_block);
 		int _la;
 		try {
+			_localctx = new BlockASTContext(_localctx);
 			EnterOuterAlt(_localctx, 1);
 			{
 			State = 189;
@@ -958,6 +1218,18 @@ public partial class AlphaParser : Parser {
 	}
 
 	public partial class ActParsContext : ParserRuleContext {
+		public ActParsContext(ParserRuleContext parent, int invokingState)
+			: base(parent, invokingState)
+		{
+		}
+		public override int RuleIndex { get { return RULE_actPars; } }
+	 
+		public ActParsContext() { }
+		public virtual void CopyFrom(ActParsContext context) {
+			base.CopyFrom(context);
+		}
+	}
+	public partial class ActParsASTContext : ActParsContext {
 		[System.Diagnostics.DebuggerNonUserCode] public ExprContext[] expr() {
 			return GetRuleContexts<ExprContext>();
 		}
@@ -968,11 +1240,13 @@ public partial class AlphaParser : Parser {
 		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode COMMA(int i) {
 			return GetToken(AlphaParser.COMMA, i);
 		}
-		public ActParsContext(ParserRuleContext parent, int invokingState)
-			: base(parent, invokingState)
-		{
+		public ActParsASTContext(ActParsContext context) { CopyFrom(context); }
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IAlphaParserVisitor<TResult> typedVisitor = visitor as IAlphaParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitActParsAST(this);
+			else return visitor.VisitChildren(this);
 		}
-		public override int RuleIndex { get { return RULE_actPars; } }
 	}
 
 	[RuleVersion(0)]
@@ -981,6 +1255,7 @@ public partial class AlphaParser : Parser {
 		EnterRule(_localctx, 18, RULE_actPars);
 		int _la;
 		try {
+			_localctx = new ActParsASTContext(_localctx);
 			EnterOuterAlt(_localctx, 1);
 			{
 			State = 199;
@@ -1015,6 +1290,18 @@ public partial class AlphaParser : Parser {
 	}
 
 	public partial class ConditionContext : ParserRuleContext {
+		public ConditionContext(ParserRuleContext parent, int invokingState)
+			: base(parent, invokingState)
+		{
+		}
+		public override int RuleIndex { get { return RULE_condition; } }
+	 
+		public ConditionContext() { }
+		public virtual void CopyFrom(ConditionContext context) {
+			base.CopyFrom(context);
+		}
+	}
+	public partial class ConditionASTContext : ConditionContext {
 		[System.Diagnostics.DebuggerNonUserCode] public CondTermContext[] condTerm() {
 			return GetRuleContexts<CondTermContext>();
 		}
@@ -1025,11 +1312,13 @@ public partial class AlphaParser : Parser {
 		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode LOGICAL_OR(int i) {
 			return GetToken(AlphaParser.LOGICAL_OR, i);
 		}
-		public ConditionContext(ParserRuleContext parent, int invokingState)
-			: base(parent, invokingState)
-		{
+		public ConditionASTContext(ConditionContext context) { CopyFrom(context); }
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IAlphaParserVisitor<TResult> typedVisitor = visitor as IAlphaParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitConditionAST(this);
+			else return visitor.VisitChildren(this);
 		}
-		public override int RuleIndex { get { return RULE_condition; } }
 	}
 
 	[RuleVersion(0)]
@@ -1038,6 +1327,7 @@ public partial class AlphaParser : Parser {
 		EnterRule(_localctx, 20, RULE_condition);
 		int _la;
 		try {
+			_localctx = new ConditionASTContext(_localctx);
 			EnterOuterAlt(_localctx, 1);
 			{
 			State = 207;
@@ -1072,6 +1362,18 @@ public partial class AlphaParser : Parser {
 	}
 
 	public partial class CondTermContext : ParserRuleContext {
+		public CondTermContext(ParserRuleContext parent, int invokingState)
+			: base(parent, invokingState)
+		{
+		}
+		public override int RuleIndex { get { return RULE_condTerm; } }
+	 
+		public CondTermContext() { }
+		public virtual void CopyFrom(CondTermContext context) {
+			base.CopyFrom(context);
+		}
+	}
+	public partial class CondTermASTContext : CondTermContext {
 		[System.Diagnostics.DebuggerNonUserCode] public CondFactContext[] condFact() {
 			return GetRuleContexts<CondFactContext>();
 		}
@@ -1082,11 +1384,13 @@ public partial class AlphaParser : Parser {
 		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode LOGICAL_AND(int i) {
 			return GetToken(AlphaParser.LOGICAL_AND, i);
 		}
-		public CondTermContext(ParserRuleContext parent, int invokingState)
-			: base(parent, invokingState)
-		{
+		public CondTermASTContext(CondTermContext context) { CopyFrom(context); }
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IAlphaParserVisitor<TResult> typedVisitor = visitor as IAlphaParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitCondTermAST(this);
+			else return visitor.VisitChildren(this);
 		}
-		public override int RuleIndex { get { return RULE_condTerm; } }
 	}
 
 	[RuleVersion(0)]
@@ -1095,6 +1399,7 @@ public partial class AlphaParser : Parser {
 		EnterRule(_localctx, 22, RULE_condTerm);
 		int _la;
 		try {
+			_localctx = new CondTermASTContext(_localctx);
 			EnterOuterAlt(_localctx, 1);
 			{
 			State = 215;
@@ -1129,6 +1434,18 @@ public partial class AlphaParser : Parser {
 	}
 
 	public partial class CondFactContext : ParserRuleContext {
+		public CondFactContext(ParserRuleContext parent, int invokingState)
+			: base(parent, invokingState)
+		{
+		}
+		public override int RuleIndex { get { return RULE_condFact; } }
+	 
+		public CondFactContext() { }
+		public virtual void CopyFrom(CondFactContext context) {
+			base.CopyFrom(context);
+		}
+	}
+	public partial class CondFactASTContext : CondFactContext {
 		[System.Diagnostics.DebuggerNonUserCode] public ExprContext[] expr() {
 			return GetRuleContexts<ExprContext>();
 		}
@@ -1138,11 +1455,13 @@ public partial class AlphaParser : Parser {
 		[System.Diagnostics.DebuggerNonUserCode] public RelopContext relop() {
 			return GetRuleContext<RelopContext>(0);
 		}
-		public CondFactContext(ParserRuleContext parent, int invokingState)
-			: base(parent, invokingState)
-		{
+		public CondFactASTContext(CondFactContext context) { CopyFrom(context); }
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IAlphaParserVisitor<TResult> typedVisitor = visitor as IAlphaParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitCondFactAST(this);
+			else return visitor.VisitChildren(this);
 		}
-		public override int RuleIndex { get { return RULE_condFact; } }
 	}
 
 	[RuleVersion(0)]
@@ -1150,6 +1469,7 @@ public partial class AlphaParser : Parser {
 		CondFactContext _localctx = new CondFactContext(Context, State);
 		EnterRule(_localctx, 24, RULE_condFact);
 		try {
+			_localctx = new CondFactASTContext(_localctx);
 			EnterOuterAlt(_localctx, 1);
 			{
 			State = 223;
@@ -1172,16 +1492,30 @@ public partial class AlphaParser : Parser {
 	}
 
 	public partial class CastContext : ParserRuleContext {
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode LEFT_PAREN() { return GetToken(AlphaParser.LEFT_PAREN, 0); }
-		[System.Diagnostics.DebuggerNonUserCode] public TypeContext type() {
-			return GetRuleContext<TypeContext>(0);
-		}
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode RIGHT_PAREN() { return GetToken(AlphaParser.RIGHT_PAREN, 0); }
 		public CastContext(ParserRuleContext parent, int invokingState)
 			: base(parent, invokingState)
 		{
 		}
 		public override int RuleIndex { get { return RULE_cast; } }
+	 
+		public CastContext() { }
+		public virtual void CopyFrom(CastContext context) {
+			base.CopyFrom(context);
+		}
+	}
+	public partial class CastASTContext : CastContext {
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode LEFT_PAREN() { return GetToken(AlphaParser.LEFT_PAREN, 0); }
+		[System.Diagnostics.DebuggerNonUserCode] public TypeContext type() {
+			return GetRuleContext<TypeContext>(0);
+		}
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode RIGHT_PAREN() { return GetToken(AlphaParser.RIGHT_PAREN, 0); }
+		public CastASTContext(CastContext context) { CopyFrom(context); }
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IAlphaParserVisitor<TResult> typedVisitor = visitor as IAlphaParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitCastAST(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -1189,6 +1523,7 @@ public partial class AlphaParser : Parser {
 		CastContext _localctx = new CastContext(Context, State);
 		EnterRule(_localctx, 26, RULE_cast);
 		try {
+			_localctx = new CastASTContext(_localctx);
 			EnterOuterAlt(_localctx, 1);
 			{
 			State = 227;
@@ -1211,6 +1546,18 @@ public partial class AlphaParser : Parser {
 	}
 
 	public partial class ExprContext : ParserRuleContext {
+		public ExprContext(ParserRuleContext parent, int invokingState)
+			: base(parent, invokingState)
+		{
+		}
+		public override int RuleIndex { get { return RULE_expr; } }
+	 
+		public ExprContext() { }
+		public virtual void CopyFrom(ExprContext context) {
+			base.CopyFrom(context);
+		}
+	}
+	public partial class ExprASTContext : ExprContext {
 		[System.Diagnostics.DebuggerNonUserCode] public TermContext[] term() {
 			return GetRuleContexts<TermContext>();
 		}
@@ -1227,11 +1574,13 @@ public partial class AlphaParser : Parser {
 		[System.Diagnostics.DebuggerNonUserCode] public AddopContext addop(int i) {
 			return GetRuleContext<AddopContext>(i);
 		}
-		public ExprContext(ParserRuleContext parent, int invokingState)
-			: base(parent, invokingState)
-		{
+		public ExprASTContext(ExprContext context) { CopyFrom(context); }
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IAlphaParserVisitor<TResult> typedVisitor = visitor as IAlphaParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitExprAST(this);
+			else return visitor.VisitChildren(this);
 		}
-		public override int RuleIndex { get { return RULE_expr; } }
 	}
 
 	[RuleVersion(0)]
@@ -1240,6 +1589,7 @@ public partial class AlphaParser : Parser {
 		EnterRule(_localctx, 28, RULE_expr);
 		int _la;
 		try {
+			_localctx = new ExprASTContext(_localctx);
 			EnterOuterAlt(_localctx, 1);
 			{
 			State = 232;
@@ -1294,6 +1644,18 @@ public partial class AlphaParser : Parser {
 	}
 
 	public partial class TermContext : ParserRuleContext {
+		public TermContext(ParserRuleContext parent, int invokingState)
+			: base(parent, invokingState)
+		{
+		}
+		public override int RuleIndex { get { return RULE_term; } }
+	 
+		public TermContext() { }
+		public virtual void CopyFrom(TermContext context) {
+			base.CopyFrom(context);
+		}
+	}
+	public partial class TermASTContext : TermContext {
 		[System.Diagnostics.DebuggerNonUserCode] public FactorContext[] factor() {
 			return GetRuleContexts<FactorContext>();
 		}
@@ -1306,11 +1668,13 @@ public partial class AlphaParser : Parser {
 		[System.Diagnostics.DebuggerNonUserCode] public MulopContext mulop(int i) {
 			return GetRuleContext<MulopContext>(i);
 		}
-		public TermContext(ParserRuleContext parent, int invokingState)
-			: base(parent, invokingState)
-		{
+		public TermASTContext(TermContext context) { CopyFrom(context); }
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IAlphaParserVisitor<TResult> typedVisitor = visitor as IAlphaParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitTermAST(this);
+			else return visitor.VisitChildren(this);
 		}
-		public override int RuleIndex { get { return RULE_term; } }
 	}
 
 	[RuleVersion(0)]
@@ -1319,6 +1683,7 @@ public partial class AlphaParser : Parser {
 		EnterRule(_localctx, 30, RULE_term);
 		int _la;
 		try {
+			_localctx = new TermASTContext(_localctx);
 			EnterOuterAlt(_localctx, 1);
 			{
 			State = 246;
@@ -1353,6 +1718,18 @@ public partial class AlphaParser : Parser {
 	}
 
 	public partial class FactorContext : ParserRuleContext {
+		public FactorContext(ParserRuleContext parent, int invokingState)
+			: base(parent, invokingState)
+		{
+		}
+		public override int RuleIndex { get { return RULE_factor; } }
+	 
+		public FactorContext() { }
+		public virtual void CopyFrom(FactorContext context) {
+			base.CopyFrom(context);
+		}
+	}
+	public partial class DesignatorFactorASTContext : FactorContext {
 		[System.Diagnostics.DebuggerNonUserCode] public DesignatorContext designator() {
 			return GetRuleContext<DesignatorContext>(0);
 		}
@@ -1361,24 +1738,100 @@ public partial class AlphaParser : Parser {
 		[System.Diagnostics.DebuggerNonUserCode] public ActParsContext actPars() {
 			return GetRuleContext<ActParsContext>(0);
 		}
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode NUMBER() { return GetToken(AlphaParser.NUMBER, 0); }
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode CHAR_CONST() { return GetToken(AlphaParser.CHAR_CONST, 0); }
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode STRING_CONST() { return GetToken(AlphaParser.STRING_CONST, 0); }
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode INT_CONST() { return GetToken(AlphaParser.INT_CONST, 0); }
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode DOUBLE_CONST() { return GetToken(AlphaParser.DOUBLE_CONST, 0); }
+		public DesignatorFactorASTContext(FactorContext context) { CopyFrom(context); }
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IAlphaParserVisitor<TResult> typedVisitor = visitor as IAlphaParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitDesignatorFactorAST(this);
+			else return visitor.VisitChildren(this);
+		}
+	}
+	public partial class BoolFactorASTContext : FactorContext {
 		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode BOOL_CONST() { return GetToken(AlphaParser.BOOL_CONST, 0); }
+		public BoolFactorASTContext(FactorContext context) { CopyFrom(context); }
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IAlphaParserVisitor<TResult> typedVisitor = visitor as IAlphaParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitBoolFactorAST(this);
+			else return visitor.VisitChildren(this);
+		}
+	}
+	public partial class NewFactorASTContext : FactorContext {
 		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode NEW() { return GetToken(AlphaParser.NEW, 0); }
 		[System.Diagnostics.DebuggerNonUserCode] public IdentContext ident() {
 			return GetRuleContext<IdentContext>(0);
 		}
+		public NewFactorASTContext(FactorContext context) { CopyFrom(context); }
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IAlphaParserVisitor<TResult> typedVisitor = visitor as IAlphaParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitNewFactorAST(this);
+			else return visitor.VisitChildren(this);
+		}
+	}
+	public partial class ParenFactorASTContext : FactorContext {
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode LEFT_PAREN() { return GetToken(AlphaParser.LEFT_PAREN, 0); }
 		[System.Diagnostics.DebuggerNonUserCode] public ExprContext expr() {
 			return GetRuleContext<ExprContext>(0);
 		}
-		public FactorContext(ParserRuleContext parent, int invokingState)
-			: base(parent, invokingState)
-		{
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode RIGHT_PAREN() { return GetToken(AlphaParser.RIGHT_PAREN, 0); }
+		public ParenFactorASTContext(FactorContext context) { CopyFrom(context); }
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IAlphaParserVisitor<TResult> typedVisitor = visitor as IAlphaParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitParenFactorAST(this);
+			else return visitor.VisitChildren(this);
 		}
-		public override int RuleIndex { get { return RULE_factor; } }
+	}
+	public partial class CharFactorASTContext : FactorContext {
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode CHAR_CONST() { return GetToken(AlphaParser.CHAR_CONST, 0); }
+		public CharFactorASTContext(FactorContext context) { CopyFrom(context); }
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IAlphaParserVisitor<TResult> typedVisitor = visitor as IAlphaParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitCharFactorAST(this);
+			else return visitor.VisitChildren(this);
+		}
+	}
+	public partial class StringFactorASTContext : FactorContext {
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode STRING_CONST() { return GetToken(AlphaParser.STRING_CONST, 0); }
+		public StringFactorASTContext(FactorContext context) { CopyFrom(context); }
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IAlphaParserVisitor<TResult> typedVisitor = visitor as IAlphaParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitStringFactorAST(this);
+			else return visitor.VisitChildren(this);
+		}
+	}
+	public partial class IntFactorASTContext : FactorContext {
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode INT_CONST() { return GetToken(AlphaParser.INT_CONST, 0); }
+		public IntFactorASTContext(FactorContext context) { CopyFrom(context); }
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IAlphaParserVisitor<TResult> typedVisitor = visitor as IAlphaParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitIntFactorAST(this);
+			else return visitor.VisitChildren(this);
+		}
+	}
+	public partial class DoubleFactorASTContext : FactorContext {
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode DOUBLE_CONST() { return GetToken(AlphaParser.DOUBLE_CONST, 0); }
+		public DoubleFactorASTContext(FactorContext context) { CopyFrom(context); }
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IAlphaParserVisitor<TResult> typedVisitor = visitor as IAlphaParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitDoubleFactorAST(this);
+			else return visitor.VisitChildren(this);
+		}
+	}
+	public partial class NumberFactorASTContext : FactorContext {
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode NUMBER() { return GetToken(AlphaParser.NUMBER, 0); }
+		public NumberFactorASTContext(FactorContext context) { CopyFrom(context); }
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IAlphaParserVisitor<TResult> typedVisitor = visitor as IAlphaParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitNumberFactorAST(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -1391,6 +1844,7 @@ public partial class AlphaParser : Parser {
 			ErrorHandler.Sync(this);
 			switch (TokenStream.LA(1)) {
 			case IDENTIFIER:
+				_localctx = new DesignatorFactorASTContext(_localctx);
 				EnterOuterAlt(_localctx, 1);
 				{
 				State = 255;
@@ -1420,6 +1874,7 @@ public partial class AlphaParser : Parser {
 				}
 				break;
 			case NUMBER:
+				_localctx = new NumberFactorASTContext(_localctx);
 				EnterOuterAlt(_localctx, 2);
 				{
 				State = 263;
@@ -1427,6 +1882,7 @@ public partial class AlphaParser : Parser {
 				}
 				break;
 			case CHAR_CONST:
+				_localctx = new CharFactorASTContext(_localctx);
 				EnterOuterAlt(_localctx, 3);
 				{
 				State = 264;
@@ -1434,6 +1890,7 @@ public partial class AlphaParser : Parser {
 				}
 				break;
 			case STRING_CONST:
+				_localctx = new StringFactorASTContext(_localctx);
 				EnterOuterAlt(_localctx, 4);
 				{
 				State = 265;
@@ -1441,6 +1898,7 @@ public partial class AlphaParser : Parser {
 				}
 				break;
 			case INT_CONST:
+				_localctx = new IntFactorASTContext(_localctx);
 				EnterOuterAlt(_localctx, 5);
 				{
 				State = 266;
@@ -1448,6 +1906,7 @@ public partial class AlphaParser : Parser {
 				}
 				break;
 			case DOUBLE_CONST:
+				_localctx = new DoubleFactorASTContext(_localctx);
 				EnterOuterAlt(_localctx, 6);
 				{
 				State = 267;
@@ -1455,6 +1914,7 @@ public partial class AlphaParser : Parser {
 				}
 				break;
 			case BOOL_CONST:
+				_localctx = new BoolFactorASTContext(_localctx);
 				EnterOuterAlt(_localctx, 7);
 				{
 				State = 268;
@@ -1462,6 +1922,7 @@ public partial class AlphaParser : Parser {
 				}
 				break;
 			case NEW:
+				_localctx = new NewFactorASTContext(_localctx);
 				EnterOuterAlt(_localctx, 8);
 				{
 				State = 269;
@@ -1471,6 +1932,7 @@ public partial class AlphaParser : Parser {
 				}
 				break;
 			case LEFT_PAREN:
+				_localctx = new ParenFactorASTContext(_localctx);
 				EnterOuterAlt(_localctx, 9);
 				{
 				State = 271;
@@ -1497,6 +1959,18 @@ public partial class AlphaParser : Parser {
 	}
 
 	public partial class DesignatorContext : ParserRuleContext {
+		public DesignatorContext(ParserRuleContext parent, int invokingState)
+			: base(parent, invokingState)
+		{
+		}
+		public override int RuleIndex { get { return RULE_designator; } }
+	 
+		public DesignatorContext() { }
+		public virtual void CopyFrom(DesignatorContext context) {
+			base.CopyFrom(context);
+		}
+	}
+	public partial class DesignatorASTContext : DesignatorContext {
 		[System.Diagnostics.DebuggerNonUserCode] public IdentContext[] ident() {
 			return GetRuleContexts<IdentContext>();
 		}
@@ -1521,11 +1995,13 @@ public partial class AlphaParser : Parser {
 		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode RIGHT_BRACKET(int i) {
 			return GetToken(AlphaParser.RIGHT_BRACKET, i);
 		}
-		public DesignatorContext(ParserRuleContext parent, int invokingState)
-			: base(parent, invokingState)
-		{
+		public DesignatorASTContext(DesignatorContext context) { CopyFrom(context); }
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IAlphaParserVisitor<TResult> typedVisitor = visitor as IAlphaParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitDesignatorAST(this);
+			else return visitor.VisitChildren(this);
 		}
-		public override int RuleIndex { get { return RULE_designator; } }
 	}
 
 	[RuleVersion(0)]
@@ -1534,6 +2010,7 @@ public partial class AlphaParser : Parser {
 		EnterRule(_localctx, 34, RULE_designator);
 		int _la;
 		try {
+			_localctx = new DesignatorASTContext(_localctx);
 			EnterOuterAlt(_localctx, 1);
 			{
 			State = 277;
@@ -1597,6 +2074,12 @@ public partial class AlphaParser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_relop; } }
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IAlphaParserVisitor<TResult> typedVisitor = visitor as IAlphaParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitRelop(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -1637,6 +2120,12 @@ public partial class AlphaParser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_addop; } }
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IAlphaParserVisitor<TResult> typedVisitor = visitor as IAlphaParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitAddop(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -1678,6 +2167,12 @@ public partial class AlphaParser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_mulop; } }
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IAlphaParserVisitor<TResult> typedVisitor = visitor as IAlphaParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitMulop(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -1717,6 +2212,12 @@ public partial class AlphaParser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_ident; } }
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IAlphaParserVisitor<TResult> typedVisitor = visitor as IAlphaParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitIdent(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -1750,6 +2251,12 @@ public partial class AlphaParser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_array; } }
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IAlphaParserVisitor<TResult> typedVisitor = visitor as IAlphaParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitArray(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -1895,3 +2402,4 @@ public partial class AlphaParser : Parser {
 
 
 }
+} // namespace generated
