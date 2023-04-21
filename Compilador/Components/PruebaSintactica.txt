@@ -1,32 +1,35 @@
-class AllProds {
-  int nPoints;
-  char exclaim; //debe mostrar error de scanner o de parser por el char de dos 	//elementos
-  char caracterEspecial; //no debe mostrar error puesto que es caracter especial
+class AllProds{
+  // int nPoints = 2;
+  // char exclaim = '!!'; //debe mostrar error de scanner o de parser por el char de dos elementos
+  // char caracterEspecial = '\n'; //no debe mostrar error puesto que es caracter especial
 
   class Point {
-    int x, y;  //error de caracteres invalidos
+    int x, y; //error de caracteres invalidos
   }
 
   char[] msg;
   Point[] pArr;
   boolean test1;
 
-{
-  void WriteError ()
-    int i;
-    boolean test2;
+  void WriteError()
+    // int i;
+    // boolean test2;
   {
     /* imprimir mensaje error */
     i = 0;
     test1 = true;
-    while(i<len(msg)){write(msg[i]);i++;}
+    while(i<len(msg)){
+      write(msg[i]);i++;
+      }
     
-    for(i;i<len(msg);i++){write(msg[i]);} //debe dar error por falta de ;
+    for(i;i<len(msg);i++){
+      write(msg[i]);
+      } //debe dar error por falta de 
     write(exclaim);
     while (i > 0) {
       i--;
-      if (i < 3 && test1==true) break;	
-      write(msg[i], 2);
+      if (i < 3 && test1==true) break	
+      write(msg[i], 2)
     }
   }
 
@@ -86,9 +89,7 @@ class AllProds {
     write('n');
 
   }
-}
 
+}
 // ANOTAR SUS COMENTARIOS EN MAYUSCULA Y NO QUITAR NADA DE LO QUE VIENE EN EL ARCHIVO SINO SOLO COMENTARLO PERO A LA VEZ COLOCAR EL EQUIVALENTE CORRECTO
 // CUALQUIER COSA QUE SEA ERROR MIO AL MOMENTO DE HACER LA PRUEBA, FAVOR CORREGIRLO Y ANOTARLO
-
-
