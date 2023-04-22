@@ -42,7 +42,6 @@ public class AContextual: AlphaParserBaseVisitor<object>
 
     public override object VisitProgramClassAST(AlphaParser.ProgramClassASTContext context)
     {
-       
         return base.VisitProgramClassAST(context);
     }
 
@@ -229,6 +228,7 @@ public class AContextual: AlphaParserBaseVisitor<object>
     public override object VisitIdent(AlphaParser.IdentContext context)
     {
         return base.VisitIdent(context);
+        
     }
 
     public override object VisitArray(AlphaParser.ArrayContext context)

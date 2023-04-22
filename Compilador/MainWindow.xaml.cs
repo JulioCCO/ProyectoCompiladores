@@ -15,7 +15,8 @@ namespace Compilador
     /// </summary>
     public partial class MainWindow
     {
-        public string txtPath = "";
+        public string txtPathPrincipal = "";
+        public string txtPathSecundario = "";
         MyErrorListener _errorListener = new MyErrorListener();
         MyErrorParser _errorParser = new MyErrorParser();
         MyDefaultErrorStrategy _errorStrategy = new MyDefaultErrorStrategy();
@@ -31,7 +32,7 @@ namespace Compilador
         {
             OpenFileDialog openFileDialog1 = new OpenFileDialog();
             openFileDialog1.ShowDialog();
-            txtPath = openFileDialog1.FileName;
+            txtPathSecundario = openFileDialog1.FileName;
             try
             {
                 if (File.Exists(openFileDialog1.FileName))
@@ -56,7 +57,7 @@ namespace Compilador
                     nuevoTextBox.AcceptsReturn = true;
                     nuevoTextBox.VerticalScrollBarVisibility = ScrollBarVisibility.Visible;
 
-                    TextReader leer = new StreamReader(txtPath);
+                    TextReader leer = new StreamReader(txtPathSecundario);
                     nuevoTextBox.Text = leer.ReadToEnd();
                     leer.Close();
 
@@ -119,12 +120,12 @@ namespace Compilador
             OpenFileDialog openFileDialog1 = new OpenFileDialog();
             //openFileDialog1.Title = "Buscar archivo .txt";
             openFileDialog1.ShowDialog();
-            txtPath = openFileDialog1.FileName;
+            txtPathPrincipal = openFileDialog1.FileName;
             try
             {
                 if (File.Exists(openFileDialog1.FileName))
                 {
-                    TextReader leer = new StreamReader(txtPath);
+                    TextReader leer = new StreamReader(txtPathPrincipal);
                     Pantalla.Text = leer.ReadToEnd();
                     leer.Close();
                 }
@@ -143,7 +144,7 @@ namespace Compilador
             if (textoAbierto)
             {
                 string text = Pantalla.Text;
-                StreamWriter writer = new StreamWriter(txtPath);
+                StreamWriter writer = new StreamWriter(txtPathPrincipal);
                 writer.WriteLine(text);
                 writer.Close();
                 _errorParser = new MyErrorParser();
@@ -181,7 +182,7 @@ namespace Compilador
                     {
                         // Crear una instancia de la nueva ventana
                         consola.SalidaConsola.Text =
-                            "Compilación exitosa\n\n" + tree.ToStringTree(parser) + "\n\n" +"Path del archivo:" + txtPath + "\n\n" +
+                            "Compilación exitosa\n\n" + tree.ToStringTree(parser) + "\n\n" +"Path del archivo:" + txtPathPrincipal + "\n\n" +
                                                            "Visitando el arbol: " + context.Visit(tree) + " \n";
                         
                         System.Diagnostics.Debug.WriteLine("\nImprimiendo Tree en consola "

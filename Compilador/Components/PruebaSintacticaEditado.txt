@@ -1,0 +1,90 @@
+class AllProds 
+{
+    int nPoints;
+    char exclaim;
+    char caracterEspecial;
+
+    class Point {
+      int x, y; 
+    }
+
+    char[] msg;
+    Point[] pArr;
+    boolean test1;
+
+    void WriteError ()
+    {
+	/*/*dfg*/*/
+        int i;
+        boolean test2;
+        // exclaim = '!!';  (Si da error como el profe dice)
+     	// caracterEspecial = '\n' (Da error porque no se aceptan especiales)
+       // test2 = true
+        while(i<len(msg)){write(msg[i]);i++;}
+
+    for(i;i<len(msg);i++;){write(msg[i]);} 
+
+    write(exclaim);
+    while (i > 0) {
+           i--;
+          if (i < 3 && test1==3) break;
+          write(msg[i], 2);
+       }
+    }
+
+    int GetX (Point p) { return p.x.Z[3+4]; } 
+
+    void SetX (int x, Point p) {
+        if (x > -10 && x <= 9 || x == 4*3/4%4/-12+-11*(2147483647/(-2147483647*1)%2)) // Falta la expresion del or
+            p.x = x;
+        else WriteError();
+    }
+
+    void SetMsg () {
+     	msg = new char; 
+	msg = new char; 
+        msg[0] = 'E';
+        msg[1] = 'E';
+        msg[2] = 'E';
+        msg[3] = 'E';
+        msg[4] = msg[3];
+        read(msg[3]) ;
+    }
+
+    void SetPoints ()
+    {
+        int i;
+        //pArr = new Point[nPoints]; (Da error y no deberia)
+        i = 0;
+        while (i < len(pArr)) {
+            //pArr[i] = new Point;
+            pArr[i].x = i;
+            pArr[i].y = i;
+            i++;
+        }
+    }
+
+    int prueba(Point x, char w)
+    {
+        return val.neg[i].algo;
+    }
+
+    void Main ()
+    {
+        int i;
+        SetMsg();
+        SetPoints();
+        read(i);
+        if (i < nPoints) {
+          write(GetX(pArr[i]));
+          write(pArr[i].y);
+        }
+        else
+          WriteError();
+        write("n"); // Para nosotros char es con commilla doble, entonces lo cambiamos
+
+    }
+}
+
+
+

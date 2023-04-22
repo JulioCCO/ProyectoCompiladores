@@ -19,8 +19,6 @@ BREAK: 'break';
 RETURN: 'return';
 READ: 'read';
 WRITE: 'write';
-TRUE: 'true';
-FALSE: 'false';
 CONST: 'const';
 ASSIGN: '=';
 INC: '++';
@@ -39,7 +37,6 @@ GREATER_OR_EQUALS: '>=';
 LOGICAL_AND: '&&';
 LOGICAL_OR: '||';
 PLUS: '+';
-MINUS: '-';
 MULT: '*';
 DIV: '/';
 MOD: '%';
@@ -60,11 +57,11 @@ RIGHT_BRACKET: ']';
 NUMBER: DIGIT+; 
 
 // CONSTANTS
-CHAR_CONST: MINIQUOMARK CHAR MINIQUOMARK;  // 'a'
-STRING_CONST: QUOMARK (LETTER|DIGIT|LETTER|WS|SPECIAL)* QUOMARK; // "Hello World"
+CHAR_CONST: MINIQUOMARK (LETTER|DIGIT|WS|SPECIAL) MINIQUOMARK; // 
+STRING_CONST: QUOMARK (LETTER|DIGIT|WS|SPECIAL)* QUOMARK; // "Hello World"
 INT_CONST: (MINUS)? DIGIT+; // 123 O -123
 DOUBLE_CONST: (MINUS)? DIGIT+ ( '.' DIGIT)* ; // 123.123 O -123.123 O 123.
-BOOL_CONST: TRUE | FALSE;  // true | false
+BOOL_CONST: (TRUE | FALSE);  // true | false
 
 // BASIC TYPES
 //INT_IDENT: 'int';
@@ -78,13 +75,14 @@ ARRAY: 'array';
 
 // Identifiers
 IDENTIFIER: LETTER (LETTER|DIGIT)*; // a O a1 O a1a
-
-fragment CHAR: [a-zA-Z0-9];
+fragment TRUE: 'true';
+fragment FALSE: 'false';
 fragment DIGIT: [0-9];
 fragment LETTER: [a-zA-Z_];
 fragment QUOMARK : '"';
 fragment MINIQUOMARK: '\'';
 fragment SPECIAL  : [\p{P}\p{S}];
+fragment MINUS: '-';
 
 // Whitespace and comments
 WS : [ \t\r\n]+ -> skip; // skip spaces, tabs, newlines
