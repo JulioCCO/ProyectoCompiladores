@@ -440,7 +440,8 @@ public partial class AlphaParserBaseVisitor<Result> : AbstractParseTreeVisitor<R
 	/// <return>The visitor result.</return>
 	public virtual Result VisitMulop([NotNull] AlphaParser.MulopContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="AlphaParser.ident"/>.
+	/// Visit a parse tree produced by the <c>IdentAST</c>
+	/// labeled alternative in <see cref="AlphaParser.ident"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -448,9 +449,10 @@ public partial class AlphaParserBaseVisitor<Result> : AbstractParseTreeVisitor<R
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitIdent([NotNull] AlphaParser.IdentContext context) { return VisitChildren(context); }
+	public virtual Result VisitIdentAST([NotNull] AlphaParser.IdentASTContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="AlphaParser.array"/>.
+	/// Visit a parse tree produced by the <c>ArrayAST</c>
+	/// labeled alternative in <see cref="AlphaParser.array"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -458,6 +460,6 @@ public partial class AlphaParserBaseVisitor<Result> : AbstractParseTreeVisitor<R
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitArray([NotNull] AlphaParser.ArrayContext context) { return VisitChildren(context); }
+	public virtual Result VisitArrayAST([NotNull] AlphaParser.ArrayASTContext context) { return VisitChildren(context); }
 }
 } // namespace generated

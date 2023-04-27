@@ -152,8 +152,6 @@ namespace Compilador
                 _errorStrategy = new MyDefaultErrorStrategy();
                 try
                 {   
-                    
-                    System.Diagnostics.Debug.WriteLine("\nInformacion tomada del TextBox: \n" + text + "\n");
                     ICharStream input = CharStreams.fromString(text);
                     AlphaScanner lexer = new AlphaScanner(input);
                     CommonTokenStream tokens = new CommonTokenStream(lexer);
@@ -169,7 +167,6 @@ namespace Compilador
                     parser.ErrorHandler = _errorStrategy;
 
                     AlphaParser.ProgramContext tree = parser.program();
-                    AContextual context = new AContextual();
                     // Check for errors
 
                     var consola = new Consola();
@@ -180,17 +177,13 @@ namespace Compilador
 
                     if (_errorParser.HasErrors() == false && _errorListener.HasErrors() == false)
                     {
+                        AContextual context = new AContextual();
+                        context.Visit(tree);
                         // Crear una instancia de la nueva ventana
                         consola.SalidaConsola.Text =
                             "Compilación exitosa\n\n" + tree.ToStringTree(parser) + "\n\n" +"Path del archivo:" + txtPathPrincipal + "\n\n" +
                                                            "Visitando el arbol: " + context.Visit(tree) + " \n";
-                        
-                        System.Diagnostics.Debug.WriteLine("\nImprimiendo Tree en consola "
-                                                           + tree.ToStringTree(parser) + " \n" +
-                                                           "Visitando el arbol:" + context.Visit(tree) + " \n"
-                                                           );
-                        
-                        
+
                         // Mostrar la ventana
                         consola.Show();
                     }

@@ -1,47 +1,111 @@
-﻿using System.Formats.Asn1;
+﻿using System;
 using Antlr4.Runtime;
-using Antlr4.Runtime.Tree;
 using generated;
 
 namespace Compilador.Components;
 
-public class AContextual: AlphaParserBaseVisitor<object>
+public class AContextual : AlphaParserBaseVisitor<object>
 {
     private TablaSimbolos tabla;
-    
+
     public AContextual()
     {
         tabla = new TablaSimbolos();
     }
+
     private string showType(int type)
     {
-        switch (type)
+        return type switch
         {
-            case 0:
-                return "int";
-            case 1:
-                return "float";
-            case 2:
-                return "string";
-            case 3:
-                return "bool";
-            case 4:
-                return "void";
-            default:
-                return "error";
-        }
+            0 => "int",
+            1 => "double",
+            2 => "string",
+            3 => "bool",
+            4 => "char",
+            5 => "void",
+            6 => "class",
+            _ => "error"
+        };
     }
+
     private string showToken(IToken token)
     {
         return token.Text + "Fila, columna: (" + token.Line + "," + token.Column + ")";
     }
+
     private bool isMethod(IToken token)
     {
         return tabla.Buscar(token).isMethod;
     }
 
+    public bool isMultitype(string op)
+    {
+        return op switch
+        {
+            "==" => true,
+            "!=" => true,
+            _ => false
+        };
+    }
+
     public override object VisitProgramClassAST(AlphaParser.ProgramClassASTContext context)
     {
+        tabla.OpenScope();
+        try
+        {
+            // IToken Tok = (IToken) Visit(context.ident());
+            // tabla.Insertar(Tok, 6, false);
+            System.Diagnostics.Debug.WriteLine("visit ProgramClassAST");
+            if (context.@using().Length > 0)
+            {
+                foreach (var child in context.@using())
+                {
+                    Visit(child);
+                    System.Diagnostics.Debug.WriteLine("visita using: " + child.GetText());
+                }
+            }
+
+            if (context.varDecl().Length > 0)
+            {
+                int i = 0;
+                foreach (var child in context.varDecl())
+                {
+                    Visit(child);
+                    System.Diagnostics.Debug.WriteLine("visita varDecl" + i + ": " + child.GetText());
+                    i++;
+                }
+            }
+
+            if (context.classDecl().Length > 0)
+            {
+                int i = 0;
+                foreach (var child in context.classDecl())
+                {
+                    Visit(child);
+                    System.Diagnostics.Debug.WriteLine("visita classDecl " + i + ": " + child.GetText());
+                    i++;
+                }
+            }
+
+            if (context.methodDecl().Length > 0)
+            {
+                int i = 0;
+                foreach (var child in context.methodDecl())
+                {
+                    Visit(child);
+                    System.Diagnostics.Debug.WriteLine("visita methodDecl " + i + ": " + child.GetText());
+                    i++;
+                }
+            }
+        }
+        catch (Exception e)
+        {
+            System.Diagnostics.Debug.WriteLine("Error en visit ProgramClassAST" + e.Message);
+            Console.WriteLine(e);
+            throw;
+        }
+
+        tabla.CloseScope();
         return base.VisitProgramClassAST(context);
     }
 
@@ -165,11 +229,6 @@ public class AContextual: AlphaParserBaseVisitor<object>
         return base.VisitDesignatorFactorAST(context);
     }
 
-    public override object VisitNumberFactorAST(AlphaParser.NumberFactorASTContext context)
-    {
-        return base.VisitNumberFactorAST(context);
-    }
-
     public override object VisitCharFactorAST(AlphaParser.CharFactorASTContext context)
     {
         return base.VisitCharFactorAST(context);
@@ -225,34 +284,19 @@ public class AContextual: AlphaParserBaseVisitor<object>
         return base.VisitMulop(context);
     }
 
-    public override object VisitIdent(AlphaParser.IdentContext context)
+    public override object VisitIdentAST(AlphaParser.IdentASTContext context)
     {
-        return base.VisitIdent(context);
-        
+        System.Diagnostics.Debug.WriteLine("visit IdentAST :" + context.IDENTIFIER().GetText());
+        return context.IDENTIFIER();
     }
 
-    public override object VisitArray(AlphaParser.ArrayContext context)
+    public override object VisitArrayAST(AlphaParser.ArrayASTContext context)
     {
-        return base.VisitArray(context);
+        return base.VisitArrayAST(context);
     }
 
-    public override object Visit(IParseTree tree)
+    public override object VisitNumberFactorAST(AlphaParser.NumberFactorASTContext context)
     {
-        return base.Visit(tree);
-    }
-
-    public override object VisitChildren(IRuleNode node)
-    {
-        return base.VisitChildren(node);
-    }
-
-    public override object VisitTerminal(ITerminalNode node)
-    {
-        return base.VisitTerminal(node);
-    }
-
-    public override object VisitErrorNode(IErrorNode node)
-    {
-        return base.VisitErrorNode(node);
+        return base.VisitNumberFactorAST(context);
     }
 }

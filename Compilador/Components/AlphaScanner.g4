@@ -75,6 +75,10 @@ ARRAY: 'array';
 
 // Identifiers
 IDENTIFIER: LETTER (LETTER|DIGIT)*; // a O a1 O a1a
+
+// minusExp
+MINUSEXP : MINUS;
+
 fragment TRUE: 'true';
 fragment FALSE: 'false';
 fragment DIGIT: [0-9];
@@ -86,7 +90,7 @@ fragment MINUS: '-';
 
 // Whitespace and comments
 WS : [ \t\r\n]+ -> skip; // skip spaces, tabs, newlines
-COMMENT : '/*' ~[\r\n]* '*/' -> skip; // skip comments
+COMMENT : '/*' .*? ~[\r\n]* '*/' -> skip; // skip comments
 LINE_COMMENT : '//' .*? ( '\r' | '\n' ) -> skip;  // skip line comments
 
 

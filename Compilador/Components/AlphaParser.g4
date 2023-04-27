@@ -42,7 +42,7 @@ condFact : expr relop expr                                                      
 
 cast : LEFT_PAREN type RIGHT_PAREN                                                              #CastAST;
 
-expr : MINUS? cast? term (addop term)*                                                          #ExprAST;
+expr : MINUSEXP? cast? term (addop term)*                                                          #ExprAST;
 
 term : factor (mulop factor)*                                                                   #TermAST;
 
@@ -65,13 +65,13 @@ relop : EQUALS
         | LESS_THAN 
         | LESS_OR_EQUALS;
 
-addop : PLUS | MINUS;
+addop : PLUS | MINUSEXP;
 
 mulop : MULT | DIV | MOD;
 
-ident : IDENTIFIER;
+ident : IDENTIFIER                                                                                #IdentAST;
 
-array : LEFT_BRACKET IDENTIFIER? RIGHT_BRACKET;
+array : LEFT_BRACKET IDENTIFIER? RIGHT_BRACKET                                                    #ArrayAST;
 
 
 

@@ -289,16 +289,18 @@ public interface IAlphaParserVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <return>The visitor result.</return>
 	Result VisitMulop([NotNull] AlphaParser.MulopContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="AlphaParser.ident"/>.
+	/// Visit a parse tree produced by the <c>IdentAST</c>
+	/// labeled alternative in <see cref="AlphaParser.ident"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitIdent([NotNull] AlphaParser.IdentContext context);
+	Result VisitIdentAST([NotNull] AlphaParser.IdentASTContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="AlphaParser.array"/>.
+	/// Visit a parse tree produced by the <c>ArrayAST</c>
+	/// labeled alternative in <see cref="AlphaParser.array"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitArray([NotNull] AlphaParser.ArrayContext context);
+	Result VisitArrayAST([NotNull] AlphaParser.ArrayASTContext context);
 }
 } // namespace generated

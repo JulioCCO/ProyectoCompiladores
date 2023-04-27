@@ -44,7 +44,7 @@ public partial class AlphaParser : Parser {
 		PLUS=28, MULT=29, DIV=30, MOD=31, VAR=32, LEFT_PAREN=33, RIGHT_PAREN=34, 
 		LEFT_BRACE=35, RIGHT_BRACE=36, LEFT_BRACKET=37, RIGHT_BRACKET=38, NUMBER=39, 
 		CHAR_CONST=40, STRING_CONST=41, INT_CONST=42, DOUBLE_CONST=43, BOOL_CONST=44, 
-		ARRAY=45, IDENTIFIER=46, WS=47, COMMENT=48, LINE_COMMENT=49, MINUS=50;
+		ARRAY=45, IDENTIFIER=46, MINUSEXP=47, WS=48, COMMENT=49, LINE_COMMENT=50;
 	public const int
 		RULE_program = 0, RULE_using = 1, RULE_varDecl = 2, RULE_classDecl = 3, 
 		RULE_methodDecl = 4, RULE_formPars = 5, RULE_type = 6, RULE_statement = 7, 
@@ -73,8 +73,8 @@ public partial class AlphaParser : Parser {
 		"GREATER_OR_EQUALS", "LOGICAL_AND", "LOGICAL_OR", "PLUS", "MULT", "DIV", 
 		"MOD", "VAR", "LEFT_PAREN", "RIGHT_PAREN", "LEFT_BRACE", "RIGHT_BRACE", 
 		"LEFT_BRACKET", "RIGHT_BRACKET", "NUMBER", "CHAR_CONST", "STRING_CONST", 
-		"INT_CONST", "DOUBLE_CONST", "BOOL_CONST", "ARRAY", "IDENTIFIER", "WS", 
-		"COMMENT", "LINE_COMMENT", "MINUS"
+		"INT_CONST", "DOUBLE_CONST", "BOOL_CONST", "ARRAY", "IDENTIFIER", "MINUSEXP", 
+		"WS", "COMMENT", "LINE_COMMENT"
 	};
 	public static readonly IVocabulary DefaultVocabulary = new Vocabulary(_LiteralNames, _SymbolicNames);
 
@@ -901,7 +901,7 @@ public partial class AlphaParser : Parser {
 					State = 124;
 					ErrorHandler.Sync(this);
 					_la = TokenStream.LA(1);
-					if ((((_la) & ~0x3f) == 0 && ((1L << _la) & 1230911857229840L) != 0)) {
+					if ((((_la) & ~0x3f) == 0 && ((1L << _la) & 245749438742544L) != 0)) {
 						{
 						State = 123;
 						actPars();
@@ -974,7 +974,7 @@ public partial class AlphaParser : Parser {
 				State = 147;
 				ErrorHandler.Sync(this);
 				_la = TokenStream.LA(1);
-				if ((((_la) & ~0x3f) == 0 && ((1L << _la) & 1230911857229840L) != 0)) {
+				if ((((_la) & ~0x3f) == 0 && ((1L << _la) & 245749438742544L) != 0)) {
 					{
 					State = 146;
 					condition();
@@ -1034,7 +1034,7 @@ public partial class AlphaParser : Parser {
 				State = 166;
 				ErrorHandler.Sync(this);
 				_la = TokenStream.LA(1);
-				if ((((_la) & ~0x3f) == 0 && ((1L << _la) & 1230911857229840L) != 0)) {
+				if ((((_la) & ~0x3f) == 0 && ((1L << _la) & 245749438742544L) != 0)) {
 					{
 					State = 165;
 					expr();
@@ -1562,7 +1562,7 @@ public partial class AlphaParser : Parser {
 		[System.Diagnostics.DebuggerNonUserCode] public TermContext term(int i) {
 			return GetRuleContext<TermContext>(i);
 		}
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode MINUS() { return GetToken(AlphaParser.MINUS, 0); }
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode MINUSEXP() { return GetToken(AlphaParser.MINUSEXP, 0); }
 		[System.Diagnostics.DebuggerNonUserCode] public CastContext cast() {
 			return GetRuleContext<CastContext>(0);
 		}
@@ -1593,10 +1593,10 @@ public partial class AlphaParser : Parser {
 			State = 232;
 			ErrorHandler.Sync(this);
 			_la = TokenStream.LA(1);
-			if (_la==MINUS) {
+			if (_la==MINUSEXP) {
 				{
 				State = 231;
-				Match(MINUS);
+				Match(MINUSEXP);
 				}
 			}
 
@@ -1615,7 +1615,7 @@ public partial class AlphaParser : Parser {
 			State = 243;
 			ErrorHandler.Sync(this);
 			_la = TokenStream.LA(1);
-			while (_la==PLUS || _la==MINUS) {
+			while (_la==PLUS || _la==MINUSEXP) {
 				{
 				{
 				State = 238;
@@ -1857,7 +1857,7 @@ public partial class AlphaParser : Parser {
 					State = 258;
 					ErrorHandler.Sync(this);
 					_la = TokenStream.LA(1);
-					if ((((_la) & ~0x3f) == 0 && ((1L << _la) & 1230911857229840L) != 0)) {
+					if ((((_la) & ~0x3f) == 0 && ((1L << _la) & 245749438742544L) != 0)) {
 						{
 						State = 257;
 						actPars();
@@ -2112,7 +2112,7 @@ public partial class AlphaParser : Parser {
 
 	public partial class AddopContext : ParserRuleContext {
 		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode PLUS() { return GetToken(AlphaParser.PLUS, 0); }
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode MINUS() { return GetToken(AlphaParser.MINUS, 0); }
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode MINUSEXP() { return GetToken(AlphaParser.MINUSEXP, 0); }
 		public AddopContext(ParserRuleContext parent, int invokingState)
 			: base(parent, invokingState)
 		{
@@ -2136,7 +2136,7 @@ public partial class AlphaParser : Parser {
 			{
 			State = 291;
 			_la = TokenStream.LA(1);
-			if ( !(_la==PLUS || _la==MINUS) ) {
+			if ( !(_la==PLUS || _la==MINUSEXP) ) {
 			ErrorHandler.RecoverInline(this);
 			}
 			else {
@@ -2204,16 +2204,24 @@ public partial class AlphaParser : Parser {
 	}
 
 	public partial class IdentContext : ParserRuleContext {
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode IDENTIFIER() { return GetToken(AlphaParser.IDENTIFIER, 0); }
 		public IdentContext(ParserRuleContext parent, int invokingState)
 			: base(parent, invokingState)
 		{
 		}
 		public override int RuleIndex { get { return RULE_ident; } }
+	 
+		public IdentContext() { }
+		public virtual void CopyFrom(IdentContext context) {
+			base.CopyFrom(context);
+		}
+	}
+	public partial class IdentASTContext : IdentContext {
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode IDENTIFIER() { return GetToken(AlphaParser.IDENTIFIER, 0); }
+		public IdentASTContext(IdentContext context) { CopyFrom(context); }
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
 			IAlphaParserVisitor<TResult> typedVisitor = visitor as IAlphaParserVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitIdent(this);
+			if (typedVisitor != null) return typedVisitor.VisitIdentAST(this);
 			else return visitor.VisitChildren(this);
 		}
 	}
@@ -2223,6 +2231,7 @@ public partial class AlphaParser : Parser {
 		IdentContext _localctx = new IdentContext(Context, State);
 		EnterRule(_localctx, 42, RULE_ident);
 		try {
+			_localctx = new IdentASTContext(_localctx);
 			EnterOuterAlt(_localctx, 1);
 			{
 			State = 295;
@@ -2241,18 +2250,26 @@ public partial class AlphaParser : Parser {
 	}
 
 	public partial class ArrayContext : ParserRuleContext {
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode LEFT_BRACKET() { return GetToken(AlphaParser.LEFT_BRACKET, 0); }
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode RIGHT_BRACKET() { return GetToken(AlphaParser.RIGHT_BRACKET, 0); }
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode IDENTIFIER() { return GetToken(AlphaParser.IDENTIFIER, 0); }
 		public ArrayContext(ParserRuleContext parent, int invokingState)
 			: base(parent, invokingState)
 		{
 		}
 		public override int RuleIndex { get { return RULE_array; } }
+	 
+		public ArrayContext() { }
+		public virtual void CopyFrom(ArrayContext context) {
+			base.CopyFrom(context);
+		}
+	}
+	public partial class ArrayASTContext : ArrayContext {
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode LEFT_BRACKET() { return GetToken(AlphaParser.LEFT_BRACKET, 0); }
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode RIGHT_BRACKET() { return GetToken(AlphaParser.RIGHT_BRACKET, 0); }
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode IDENTIFIER() { return GetToken(AlphaParser.IDENTIFIER, 0); }
+		public ArrayASTContext(ArrayContext context) { CopyFrom(context); }
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
 			IAlphaParserVisitor<TResult> typedVisitor = visitor as IAlphaParserVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitArray(this);
+			if (typedVisitor != null) return typedVisitor.VisitArrayAST(this);
 			else return visitor.VisitChildren(this);
 		}
 	}
@@ -2263,6 +2280,7 @@ public partial class AlphaParser : Parser {
 		EnterRule(_localctx, 44, RULE_array);
 		int _la;
 		try {
+			_localctx = new ArrayASTContext(_localctx);
 			EnterOuterAlt(_localctx, 1);
 			{
 			State = 297;
@@ -2316,7 +2334,7 @@ public partial class AlphaParser : Parser {
 		17,1,17,5,17,285,8,17,10,17,12,17,288,9,17,1,18,1,18,1,19,1,19,1,20,1,
 		20,1,21,1,21,1,22,1,22,3,22,300,8,22,1,22,1,22,1,22,0,0,23,0,2,4,6,8,10,
 		12,14,16,18,20,22,24,26,28,30,32,34,36,38,40,42,44,0,4,2,0,39,39,41,41,
-		1,0,20,25,2,0,28,28,50,50,1,0,29,31,330,0,49,1,0,0,0,2,66,1,0,0,0,4,70,
+		1,0,20,25,2,0,28,28,47,47,1,0,29,31,330,0,49,1,0,0,0,2,66,1,0,0,0,4,70,
 		1,0,0,0,6,81,1,0,0,0,8,94,1,0,0,0,10,104,1,0,0,0,12,115,1,0,0,0,14,187,
 		1,0,0,0,16,189,1,0,0,0,18,199,1,0,0,0,20,207,1,0,0,0,22,215,1,0,0,0,24,
 		223,1,0,0,0,26,227,1,0,0,0,28,232,1,0,0,0,30,246,1,0,0,0,32,275,1,0,0,
@@ -2370,7 +2388,7 @@ public partial class AlphaParser : Parser {
 		1,0,0,0,219,222,1,0,0,0,220,218,1,0,0,0,220,221,1,0,0,0,221,23,1,0,0,0,
 		222,220,1,0,0,0,223,224,3,28,14,0,224,225,3,36,18,0,225,226,3,28,14,0,
 		226,25,1,0,0,0,227,228,5,33,0,0,228,229,3,12,6,0,229,230,5,34,0,0,230,
-		27,1,0,0,0,231,233,5,50,0,0,232,231,1,0,0,0,232,233,1,0,0,0,233,235,1,
+		27,1,0,0,0,231,233,5,47,0,0,232,231,1,0,0,0,232,233,1,0,0,0,233,235,1,
 		0,0,0,234,236,3,26,13,0,235,234,1,0,0,0,235,236,1,0,0,0,236,237,1,0,0,
 		0,237,243,3,30,15,0,238,239,3,38,19,0,239,240,3,30,15,0,240,242,1,0,0,
 		0,241,238,1,0,0,0,242,245,1,0,0,0,243,241,1,0,0,0,243,244,1,0,0,0,244,

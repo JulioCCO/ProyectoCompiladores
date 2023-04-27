@@ -14,8 +14,8 @@ public class TablaSimbolos
     public class Ident
     {
         public IToken token;
-        public int nivel;
         public int tipo;
+        public int nivel;
         public int valor;
         public bool isMethod;
         
@@ -42,14 +42,14 @@ public class TablaSimbolos
     public void Insertar(IToken id, int tp, bool isM)
     {
         Ident i = new Ident(id, tp, isM);
-        tabla.AddLast(id);
+        tabla.AddFirst(id);
     }
     
     public Ident Buscar(IToken id)
     {
         foreach (Ident i in tabla)
         {
-            if (i.token.Text == id.Text)
+            if (i.token.Text.Equals(id.Text))
                 return i;
         }
         return null;
@@ -62,17 +62,7 @@ public class TablaSimbolos
     
     public void CloseScope()
     {
-        // hay que sacar todos los ident del nivel que se está cerrando
-        LinkedListNode<object> current = tabla.First;
-        while (current != null)
-        {
-            LinkedListNode<object> next = current.Next;
-            if (((Ident)current.Value).nivel == nivelActual)
-            {
-                tabla.Remove(current);
-            }
-            current = next;
-        }
+        tabla.Remove(new Func<Ident, bool>(n => n.nivel == nivelActual));
         nivelActual--;
     }
     
