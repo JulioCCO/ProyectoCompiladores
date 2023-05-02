@@ -754,6 +754,16 @@ public partial class AlphaParser : Parser {
 			else return visitor.VisitChildren(this);
 		}
 	}
+	public partial class SemicolonStatementASTContext : StatementContext {
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode SEMICOLON() { return GetToken(AlphaParser.SEMICOLON, 0); }
+		public SemicolonStatementASTContext(StatementContext context) { CopyFrom(context); }
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IAlphaParserVisitor<TResult> typedVisitor = visitor as IAlphaParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitSemicolonStatementAST(this);
+			else return visitor.VisitChildren(this);
+		}
+	}
 	public partial class ReadStatementASTContext : StatementContext {
 		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode READ() { return GetToken(AlphaParser.READ, 0); }
 		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode LEFT_PAREN() { return GetToken(AlphaParser.LEFT_PAREN, 0); }
@@ -818,7 +828,6 @@ public partial class AlphaParser : Parser {
 		[System.Diagnostics.DebuggerNonUserCode] public BlockContext block() {
 			return GetRuleContext<BlockContext>(0);
 		}
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode SEMICOLON() { return GetToken(AlphaParser.SEMICOLON, 0); }
 		public BlockStatementASTContext(StatementContext context) { CopyFrom(context); }
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
@@ -1105,7 +1114,7 @@ public partial class AlphaParser : Parser {
 				}
 				break;
 			case SEMICOLON:
-				_localctx = new BlockStatementASTContext(_localctx);
+				_localctx = new SemicolonStatementASTContext(_localctx);
 				EnterOuterAlt(_localctx, 10);
 				{
 				State = 186;

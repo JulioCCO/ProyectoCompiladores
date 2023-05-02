@@ -10,26 +10,53 @@ public class TablaSimbolos
     LinkedList<Object> tabla;
 
     private static int nivelActual;
+    public enum DataType
+    {
+        Method,
+        Variable,
+        Array,
+        Class,
+        If,
+        Else,
+        For,
+        While,
+        Using,
+        Error,
+
+    }
+    
+    public enum BasicType
+    {
+        Int,
+        Double,
+        String,
+        Boolean,
+        Char,
+        Void,
+        Null,
+        Error,
+    }
 
     public class Ident
     {
         public IToken token;
-        public int tipo;
-        public int nivel;
-        public int valor;
-        public bool isMethod;
+        public BasicType tipo;
+        public int nivelGlobal;
+        public int nivelLocal;
+        public DataType tipoDato;
         
-        public Ident(IToken t, int tp, bool isM)
+        public Ident(IToken t, BasicType BasicType, DataType tipoDatos)
         {
             token = t;
-            nivel = nivelActual;
-            tipo = tp;
-            valor = 0;
-            isMethod = isM;
+            nivelGlobal = nivelActual;
+            tipo = BasicType;
+            nivelLocal = -1;
+            tipoDato = tipoDatos;
         }
-        public void setValor(int v)
+        
+        public void setNivelLocal(int v)
         {
-            valor = v;
+            nivelLocal = v;
         }
     }
     
@@ -39,10 +66,11 @@ public class TablaSimbolos
         nivelActual = -1;
     }
     
-    public void Insertar(IToken id, int tp, bool isM)
+    public void Insertar(IToken id, BasicType tp, DataType dt,int  v)
     {
-        Ident i = new Ident(id, tp, isM);
-        tabla.AddFirst(id);
+        Ident i = new Ident(id, tp, dt);
+        i.setNivelLocal(v);
+        tabla.AddFirst(i);
     }
     
     public Ident Buscar(IToken id)
@@ -62,19 +90,23 @@ public class TablaSimbolos
     
     public void CloseScope()
     {
-        tabla.Remove(new Func<Ident, bool>(n => n.nivel == nivelActual));
+        tabla.Remove(new Func<Ident, bool>(n => n.nivelGlobal == nivelActual));
         nivelActual--;
     }
     
     public void Imprimir()
     {
-        Console.WriteLine("----- INICIO TABLA ------");
+        System.Diagnostics.Debug.WriteLine("----- INICIO TABLA ------");
         for (int i = 0; i < tabla.Count; i++)
         {
             IToken s = ((Ident)tabla.ElementAt(i)).token;
-            Console.WriteLine("Nombre: " + s.Text + " - " + ((Ident)tabla.ElementAt(i)).nivel + " - " + ((Ident)tabla.ElementAt(i)).tipo);
+            System.Diagnostics.Debug.WriteLine("Nombre: " + s.Text + " - Nivel global: " +
+                                               ((Ident)tabla.ElementAt(i)).nivelGlobal
+                                               + " - Tipo basico " + ((Ident)tabla.ElementAt(i)).tipo
+                                               + " - Tipo dato: " + ((Ident)tabla.ElementAt(i)).tipoDato
+                                               + " - Nivel: " + ((Ident)tabla.ElementAt(i)).nivelLocal);
         }
-        Console.WriteLine("----- FIN TABLA ------");
+        System.Diagnostics.Debug.WriteLine("----- FIN TABLA ------");
     }
     
 }

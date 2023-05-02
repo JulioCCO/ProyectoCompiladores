@@ -28,7 +28,7 @@ statement : designator (ASSIGN expr | LEFT_PAREN actPars? RIGHT_PAREN | INC | DE
           | READ LEFT_PAREN designator RIGHT_PAREN SEMICOLON                                    #ReadStatementAST   
           | WRITE LEFT_PAREN expr (COMMA (NUMBER|STRING_CONST))? RIGHT_PAREN SEMICOLON          #WriteStatementAST
           | block                                                                               #BlockStatementAST
-          | SEMICOLON                                                                           #BlockStatementAST;
+          | SEMICOLON                                                                           #SemicolonStatementAST;
           
 block : LEFT_BRACE (varDecl | statement)* RIGHT_BRACE                                           #BlockAST;
 
@@ -42,7 +42,7 @@ condFact : expr relop expr                                                      
 
 cast : LEFT_PAREN type RIGHT_PAREN                                                              #CastAST;
 
-expr : MINUSEXP? cast? term (addop term)*                                                          #ExprAST;
+expr : MINUSEXP? cast? term (addop term)*                                                       #ExprAST;
 
 term : factor (mulop factor)*                                                                   #TermAST;
 

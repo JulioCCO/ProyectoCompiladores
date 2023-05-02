@@ -212,6 +212,17 @@ public partial class AlphaParserBaseVisitor<Result> : AbstractParseTreeVisitor<R
 	/// <return>The visitor result.</return>
 	public virtual Result VisitBlockStatementAST([NotNull] AlphaParser.BlockStatementASTContext context) { return VisitChildren(context); }
 	/// <summary>
+	/// Visit a parse tree produced by the <c>SemicolonStatementAST</c>
+	/// labeled alternative in <see cref="AlphaParser.statement"/>.
+	/// <para>
+	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
+	/// on <paramref name="context"/>.
+	/// </para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	public virtual Result VisitSemicolonStatementAST([NotNull] AlphaParser.SemicolonStatementASTContext context) { return VisitChildren(context); }
+	/// <summary>
 	/// Visit a parse tree produced by the <c>BlockAST</c>
 	/// labeled alternative in <see cref="AlphaParser.block"/>.
 	/// <para>

@@ -1,3 +1,5 @@
+using Data;
+
 class AllProds 
 {
   int nPoints;
@@ -12,39 +14,42 @@ class AllProds
   Point[] pArr;
   boolean test1;
 
-  void WriteError ()
+  void WriteError (int julio)
   {
-    int i;
-    boolean test2;
+    int b;
+    boolean test1;
 
    exclaim = 'a';
    caracterEspecial = 'a';
 
    /* imprimir mensaje error */
-   i = 0;
-   i = "a"; //error de caracteres invalidos
+   b = 0;
+   b = "a"; //error de caracteres invalidos
    test1 = true;
 
-   while(i<len(msg)){write(msg[i]);i++;}
+   while(b<len(msg)){write(msg[b]);b++; int cesar;}
 
-   for(i;i<len(msg);i++;){write(msg[i]);}
+   for(j;j<len(msg);j++;){write(msg[j]);}
 
    write(exclaim);
 
-   while (i > 0) {
-      i--;
-      if (i < 3 && test1==true) break;	
-      write(msg[i], 2);
+   while (b > 0) {
+      b--;
+      if (b < 3 && test1==true) break;	
+      write(msg[b], 2);
    }
   }
-  int GetX (Point p) { return p.x.Z[3+4]; }
+  int GetX (Point p1, int x, char ju) { return p1.x.Z[3+4]; }
 
 
-  void SetX (int x, Point p) {
-    if (x > -10 && x <= 9 ||
-        x == 4*3/4%4+12+-11*(2147483647/(-2147483647+-1)%2) ) 
-      p.x = x;
-    else WriteError();
+  void SetX (int x, Point p2) {
+    if (x > -10 && x <= 9 || x == 4*3/4%4+12+-11*(2147483647/(-2147483647+-1)%2)){
+      p2.x = x;
+	  int camino; 
+    }
+    else {
+      WriteError();
+    }
   }
 
   void SetMsg () {
@@ -59,14 +64,14 @@ class AllProds
 
   void SetPoints ()
   {
-    int i;
+    int c;
     pArr = Point[nPoints];
-    i = 0;
-    while (i < len(pArr)) {
-      pArr[i] = new Point;
-      pArr[i].x = i;
-      pArr[i].y = i;
-      i++;
+    c = 0;
+    while (c < len(pArr)) {
+      pArr[c] = new Point;
+      pArr[c].x = c;
+      pArr[c].y = c;
+      c++;
     }
   }
 
@@ -78,13 +83,13 @@ class AllProds
 
   void Main ()
   {
-    int i;
+    int a;
     SetMsg();
     SetPoints();
-    read(i);
-    if (i < nPoints) {
-      write(GetX(pArr[i]));
-      write(pArr[i].y);
+    read(a);
+    if (a < nPoints) {
+      write(GetX(pArr[a]));
+      write(pArr[a].y);
     }
     else
       WriteError();
@@ -96,12 +101,6 @@ class AllProds
 }
 // ANOTAR SUS COMENTARIOS EN MAYUSCULA Y NO QUITAR NADA DE LO QUE VIENE EN EL ARCHIVO SINO SOLO COMENTARLO PERO A LA VEZ COLOCAR EL EQUIVALENTE CORRECTO
 // CUALQUIER COSA QUE SEA ERROR MIO AL MOMENTO DE HACER LA PRUEBA, FAVOR CORREGIRLO Y ANOTARLO
-
-
-
-
-
-
 
 
 

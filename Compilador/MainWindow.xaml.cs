@@ -181,9 +181,7 @@ namespace Compilador
                         context.Visit(tree);
                         // Crear una instancia de la nueva ventana
                         consola.SalidaConsola.Text =
-                            "Compilación exitosa\n\n" + tree.ToStringTree(parser) + "\n\n" +"Path del archivo:" + txtPathPrincipal + "\n\n" +
-                                                           "Visitando el arbol: " + context.Visit(tree) + " \n";
-
+                            "Compilación exitosa\n\n" + tree.ToStringTree(parser) + "\n\n" +"Path del archivo:" + txtPathPrincipal + "\n\n";
                         // Mostrar la ventana
                         consola.Show();
                     }

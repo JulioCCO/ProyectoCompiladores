@@ -145,6 +145,13 @@ public interface IAlphaParserVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <return>The visitor result.</return>
 	Result VisitBlockStatementAST([NotNull] AlphaParser.BlockStatementASTContext context);
 	/// <summary>
+	/// Visit a parse tree produced by the <c>SemicolonStatementAST</c>
+	/// labeled alternative in <see cref="AlphaParser.statement"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitSemicolonStatementAST([NotNull] AlphaParser.SemicolonStatementASTContext context);
+	/// <summary>
 	/// Visit a parse tree produced by the <c>BlockAST</c>
 	/// labeled alternative in <see cref="AlphaParser.block"/>.
 	/// </summary>
