@@ -59,15 +59,6 @@ C:\Proyecto Compi\ProyectoCompiladores\Compilador\obj\Debug\net7.0-windows\refin
 C:\Proyecto Compi\ProyectoCompiladores\Compilador\obj\Debug\net7.0-windows\Compilador.pdb
 C:\Proyecto Compi\ProyectoCompiladores\Compilador\obj\Debug\net7.0-windows\Compilador.genruntimeconfig.cache
 C:\Proyecto Compi\ProyectoCompiladores\Compilador\obj\Debug\net7.0-windows\ref\Compilador.dll
-C:\Proyecto Compi\ProyectoCompiladores\Compilador\bin\Debug\net7.0-windows\Antlr4.Runtime.dll
-C:\Proyecto Compi\ProyectoCompiladores\Compilador\obj\Debug\net7.0-windows\Scanner.cs
-C:\Proyecto Compi\ProyectoCompiladores\Compilador\obj\Debug\net7.0-windows\ParserLexer.cs
-C:\Proyecto Compi\ProyectoCompiladores\Compilador\obj\Debug\net7.0-windows\ParserParser.cs
-C:\Proyecto Compi\ProyectoCompiladores\Compilador\obj\Debug\net7.0-windows\ParserListener.cs
-C:\Proyecto Compi\ProyectoCompiladores\Compilador\obj\Debug\net7.0-windows\ParserBaseListener.cs
-C:\Proyecto Compi\ProyectoCompiladores\Compilador\obj\Debug\net7.0-windows\ParserVisitor.cs
-C:\Proyecto Compi\ProyectoCompiladores\Compilador\obj\Debug\net7.0-windows\ParserBaseVisitor.cs
-C:\Proyecto Compi\ProyectoCompiladores\Compilador\obj\Debug\net7.0-windows\Compilador.csproj.Antlr4GeneratedCodeFileListAbsolute.txt
 C:\Proyecto Compi\ProyectoCompiladores\Compilador\obj\Debug\net7.0-windows\Compilador.csproj.CopyComplete
 E:\Compi\Compilador\Compilador\obj\Debug\net7.0-windows\Compilador.csproj.CopyComplete
 E:\Compi\Compilador\Compilador\obj\Debug\net7.0-windows\Compilador_Content.g.cs
@@ -111,3 +102,13 @@ E:\Compi\Compilador\Compilador\obj\Debug\net7.0-windows\Compilador_MarkupCompile
 C:\Users\Josue\Escritorio\TEC2\Semestre VIII\Compi\ProyectoC#\ProyectoCompiladores\Compilador\obj\Debug\net7.0-windows\Consola.g.cs
 C:\Users\Josue\Escritorio\TEC2\Semestre VIII\Compi\ProyectoC#\ProyectoCompiladores\Compilador\obj\Debug\net7.0-windows\Compilador_MarkupCompile.lref
 C:\Users\Josue\Escritorio\TEC2\Semestre VIII\Compi\ProyectoC#\ProyectoCompiladores\Compilador\obj\Debug\net7.0-windows\Consola.baml
+C:\Proyecto Compi\ProyectoCompiladores\Compilador\bin\Debug\net7.0-windows\Antlr3.Runtime.dll
+C:\Proyecto Compi\ProyectoCompiladores\Compilador\bin\Debug\net7.0-windows\Antlr4.Runtime.Standard.dll
+C:\Proyecto Compi\ProyectoCompiladores\Compilador\bin\Debug\net7.0-windows\Antlr4BuildTasks.dll
+C:\Proyecto Compi\ProyectoCompiladores\Compilador\bin\Debug\net7.0-windows\Microsoft.Build.Framework.dll
+C:\Proyecto Compi\ProyectoCompiladores\Compilador\bin\Debug\net7.0-windows\Microsoft.Build.Utilities.Core.dll
+C:\Proyecto Compi\ProyectoCompiladores\Compilador\bin\Debug\net7.0-windows\Microsoft.NET.StringTools.dll
+C:\Proyecto Compi\ProyectoCompiladores\Compilador\obj\Debug\net7.0-windows\Consola.g.cs
+C:\Proyecto Compi\ProyectoCompiladores\Compilador\obj\Debug\net7.0-windows\Compilador_Content.g.cs
+C:\Proyecto Compi\ProyectoCompiladores\Compilador\obj\Debug\net7.0-windows\Compilador_MarkupCompile.lref
+C:\Proyecto Compi\ProyectoCompiladores\Compilador\obj\Debug\net7.0-windows\Consola.baml

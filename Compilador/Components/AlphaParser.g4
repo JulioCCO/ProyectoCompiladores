@@ -50,7 +50,7 @@ factor : designator (LEFT_PAREN actPars? RIGHT_PAREN)?                          
        | NUMBER                                                                                 #NumberFactorAST
        | CHAR_CONST                                                                             #CharFactorAST
        | STRING_CONST                                                                           #StringFactorAST
-       | INT_CONST                                                                              #IntFactorAST   
+       | (MINUS)? INT_CONST                                                                              #IntFactorAST   
        | DOUBLE_CONST                                                                           #DoubleFactorAST    
        | BOOL_CONST                                                                             #BoolFactorAST
        | NEW ident                                                                              #NewFactorAST
