@@ -5,13 +5,15 @@ class AllProds
   int nPoints;
   char exclaim;
   char caracterEspecial;
+  Point estoP;
 
   class Point {
     int x, y; 
   }
-    
+  
+  
   Point point;
-
+  
   char[] msg;
   Point[] pArr;
   boolean test1;
@@ -51,8 +53,10 @@ class AllProds
 	  int camino; 
     }
     else {
+      
       WriteError();
     }
+    x = 4*3/4%4+12;
   }
 
   void SetMsg () {
@@ -105,6 +109,8 @@ class AllProds
 
 //ANOTAR SUS COMENTARIOS EN MAYUSCULA Y NO QUITAR NADA DE LO QUE VIENE EN EL ARCHIVO SINO SOLO COMENTARLO PERO A LA VEZ COLOCAR EL EQUIVALENTE CORRECTO
 //CUALQUIER COSA QUE SEA ERROR MIO AL MOMENTO DE HACER LA PRUEBA, FAVOR CORREGIRLO Y ANOTARLO
+
+
 
 
 

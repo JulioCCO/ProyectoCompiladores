@@ -142,7 +142,7 @@ public class AContextual : AlphaParserBaseVisitor<object>
     public override object? VisitClassDeclAST(AlphaParser.ClassDeclASTContext context)
     {
         System.Diagnostics.Debug.WriteLine("visit ClassDeclAST: " + context.ident().GetText());
-        
+
         IToken tok = (IToken)Visit(context.ident());
         ClassType cls = new ClassType(tok, TablaSimbolos.nivelActual);
         tabla.Insertar(cls);
@@ -165,15 +165,17 @@ public class AContextual : AlphaParserBaseVisitor<object>
     public override object? VisitMethodDeclAST(AlphaParser.MethodDeclASTContext context)
     {
         System.Diagnostics.Debug.WriteLine("visit MethodDeclAST: " + context.ident().GetText());
-        
+
         LinkedList<Type> parametros = new LinkedList<Type>();
         if (context.formPars() != null)
         {
+            tabla.OpenScope();
             parametros = (LinkedList<Type>)Visit(context.formPars());
+            tabla.CloseScope();
         }
-        
+
         IToken tok = (IToken)Visit(context.ident());
-        
+
         if (context.type() != null) // Si tiene tipo 
         {
             if (BasicType.isBasicType(context.type().GetText()) == true) // si es tipo basico
@@ -185,7 +187,8 @@ public class AContextual : AlphaParserBaseVisitor<object>
                     tabla.Insertar(method);
                 }
             }
-            else if (tabla.Buscar(context.type().GetText()) != null && tabla.Buscar(context.type().GetText()) is ClassType) // si es tipo compuesto
+            else if (tabla.Buscar(context.type().GetText()) != null &&
+                     tabla.Buscar(context.type().GetText()) is ClassType) // si es tipo compuesto
             {
                 MethodType method = new MethodType(tok, TablaSimbolos.nivelActual, parametros.Count,
                     context.type().GetText(), parametros);
@@ -193,7 +196,8 @@ public class AContextual : AlphaParserBaseVisitor<object>
             }
             else // error
             {
-                System.Diagnostics.Debug.WriteLine("Error en visit MethodDeclAST, tipo recibido: " + context.type().GetText());
+                System.Diagnostics.Debug.WriteLine("Error en visit MethodDeclAST, tipo recibido: " +
+                                                   context.type().GetText());
             }
         }
         else if (context.VOID() != null) // si no tiene tipo, es void
@@ -203,8 +207,10 @@ public class AContextual : AlphaParserBaseVisitor<object>
         }
         else // error
         {
-            System.Diagnostics.Debug.WriteLine("Error en visit MethodDeclAST, tipo recibido: " + context.type().GetText());
+            System.Diagnostics.Debug.WriteLine("Error en visit MethodDeclAST, tipo recibido: " +
+                                               context.type().GetText());
         }
+
         tabla.OpenScope();
         Visit(context.block());
         tabla.CloseScope();
@@ -264,6 +270,7 @@ public class AContextual : AlphaParserBaseVisitor<object>
                                                    context.type(i).GetText());
             }
         }
+
         return parametros;
     }
 
@@ -287,13 +294,17 @@ public class AContextual : AlphaParserBaseVisitor<object>
     public override object? VisitAssignStatementAST(AlphaParser.AssignStatementASTContext context)
     {
         Visit(context.designator());
-        if (context.expr() != null)
+        if (context.expr() != null) //  si es una asignacion 
         {
             Visit(context.expr());
         }
-        else if (context.actPars() != null)
+        else if (context.actPars() != null) // si es una llamada a metodo
         {
             Visit(context.actPars());
+        }
+        else if (context.INC() != null || context.DEC() != null) // si es un incremento o decremento
+        {
+            // TODO: revisar si es necesario hacer algo
         }
 
         return null;
@@ -315,6 +326,7 @@ public class AContextual : AlphaParserBaseVisitor<object>
             Visit(context.statement(1));
             tabla.CloseScope();
         }
+
         return null;
     }
 
@@ -424,6 +436,7 @@ public class AContextual : AlphaParserBaseVisitor<object>
                 Visit(child);
             }
         }
+
         return null;
     }
 
@@ -432,15 +445,21 @@ public class AContextual : AlphaParserBaseVisitor<object>
      */
     public override object? VisitActParsAST(AlphaParser.ActParsASTContext context)
     {
+        // ocupo retornar la cantidad de parametros que tiene el metodo
+        // y el tipo de cada uno de ellos
+        
+        Dictionary<string, string> actPars = new Dictionary<string, string>();
+        
         Visit(context.expr(0));
         if (context.expr().Length > 1)
         {
             for (int i = 1; i < context.expr().Length; i++)
             {
+                
                 Visit(context.expr(i));
             }
         }
-
+        
         return null;
     }
 
