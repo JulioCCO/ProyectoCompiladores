@@ -215,13 +215,6 @@ public interface IAlphaParserVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <return>The visitor result.</return>
 	Result VisitDesignatorFactorAST([NotNull] AlphaParser.DesignatorFactorASTContext context);
 	/// <summary>
-	/// Visit a parse tree produced by the <c>NumberFactorAST</c>
-	/// labeled alternative in <see cref="AlphaParser.factor"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitNumberFactorAST([NotNull] AlphaParser.NumberFactorASTContext context);
-	/// <summary>
 	/// Visit a parse tree produced by the <c>CharFactorAST</c>
 	/// labeled alternative in <see cref="AlphaParser.factor"/>.
 	/// </summary>

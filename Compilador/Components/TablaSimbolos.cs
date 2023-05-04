@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using Antlr4.Runtime;
+using Compilador.Components.TypesManager;
+using Type = Compilador.Components.TypesManager.Type;
 
 namespace Compilador.Components;
 
@@ -9,75 +11,25 @@ public class TablaSimbolos
 {
     LinkedList<Object> tabla;
 
-    private static int nivelActual;
-    public enum DataType
-    {
-        Method,
-        Variable,
-        Array,
-        Class,
-        If,
-        Else,
-        For,
-        While,
-        Using,
-        Error,
-
-    }
-    
-    public enum BasicType
-    {
-        Int,
-        Double,
-        String,
-        Boolean,
-        Char,
-        Void,
-        Null,
-        Error,
-    }
-
-    public class Ident
-    {
-        public IToken token;
-        public BasicType tipo;
-        public int nivelGlobal;
-        public int nivelLocal;
-        public DataType tipoDato;
-        
-        public Ident(IToken t, BasicType BasicType, DataType tipoDatos)
-        {
-            token = t;
-            nivelGlobal = nivelActual;
-            tipo = BasicType;
-            nivelLocal = -1;
-            tipoDato = tipoDatos;
-        }
-        
-        public void setNivelLocal(int v)
-        {
-            nivelLocal = v;
-        }
-    }
+    public static int nivelActual;
     
     public TablaSimbolos()
     {
-        tabla = new LinkedList<object>();
+        tabla = new LinkedList<Object>();
         nivelActual = -1;
     }
     
-    public void Insertar(IToken id, BasicType tp, DataType dt,int  v)
+    public void Insertar(Type t)
     {
-        Ident i = new Ident(id, tp, dt);
-        i.setNivelLocal(v);
-        tabla.AddFirst(i);
+        tabla.AddLast(t);
     }
-    
-    public Ident Buscar(IToken id)
+
+    public Type? Buscar(string id)
     {
-        foreach (Ident i in tabla)
+        foreach (Type? i in tabla)
         {
-            if (i.token.Text.Equals(id.Text))
+            //if (i.token.Text.Equals(id) && i.nivel <= nivelActual)
+            if (i.token.Text.Equals(id))
                 return i;
         }
         return null;
@@ -90,7 +42,7 @@ public class TablaSimbolos
     
     public void CloseScope()
     {
-        tabla.Remove(new Func<Ident, bool>(n => n.nivelGlobal == nivelActual));
+        tabla.Remove(new Func<Type, bool>(n => n.nivel == nivelActual));
         nivelActual--;
     }
     
@@ -99,13 +51,49 @@ public class TablaSimbolos
         System.Diagnostics.Debug.WriteLine("----- INICIO TABLA ------");
         for (int i = 0; i < tabla.Count; i++)
         {
-            IToken s = ((Ident)tabla.ElementAt(i)).token;
-            System.Diagnostics.Debug.WriteLine("Nombre: " + s.Text + " - Nivel global: " +
-                                               ((Ident)tabla.ElementAt(i)).nivelGlobal
-                                               + " - Tipo basico " + ((Ident)tabla.ElementAt(i)).tipo
-                                               + " - Tipo dato: " + ((Ident)tabla.ElementAt(i)).tipoDato
-                                               + " - Nivel: " + ((Ident)tabla.ElementAt(i)).nivelLocal);
+            if (tabla.ElementAt(i).GetType() == typeof(BasicType))
+            {
+                System.Diagnostics.Debug.WriteLine("Nombre: " + ((BasicType)tabla.ElementAt(i)).token.Text 
+                                                            + " Nivel: " + ((BasicType)tabla.ElementAt(i)).nivel
+                                                            + " Tipo: " + ((BasicType)tabla.ElementAt(i)).type);
+            }
+            else if (tabla.ElementAt(i).GetType() == typeof(ClassType))
+            {
+                System.Diagnostics.Debug.WriteLine("Nombre: " + ((ClassType)tabla.ElementAt(i)).token.Text 
+                                                              + " Nivel: "+ ((ClassType)tabla.ElementAt(i)).nivel
+                                                              + " Tipo: " + ((ClassType)tabla.ElementAt(i)).type);
+            }
+            else if (tabla.ElementAt(i).GetType() == typeof(MethodType))
+            {
+                System.Diagnostics.Debug.WriteLine("Nombre: " + ((MethodType)tabla.ElementAt(i)).token.Text 
+                                                              + " Nivel: " + ((MethodType)tabla.ElementAt(i)).nivel 
+                                                              + " Tipo: " + ((MethodType)tabla.ElementAt(i)).type 
+                                                              + " Cantidad de parametros: " + ((MethodType)tabla.ElementAt(i)).cantParams
+                                                              + " Tipo de retorno: " + ((MethodType)tabla.ElementAt(i)).returnType);
+
+                if (((MethodType)tabla.ElementAt(i)).paramsTypes.Count > 0)
+                {
+                    ((MethodType)tabla.ElementAt(i)).imprimirParams();
+                }
+
+            }
+            else if (tabla.ElementAt(i).GetType() == typeof(ArrayType))
+            {
+                System.Diagnostics.Debug.WriteLine("Nombre: " + ((ArrayType)tabla.ElementAt(i)).token.Text 
+                                                            + " Nivel: " + ((ArrayType)tabla.ElementAt(i)).nivel
+                                                            + " Tipo: " + ((ArrayType)tabla.ElementAt(i)).type
+                                                            + " Tipo de dato: " + ((ArrayType)tabla.ElementAt(i)).dataType);
+                
+            }else if (tabla.ElementAt(i).GetType() == typeof(CustomType))
+            {
+                System.Diagnostics.Debug.WriteLine("Nombre: " + ((CustomType)tabla.ElementAt(i)).token.Text 
+                                                            + " Nivel: " + ((CustomType)tabla.ElementAt(i)).nivel
+                                                            + " Tipo: " + ((CustomType)tabla.ElementAt(i)).Type
+                                                            + " Tipo de dato: " + ((CustomType)tabla.ElementAt(i)).TypeOf);
+                
+            }
         }
+
         System.Diagnostics.Debug.WriteLine("----- FIN TABLA ------");
     }
     

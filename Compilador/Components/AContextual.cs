@@ -1,45 +1,19 @@
 ﻿using System;
+using System.Collections.Generic;
 using Antlr4.Runtime;
 using generated;
+using Compilador.Components.TypesManager;
+using Type = Compilador.Components.TypesManager.Type;
 
 namespace Compilador.Components;
 
 public class AContextual : AlphaParserBaseVisitor<object>
 {
     public TablaSimbolos tabla; // tabla de simbolos global
-    public int nivelPropio = 0;
 
     public AContextual()
     {
         tabla = new TablaSimbolos();
-    }
-
-    private TablaSimbolos.BasicType showType(string type)
-    {
-        return type switch
-        {
-            "int" => TablaSimbolos.BasicType.Int,
-            "double" => TablaSimbolos.BasicType.Double,
-            "string" => TablaSimbolos.BasicType.String,
-            "boolean" => TablaSimbolos.BasicType.Boolean,
-            "char" => TablaSimbolos.BasicType.Char,
-            "void" => TablaSimbolos.BasicType.Void,
-            "null" => TablaSimbolos.BasicType.Null,
-            "int[]" => TablaSimbolos.BasicType.Int,
-            "char[]" => TablaSimbolos.BasicType.Char,
-            _ => TablaSimbolos.BasicType.Error
-        };
-    }
-
-
-    private string showToken(IToken token)
-    {
-        return token.Text + "Fila, columna: (" + token.Line + "," + token.Column + ")";
-    }
-
-    private TablaSimbolos.DataType isMethod(IToken token)
-    {
-        return tabla.Buscar(token).tipoDato;
     }
 
     public bool isMultitype(string op)
@@ -59,50 +33,14 @@ public class AContextual : AlphaParserBaseVisitor<object>
     {
         try
         {
+            System.Diagnostics.Debug.WriteLine("visit ProgramClassAST");
             tabla.OpenScope();
             IToken Tok = (IToken)Visit(context.ident());
-            tabla.Insertar(Tok, TablaSimbolos.BasicType.Null, TablaSimbolos.DataType.Class, nivelPropio);
-            System.Diagnostics.Debug.WriteLine("visit ProgramClassAST");
-            if (context.@using().Length > 0)
+            ClassType cls = new ClassType(Tok, TablaSimbolos.nivelActual);
+            tabla.Insertar(cls);
+            foreach (var child in context.children)
             {
-                foreach (var child in context.@using())
-                {
-                    Visit(child);
-                    System.Diagnostics.Debug.WriteLine("visita using: " + child.GetText());
-                }
-            }
-
-            if (context.varDecl().Length > 0)
-            {
-                int i = 0;
-                foreach (var child in context.varDecl())
-                {
-                    Visit(child);
-                    System.Diagnostics.Debug.WriteLine("visita varDecl " + i + ": " + child.GetText());
-                    i++;
-                }
-            }
-
-            if (context.classDecl().Length > 0)
-            {
-                int i = 0;
-                foreach (var child in context.classDecl())
-                {
-                    Visit(child);
-                    System.Diagnostics.Debug.WriteLine("visita classDecl " + i + ": " + child.GetText());
-                    i++;
-                }
-            }
-
-            if (context.methodDecl().Length > 0)
-            {
-                int i = 0;
-                foreach (var child in context.methodDecl())
-                {
-                    Visit(child);
-                    System.Diagnostics.Debug.WriteLine("visita methodDecl " + i + ": " + child.GetText());
-                    i++;
-                }
+                Visit(child);
             }
 
             tabla.CloseScope();
@@ -114,7 +52,6 @@ public class AContextual : AlphaParserBaseVisitor<object>
         }
 
         tabla.Imprimir();
-        //return base.VisitProgramClassAST(context);
         return null;
     }
 
@@ -123,8 +60,7 @@ public class AContextual : AlphaParserBaseVisitor<object>
     */
     public override object? VisitUsingClassAST(AlphaParser.UsingClassASTContext context)
     {
-        IToken tok = (IToken)Visit(context.ident());
-        tabla.Insertar(tok, TablaSimbolos.BasicType.Null, TablaSimbolos.DataType.Using, nivelPropio);
+        //TODO : implementar using para insertar en la tabla de simbolos
         return null;
     }
 
@@ -133,44 +69,62 @@ public class AContextual : AlphaParserBaseVisitor<object>
         int  carro, moto, avion;
         int[] x, y, z;
         int x;
+        Clase x;
     */
     public override object? VisitVarDeclAST(AlphaParser.VarDeclASTContext context)
     {
         try
         {
-            foreach (var child in context.ident())
-            {
-                IToken tok = (IToken)Visit(child);
-                var ultimasDosPosiciones =
-                    context.type().GetText()
-                        .Substring(context.type().GetText().Length - 2); // [] para saber si es arreglo
+            System.Diagnostics.Debug.WriteLine("visit VarDeclAST");
+            var ultimasDosPosiciones =
+                context.type().GetText()
+                    .Substring(context.type().GetText().Length - 2); // [] para saber si es arreglo
+            var textoSinUltimosDosCaracteres =
+                context.type().GetText().Substring(0, context.type().GetText().Length - 2);
 
-                TablaSimbolos.BasicType varTipo = showType(context.type().GetText());
-                if (varTipo is TablaSimbolos.BasicType.Error)
+            if (BasicType.isBasicType(context.type().GetText()) == true) // si es tipo basico
+            {
+                foreach (var child in context.ident())
+                {
+                    IToken tok = (IToken)Visit(child);
+                    BasicType.Types varTipo = BasicType.showType(context.type().GetText());
+                    BasicType var = new BasicType(tok, varTipo, TablaSimbolos.nivelActual);
+                    tabla.Insertar(var);
+                }
+            }
+            else if (ultimasDosPosiciones.Equals("[]")) // si es arreglo
+            {
+                ArrayType.Types type = ArrayType.showType(textoSinUltimosDosCaracteres);
+
+                if (type is ArrayType.Types.Error)
                 {
                     System.Diagnostics.Debug.WriteLine("Error en visit VarDeclAST, tipo recibido: " +
                                                        context.type().GetText());
                 }
-                else if (ultimasDosPosiciones.Equals("[]"))
-                {
-                    if (varTipo is TablaSimbolos.BasicType.Int or TablaSimbolos.BasicType.Char)
-                    {
-                        tabla.Insertar(tok, varTipo, TablaSimbolos.DataType.Array,
-                            nivelPropio);
-                    }
-                    else
-                    {
-                        var textoSinUltimosDosCaracteres =
-                            context.type().GetText().Substring(0, context.type().GetText().Length - 2);
-                        System.Diagnostics.Debug.WriteLine(
-                            "Error en visit VarDeclAST, los arreglos solo pueden ser de tipo int o char, tipo encontrado: " +
-                            textoSinUltimosDosCaracteres);
-                    }
-                }
                 else
                 {
-                    tabla.Insertar(tok, varTipo, TablaSimbolos.DataType.Variable, nivelPropio);
+                    foreach (var child in context.ident())
+                    {
+                        IToken tok = (IToken)Visit(child);
+                        ArrayType arr = new ArrayType(tok, TablaSimbolos.nivelActual, type);
+                        tabla.Insertar(arr);
+                    }
                 }
+            }
+            else if (tabla.Buscar(context.type().GetText()) != null &&
+                     tabla.Buscar(context.type().GetText()) is ClassType) // si es tipo compuesto
+            {
+                foreach (var child in context.ident())
+                {
+                    IToken tok = (IToken)Visit(child);
+                    CustomType var = new CustomType(tok, TablaSimbolos.nivelActual, context.type().GetText());
+                    tabla.Insertar(var);
+                }
+            }
+            else
+            {
+                System.Diagnostics.Debug.WriteLine("Error en visit VarDeclAST, tipo recibido: " +
+                                                   context.type().GetText());
             }
         }
         catch (Exception e)
@@ -187,11 +141,12 @@ public class AContextual : AlphaParserBaseVisitor<object>
      */
     public override object? VisitClassDeclAST(AlphaParser.ClassDeclASTContext context)
     {
-        nivelPropio++;
         System.Diagnostics.Debug.WriteLine("visit ClassDeclAST: " + context.ident().GetText());
-        tabla.OpenScope();
+        
         IToken tok = (IToken)Visit(context.ident());
-        tabla.Insertar(tok, TablaSimbolos.BasicType.Null, TablaSimbolos.DataType.Class, nivelPropio);
+        ClassType cls = new ClassType(tok, TablaSimbolos.nivelActual);
+        tabla.Insertar(cls);
+        tabla.OpenScope();
         if (context.varDecl().Length > 0)
         {
             foreach (var child in context.varDecl())
@@ -209,33 +164,48 @@ public class AContextual : AlphaParserBaseVisitor<object>
      */
     public override object? VisitMethodDeclAST(AlphaParser.MethodDeclASTContext context)
     {
-        nivelPropio++;
         System.Diagnostics.Debug.WriteLine("visit MethodDeclAST: " + context.ident().GetText());
-        tabla.OpenScope();
-        IToken tok = (IToken)Visit(context.ident());
-        if (context.type() != null)
-        {
-            var tipo = showType(context.type().GetText());
-            if (tipo == TablaSimbolos.BasicType.Error)
-            {
-                System.Diagnostics.Debug.WriteLine("Error en visit MethodDeclAST, tipo recibido: " +
-                                                   context.type().GetText());
-                return null;
-            }
-
-            // TODO: Se debe verificar que el metodo sea un tipo valido para el lenguaje
-            tabla.Insertar(tok, tipo, TablaSimbolos.DataType.Method, nivelPropio);
-        }
-        else
-        {
-            tabla.Insertar(tok, TablaSimbolos.BasicType.Void, TablaSimbolos.DataType.Method, nivelPropio);
-        }
-
+        
+        LinkedList<Type> parametros = new LinkedList<Type>();
         if (context.formPars() != null)
         {
-            Visit(context.formPars());
+            parametros = (LinkedList<Type>)Visit(context.formPars());
         }
-
+        
+        IToken tok = (IToken)Visit(context.ident());
+        
+        if (context.type() != null) // Si tiene tipo 
+        {
+            if (BasicType.isBasicType(context.type().GetText()) == true) // si es tipo basico
+            {
+                if (BasicType.showType(context.type().GetText()) != BasicType.Types.Error)
+                {
+                    MethodType method = new MethodType(tok, TablaSimbolos.nivelActual, parametros.Count,
+                        context.type().GetText(), parametros);
+                    tabla.Insertar(method);
+                }
+            }
+            else if (tabla.Buscar(context.type().GetText()) != null && tabla.Buscar(context.type().GetText()) is ClassType) // si es tipo compuesto
+            {
+                MethodType method = new MethodType(tok, TablaSimbolos.nivelActual, parametros.Count,
+                    context.type().GetText(), parametros);
+                tabla.Insertar(method);
+            }
+            else // error
+            {
+                System.Diagnostics.Debug.WriteLine("Error en visit MethodDeclAST, tipo recibido: " + context.type().GetText());
+            }
+        }
+        else if (context.VOID() != null) // si no tiene tipo, es void
+        {
+            MethodType method = new MethodType(tok, TablaSimbolos.nivelActual, parametros.Count, "void", parametros);
+            tabla.Insertar(method);
+        }
+        else // error
+        {
+            System.Diagnostics.Debug.WriteLine("Error en visit MethodDeclAST, tipo recibido: " + context.type().GetText());
+        }
+        tabla.OpenScope();
         Visit(context.block());
         tabla.CloseScope();
         return null;
@@ -243,23 +213,58 @@ public class AContextual : AlphaParserBaseVisitor<object>
 
     /*
      * formPars : type ident (COMMA type ident)*    #FormParsAST;
-     *  int x, char y, int z  
+     *  int x, char y, int z
+     *  int x, char y, int z[]
      */
-    public override object? VisitFormParsAST(AlphaParser.FormParsASTContext context)
+    public override LinkedList<Type>? VisitFormParsAST(AlphaParser.FormParsASTContext context)
     {
         System.Diagnostics.Debug.WriteLine("visit FormParsAST: " + context.GetText());
-        if (context.type().Length > 0)
+        LinkedList<Type> parametros = new LinkedList<Type>();
+
+
+        for (int i = 0; i < context.ident().Length; i++)
         {
-            for (int i = 0; i < context.type().Length; i++)
+            var ultimasDosPosiciones =
+                context.type(i).GetText()
+                    .Substring(context.type(i).GetText().Length - 2); // [] para saber si es arreglo
+            var textoSinUltimosDosCaracteres =
+                context.type(i).GetText().Substring(0, context.type(i).GetText().Length - 2);
+
+            IToken tok = (IToken)Visit(context.ident(i));
+            if (BasicType.isBasicType(context.type(i).GetText())) // si es tipo basico
             {
-                var tipo = showType(context.type(i).GetText());
-                IToken tok = (IToken)Visit(context.ident(i));
-                // TODO: Se debe verificar que el tipo exista en el lenguaje, ademas de saber a que funcion pertenecen los parametros
-                tabla.Insertar(tok, tipo, TablaSimbolos.DataType.Variable, nivelPropio);
+                BasicType.Types varTipo = BasicType.showType(context.type(i).GetText());
+                BasicType var = new BasicType(tok, varTipo, TablaSimbolos.nivelActual);
+                parametros.AddLast(var);
+            }
+            else if (tabla.Buscar(context.type(i).GetText()) != null &&
+                     tabla.Buscar(context.type(i).GetText()) is ClassType) // si es tipo compuesto
+            {
+                CustomType var = new CustomType(tok, TablaSimbolos.nivelActual, context.type(i).GetText());
+                parametros.AddLast(var);
+            }
+            else if (ultimasDosPosiciones.Equals("[]")) // si es arreglo
+            {
+                ArrayType.Types type = ArrayType.showType(textoSinUltimosDosCaracteres);
+
+                if (type is ArrayType.Types.Error)
+                {
+                    System.Diagnostics.Debug.WriteLine("Error en visit VarDeclAST, tipo recibido: " +
+                                                       context.type(i).GetText());
+                }
+                else if (type is ArrayType.Types.Int or ArrayType.Types.Char)
+                {
+                    ArrayType arr = new ArrayType(tok, TablaSimbolos.nivelActual, type);
+                    parametros.AddLast(arr);
+                }
+            }
+            else
+            {
+                System.Diagnostics.Debug.WriteLine("Error en visit FormParsAST, tipo recibido: " +
+                                                   context.type(i).GetText());
             }
         }
-
-        return null;
+        return parametros;
     }
 
     /*
@@ -299,24 +304,17 @@ public class AContextual : AlphaParserBaseVisitor<object>
     */
     public override object? VisitIfStatementAST(AlphaParser.IfStatementASTContext context)
     {
-        nivelPropio++;
         tabla.OpenScope();
-        IToken tok = context.IF().Symbol;
-        tabla.Insertar(tok, TablaSimbolos.BasicType.Null, TablaSimbolos.DataType.If, nivelPropio);
         Visit(context.condition());
         Visit(context.statement(0));
         tabla.CloseScope();
-        
+
         if (context.statement(1) != null)
         {
-            nivelPropio++;
-            IToken tok2 = context.ELSE().Symbol;
-            tabla.Insertar(tok2, TablaSimbolos.BasicType.Null, TablaSimbolos.DataType.Else, nivelPropio);
             tabla.OpenScope();
             Visit(context.statement(1));
             tabla.CloseScope();
         }
-
         return null;
     }
 
@@ -325,10 +323,7 @@ public class AContextual : AlphaParserBaseVisitor<object>
      */
     public override object? VisitForStatementAST(AlphaParser.ForStatementASTContext context)
     {
-        nivelPropio++;
         tabla.OpenScope();
-        IToken tok = context.FOR().Symbol;
-        tabla.Insertar(tok, TablaSimbolos.BasicType.Null, TablaSimbolos.DataType.For, nivelPropio);
         Visit(context.expr());
         if (context.condition() != null)
         {
@@ -344,6 +339,7 @@ public class AContextual : AlphaParserBaseVisitor<object>
         {
             Visit(context.statement(0));
         }
+
         tabla.CloseScope();
         return null;
     }
@@ -354,9 +350,6 @@ public class AContextual : AlphaParserBaseVisitor<object>
     public override object? VisitWhileStatementAST(AlphaParser.WhileStatementASTContext context)
     {
         tabla.OpenScope();
-        nivelPropio++;
-        IToken tok = context.WHILE().Symbol;
-        tabla.Insertar(tok, TablaSimbolos.BasicType.Null, TablaSimbolos.DataType.While, nivelPropio);
         Visit(context.condition());
         Visit(context.statement());
         tabla.CloseScope();
@@ -431,7 +424,6 @@ public class AContextual : AlphaParserBaseVisitor<object>
                 Visit(child);
             }
         }
-
         return null;
     }
 
@@ -448,6 +440,7 @@ public class AContextual : AlphaParserBaseVisitor<object>
                 Visit(context.expr(i));
             }
         }
+
         return null;
     }
 
@@ -464,6 +457,7 @@ public class AContextual : AlphaParserBaseVisitor<object>
                 Visit(context.condTerm(i));
             }
         }
+
         return base.VisitConditionAST(context);
     }
 
@@ -524,6 +518,7 @@ public class AContextual : AlphaParserBaseVisitor<object>
                 Visit(context.term(i));
             }
         }
+
         return null;
     }
 
@@ -541,6 +536,7 @@ public class AContextual : AlphaParserBaseVisitor<object>
                 Visit(context.factor(i));
             }
         }
+
         return null;
     }
 
@@ -555,14 +551,6 @@ public class AContextual : AlphaParserBaseVisitor<object>
             Visit(context.actPars());
         }
 
-        return null;
-    }
-
-    /*
-     *  | NUMBER    #NumberFactorAST
-     */
-    public override object? VisitNumberFactorAST(AlphaParser.NumberFactorASTContext context)
-    {
         return null;
     }
 

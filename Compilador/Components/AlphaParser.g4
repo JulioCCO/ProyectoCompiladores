@@ -26,7 +26,7 @@ statement : designator (ASSIGN expr | LEFT_PAREN actPars? RIGHT_PAREN | INC | DE
           | BREAK SEMICOLON                                                                     #BreakStatementAST
           | RETURN expr? SEMICOLON                                                              #ReturnStatementAST
           | READ LEFT_PAREN designator RIGHT_PAREN SEMICOLON                                    #ReadStatementAST   
-          | WRITE LEFT_PAREN expr (COMMA (NUMBER|STRING_CONST))? RIGHT_PAREN SEMICOLON          #WriteStatementAST
+          | WRITE LEFT_PAREN expr (COMMA (INT_CONST|STRING_CONST))? RIGHT_PAREN SEMICOLON       #WriteStatementAST
           | block                                                                               #BlockStatementAST
           | SEMICOLON                                                                           #SemicolonStatementAST;
           
@@ -43,14 +43,13 @@ condFact : expr relop expr                                                      
 cast : LEFT_PAREN type RIGHT_PAREN                                                              #CastAST;
 
 expr : MINUSEXP? cast? term (addop term)*                                                       #ExprAST;
-
+ 
 term : factor (mulop factor)*                                                                   #TermAST;
 
-factor : designator (LEFT_PAREN actPars? RIGHT_PAREN)?                                          #DesignatorFactorAST                                       
-       | NUMBER                                                                                 #NumberFactorAST
+factor : designator (LEFT_PAREN actPars? RIGHT_PAREN)?                                          #DesignatorFactorAST 
        | CHAR_CONST                                                                             #CharFactorAST
        | STRING_CONST                                                                           #StringFactorAST
-       | (MINUS)? INT_CONST                                                                              #IntFactorAST   
+       | (MINUS)? INT_CONST                                                                     #IntFactorAST   
        | DOUBLE_CONST                                                                           #DoubleFactorAST    
        | BOOL_CONST                                                                             #BoolFactorAST
        | NEW ident                                                                              #NewFactorAST

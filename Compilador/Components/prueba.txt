@@ -9,13 +9,14 @@ class AllProds
   class Point {
     int x, y; 
   }
-
+    
+  Point point;
 
   char[] msg;
   Point[] pArr;
   boolean test1;
 
-  void WriteError (int julio)
+  void WriteError (int julio, int[] arreglo)
   {
     int b;
     boolean test1;
@@ -40,11 +41,12 @@ class AllProds
       write(msg[b], 2);
    }
   }
-  int GetX (Point p1, int x, char ju) { return p1.x.Z[3+4]; }
+  
+  int GetX (Point p1, int x, char ju) { return p1.x+2; }
 
 
   void SetX (int x, Point p2) {
-    if (x > -10 && x <= 9 || x == 4*3/4%4+12+-11*(2147483647/(-2147483647+-1)%2)){
+    if (x > -10 && x <= 9 || x == 4*3/4%4+12- -11*(2147483647/(-2147483647+-1)%2)){
       p2.x = x;
 	  int camino; 
     }
@@ -98,12 +100,20 @@ class AllProds
 
   }
 
-
 } 
 
 
 //ANOTAR SUS COMENTARIOS EN MAYUSCULA Y NO QUITAR NADA DE LO QUE VIENE EN EL ARCHIVO SINO SOLO COMENTARLO PERO A LA VEZ COLOCAR EL EQUIVALENTE CORRECTO
 //CUALQUIER COSA QUE SEA ERROR MIO AL MOMENTO DE HACER LA PRUEBA, FAVOR CORREGIRLO Y ANOTARLO
+
+
+
+
+
+
+
+
+
 
 
 
