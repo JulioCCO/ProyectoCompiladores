@@ -11,33 +11,42 @@ class AllProds
     int x, y; 
   }
   
-  
-  Point point;
-  
+ 
   char[] msg;
   Point[] pArr;
   boolean test1;
 
   void WriteError (int julio, int[] arreglo)
   {
+    Point point;
+    point = new Point;
+    point.x = 0;
+    arreglo.add(0);
+    arreglo.add(1);
+    arreglo.del[0];
+   
     int b;
+    b = arreglo.len();
+    char exc;
+    
     boolean test1;
-
-   exclaim = 'a';
+ 
+   exclaim = '4';
    caracterEspecial = 'a';
 
-   /* imprimir mensaje error */
-   b = 0;
-   b = "a"; //error de caracteres invalidos
+   /* imprimir mensaje error  /* 
+ 	imprimir mensaje error */ */
+   b = ord(exclaim);
+  //error de caracteres invalidos
    test1 = true;
 
-   while(b<len(msg)){write(msg[b]);b++; int cesar;}
-
-   for(j;j<len(msg);j++;){write(msg[j]);}
+   while(b<arreglo.len()){write(msg[b]);b++; int cesar;}
+ 
+   for(j;j<arreglo.len();j++;){write(msg[j]);}
 
    write(exclaim);
 
-   while (b > 0) {
+   while (b >8) {
       b--;
       if (b < 3 && test1==true) break;	
       write(msg[b], 2);
@@ -48,6 +57,7 @@ class AllProds
 
 
   void SetX (int x, Point p2) {
+    int[] arreglito;
     if (x > -10 && x <= 9 || x == 4*3/4%4+12- -11*(2147483647/(-2147483647+-1)%2)){
       p2.x = x;
 	  int camino; 
@@ -71,10 +81,14 @@ class AllProds
 
   void SetPoints ()
   {
+    int[] pArr;
     int c;
     pArr = Point[nPoints];
-    c = 0;
-    while (c < len(pArr)) {
+    //c = 0;
+    //c = pArr.len();
+	
+    //pArr.len();
+    while (c <5) {
       pArr[c] = new Point;
       pArr[c].x = c;
       pArr[c].y = c;
@@ -109,6 +123,21 @@ class AllProds
 
 //ANOTAR SUS COMENTARIOS EN MAYUSCULA Y NO QUITAR NADA DE LO QUE VIENE EN EL ARCHIVO SINO SOLO COMENTARLO PERO A LA VEZ COLOCAR EL EQUIVALENTE CORRECTO
 //CUALQUIER COSA QUE SEA ERROR MIO AL MOMENTO DE HACER LA PRUEBA, FAVOR CORREGIRLO Y ANOTARLO
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

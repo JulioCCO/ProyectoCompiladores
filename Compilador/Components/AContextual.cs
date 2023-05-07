@@ -294,8 +294,10 @@ public class AContextual : AlphaParserBaseVisitor<object>
     public override object? VisitAssignStatementAST(AlphaParser.AssignStatementASTContext context)
     {
         Visit(context.designator());
+        System.Diagnostics.Debug.WriteLine("visit AssignStatementAST designator: " + context.designator().GetText());
         if (context.expr() != null) //  si es una asignacion 
         {
+            System.Diagnostics.Debug.WriteLine("visit AssignStatementAST  expr: " + context.expr().GetText());
             Visit(context.expr());
         }
         else if (context.actPars() != null) // si es una llamada a metodo
@@ -408,11 +410,37 @@ public class AContextual : AlphaParserBaseVisitor<object>
     }
 
     /*
+    | addMeth SEMICOLON #AddMethStatementAST
+     */
+    public override object VisitAddMethStatementAST(AlphaParser.AddMethStatementASTContext context)
+    {
+        Visit(context.addMeth());
+        return null;
+    }
+
+    /*
+    | delMeth SEMICOLON #DelMethStatementAST
+     */
+    public override object VisitDelMethStatementAST(AlphaParser.DelMethStatementASTContext context)
+    {
+        Visit(context.delMeth());
+        return null;
+    }
+
+    /*
      * | block #BlockStatementAST
      */
     public override object? VisitBlockStatementAST(AlphaParser.BlockStatementASTContext context)
     {
         Visit(context.block());
+        return null;
+    }
+
+    /*
+     | SEMICOLON  #SemicolonStatementAST
+     */
+    public override object VisitSemicolonStatementAST(AlphaParser.SemicolonStatementASTContext context)
+    {
         return null;
     }
 
@@ -447,19 +475,18 @@ public class AContextual : AlphaParserBaseVisitor<object>
     {
         // ocupo retornar la cantidad de parametros que tiene el metodo
         // y el tipo de cada uno de ellos
-        
+
         Dictionary<string, string> actPars = new Dictionary<string, string>();
-        
+
         Visit(context.expr(0));
         if (context.expr().Length > 1)
         {
             for (int i = 1; i < context.expr().Length; i++)
             {
-                
                 Visit(context.expr(i));
             }
         }
-        
+
         return null;
     }
 
@@ -561,6 +588,9 @@ public class AContextual : AlphaParserBaseVisitor<object>
 
     /*
      * factor : designator (LEFT_PAREN actPars? RIGHT_PAREN)? #DesignatorFactorAST
+     * cuando es un designator factor, se debe de verificar que el designator sea un metodo
+     * y que el metodo tenga la cantidad de parametros correctos
+     * y que el tipo de los parametros sea el correcto
      */
     public override object? VisitDesignatorFactorAST(AlphaParser.DesignatorFactorASTContext context)
     {
@@ -631,6 +661,60 @@ public class AContextual : AlphaParserBaseVisitor<object>
         return null;
     }
 
+    /*
+     | ORD LEFT_PAREN (ident) RIGHT_PAREN #CastingCharToIntAST 
+     */
+    public override object? VisitCastingCharToIntAST(AlphaParser.CastingCharToIntASTContext context)
+    {
+        Visit(context.ident());
+        return null;
+    }
+
+    /*
+     | CHR LEFT_PAREN (ident) RIGHT_PAREN #CastingIntToChargAST
+     */
+    public override object VisitCastingIntToChargAST(AlphaParser.CastingIntToChargASTContext context)
+    {
+        Visit(context.ident());
+        return null;
+    }
+
+    /*
+     | lenMeth #LenMethFactorAST;
+     */
+    public override object VisitLenMethFactorAST(AlphaParser.LenMethFactorASTContext context)
+    {
+        Visit(context.lenMeth());
+        return null;
+    }
+
+    /*
+     addMeth: ident DOT ADDMETHOD LEFT_PAREN (CHAR_CONST | INT_CONST) RIGHT_PAREN #AddMethAST;
+     */
+    public override object VisitAddMethAST(AlphaParser.AddMethASTContext context)
+    {
+        Visit(context.ident());
+        return base.VisitAddMethAST(context);
+    }
+    
+    /*
+     lenMeth: ident DOT DELMETHOD LEFT_BRACKET INT_CONST RIGHT_BRACKET #DelMethAST;
+     */
+    public override object VisitLenMethAST(AlphaParser.LenMethASTContext context)
+    {
+        Visit(context.ident());
+        return null;
+    }
+
+    /*
+     delMeth: ident DOT LENMETHOD LEFT_PAREN RIGHT_PAREN  #LenMethAST;
+     */
+    public override object VisitDelMethAST(AlphaParser.DelMethASTContext context)
+    {
+        Visit(context.ident());
+        return null;
+    }
+ 
     /*
      * designator : ident (DOT ident | LEFT_BRACKET expr RIGHT_BRACKET)*   #DesignatorAST;
      */
