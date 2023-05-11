@@ -298,7 +298,7 @@ public class AContextual : AlphaParserBaseVisitor<object>
     {
 
         string tipoDesignator = (string) Visit(context.designator());
-        System.Diagnostics.Debug.WriteLine("visit AssignStatementAST designator: " + tipoDesignator);
+        System.Diagnostics.Debug.WriteLine("visit AssignStatementAST typo del designator: " + tipoDesignator);
         if (context.expr() != null) //  si es una asignacion 
         {
             string tipo = (string) Visit(context.expr());
@@ -314,6 +314,8 @@ public class AContextual : AlphaParserBaseVisitor<object>
         }
         else if (context.LEFT_PAREN() != null) // si es una llamada a metodo
         {
+            // TODO: Verificar que el metodo exista y que los parametros sean correctos
+            
             if (context.actPars() != null) Visit(context.actPars());
         }
         else if (context.INC() != null ) // si es un incremento o decremento
@@ -405,6 +407,7 @@ public class AContextual : AlphaParserBaseVisitor<object>
     {
         if (context.expr() != null)
         {
+            // TODO: Verificar que el tipo de la expresion sea igual al tipo de retorno del metodo
             Visit(context.expr());
         }
 
@@ -574,6 +577,7 @@ public class AContextual : AlphaParserBaseVisitor<object>
     public override object? VisitTermAST(AlphaParser.TermASTContext context)
     {
         string tipo = (string) Visit(context.factor(0)); // tipo del primer factor
+        //TODO verificar que el tipo del factor sea el correcto, ¿DEBERIA SER ENTERO?
         if (context.factor().Length > 1)
         {
             for (int i = 1; i < context.factor().Length; i++)
@@ -582,7 +586,7 @@ public class AContextual : AlphaParserBaseVisitor<object>
                 string tipoLista = (string)  Visit(context.factor(i));
                 if (tipo != tipoLista)
                 {
-                    System.Diagnostics.Debug.WriteLine("ERROR: TIPOS DIFERENTES");
+                    System.Diagnostics.Debug.WriteLine("ERROR: TIPOS DIFERENTES EN LA EXPRESION");
                     return null;
                 }
             }
@@ -602,8 +606,10 @@ public class AContextual : AlphaParserBaseVisitor<object>
         string tipo = (string) Visit(context.designator());
         if (context.LEFT_PAREN() != null)
         {
+            //TODO verificar que el designator sea un metodo
             if (context.actPars() != null)
             {
+                // TODO verificar que el metodo tenga la cantidad de parametros correctos y que el tipo de los parametros sea el correcto 
                 Visit(context.actPars());
             }
         }
@@ -680,12 +686,26 @@ public class AContextual : AlphaParserBaseVisitor<object>
     
     /*
      * designator : ident (DOT ident | LEFT_BRACKET expr RIGHT_BRACKET)*   #DesignatorAST;
+     * Clase.array[1] = 1;
      */
     public override object? VisitDesignatorAST(AlphaParser.DesignatorASTContext context)
     {
-        if(context.ident().Length > 1) 
+        if (context.ident().Length == 1) // solo hay un id
         {
-            // validar si el tipo es arreglo 
+            //enterito = 1
+            Type tipo = tabla.Buscar(context.ident(0).GetText());
+            System.Diagnostics.Debug.WriteLine(context.ident(0).GetText()+ " DESIGNATOR");
+            if (tipo != null)
+            {
+                return tipo.getType();
+            }
+            System.Diagnostics.Debug.WriteLine( " No se encontro");
+            return null;
+        }
+
+        if(context.DOT() != null && context.ident().Length > 1) 
+        {
+            // TODO aqui se debe esperar la respuesta del profe sobre que tipo  de variables puede tener una clase 
             
             System.Diagnostics.Debug.WriteLine(context.ident(0).GetText() + " DESIGNATOR mas de 1 id");
             CustomType tipo = (CustomType) tabla.Buscar(context.ident(context.ident().Length - 2).GetText());
@@ -707,7 +727,6 @@ public class AContextual : AlphaParserBaseVisitor<object>
                     System.Diagnostics.Debug.WriteLine(" No se encontro en dicha clase");
 
                     return null;
-                
                 }
             }
 
@@ -715,29 +734,21 @@ public class AContextual : AlphaParserBaseVisitor<object>
                                                context.ident(context.ident().Length - 2).GetText());
             return null;
         }
-        
-        if (context.ident().Length == 1) // solo hay un id
+
+        if (context.LEFT_BRACKET()!= null && context.RIGHT_BRACKET() != null && context.expr() != null)
         {
-            //enterito = 1
-            Type tipo = tabla.Buscar(context.ident(0).GetText());
-            System.Diagnostics.Debug.WriteLine(context.ident(0).GetText()+ " DESIGNATOR");
-            if (tipo != null)
-            {
-                return tipo.getType();
-            }
-            System.Diagnostics.Debug.WriteLine( " No se encontro");
-            return null;
-        }
-        if (context.expr() != null)
-        {
-            //int char //point no
-            //msg[0] // msg[0][0] no
+            // TODO Validar que el tipo del arreglo sea el correcto, que este en el alcance y que el indice sea un entero
+            // TODO consultar cuando y como se le da tamaño a un arreglo
             Type tipo = tabla.Buscar(context.ident(0).GetText());
             if (tipo != null )
             {
                 return tipo.getType();
             }
-
+            return null;
+        }
+        else
+        {
+            System.Diagnostics.Debug.WriteLine("Error en el designator arreglo mal declarado");
             return null;
         }
 

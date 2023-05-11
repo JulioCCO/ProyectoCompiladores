@@ -11,6 +11,17 @@ class AllProds
     int x, y; 
   }
   
+  
+  class Point1 {
+    int x, y; 
+    Point p;
+  }  
+  
+  class Point2 {
+     int x, y; 
+     oint1 p;
+  }
+  
    
   char[] msg;
   Point[] pArr;
@@ -70,11 +81,11 @@ class AllProds
 
   void SetMsg () {
     msg = new char;
-    msg[0] = 'E';
+    msg[] = 'E';
     msg[true] = 'r';
     msg[hola] = 'r';
     msg[3] = 'r';
-    msg[4] = msg[3];
+    msg[4] = msg[true];
     read(msg[3]) ;    
   }
 
@@ -120,6 +131,9 @@ class AllProds
 
 //ANOTAR SUS COMENTARIOS EN MAYUSCULA Y NO QUITAR NADA DE LO QUE VIENE EN EL ARCHIVO SINO SOLO COMENTARLO PERO A LA VEZ COLOCAR EL EQUIVALENTE CORRECTO
 //CUALQUIER COSA QUE SEA ERROR MIO AL MOMENTO DE HACER LA PRUEBA, FAVOR CORREGIRLO Y ANOTARLO
+
+
+
 
 
 

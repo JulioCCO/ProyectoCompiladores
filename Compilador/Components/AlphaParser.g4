@@ -42,7 +42,7 @@ condFact : expr relop expr                                                      
 
 cast : LEFT_PAREN type RIGHT_PAREN                                                              #CastAST;
 
-expr : MINUSEXP? cast? term (addop term)*                                                       #ExprAST;
+expr : MINUSEXP? cast ? term (addop term)*                                                       #ExprAST;
  
 term : factor (mulop factor)*                                                                   #TermAST;
 
