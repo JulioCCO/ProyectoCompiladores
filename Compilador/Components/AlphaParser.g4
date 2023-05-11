@@ -27,8 +27,6 @@ statement : designator (ASSIGN expr | LEFT_PAREN actPars? RIGHT_PAREN | INC | DE
           | RETURN expr? SEMICOLON                                                              #ReturnStatementAST
           | READ LEFT_PAREN designator RIGHT_PAREN SEMICOLON                                    #ReadStatementAST   
           | WRITE LEFT_PAREN expr (COMMA (INT_CONST|STRING_CONST))? RIGHT_PAREN SEMICOLON       #WriteStatementAST
-          | addMeth SEMICOLON                                                                   #AddMethStatementAST
-          | delMeth SEMICOLON                                                                   #DelMethStatementAST
           | block                                                                               #BlockStatementAST
           | SEMICOLON                                                                           #SemicolonStatementAST;
      
@@ -55,16 +53,7 @@ factor : designator (LEFT_PAREN actPars? RIGHT_PAREN)?                          
        | DOUBLE_CONST                                                                           #DoubleFactorAST    
        | BOOL_CONST                                                                             #BoolFactorAST
        | NEW ident                                                                              #NewFactorAST
-       | LEFT_PAREN expr RIGHT_PAREN                                                            #ParenFactorAST
-       | ORD LEFT_PAREN (ident) RIGHT_PAREN                                                     #CastingCharToIntAST // ord(x) x = 1,2,3,4,5,6,7,8,9
-       | CHR LEFT_PAREN (ident) RIGHT_PAREN                                                     #CastingIntToChargAST  // chr(x) = '1','2','3','4','5','6','7','8','9'
-       | lenMeth                                                                                #LenMethFactorAST;
-   
-addMeth: ident DOT ADDMETHOD LEFT_PAREN (CHAR_CONST | INT_CONST) RIGHT_PAREN                    #AddMethAST;
-
-lenMeth: ident DOT LENMETHOD LEFT_PAREN RIGHT_PAREN                                             #DelMethAST;
- 
-delMeth: ident DOT DELMETHOD LEFT_BRACKET INT_CONST  RIGHT_BRACKET                              #LenMethAST;
+       | LEFT_PAREN expr RIGHT_PAREN                                                            #ParenFactorAST;
 
 designator : ident (DOT ident | LEFT_BRACKET expr RIGHT_BRACKET)*                               #DesignatorAST;
 
@@ -81,7 +70,7 @@ mulop : MULT | DIV | MOD;
 
 ident : IDENTIFIER                                                                                #IdentAST;
 
-array : LEFT_BRACKET IDENTIFIER? RIGHT_BRACKET                                                    #ArrayAST;
+array : LEFT_BRACKET RIGHT_BRACKET                                                                #ArrayAST;
 
 
 

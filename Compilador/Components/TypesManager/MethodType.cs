@@ -46,5 +46,9 @@ public class MethodType: Type
         }
         System.Diagnostics.Debug.WriteLine("----- FIN PARAMETROS ------");
     }
-    
+
+    public override string getType()
+    {
+        return type;
+    }
 }

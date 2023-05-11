@@ -138,20 +138,6 @@ public interface IAlphaParserVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <return>The visitor result.</return>
 	Result VisitWriteStatementAST([NotNull] AlphaParser.WriteStatementASTContext context);
 	/// <summary>
-	/// Visit a parse tree produced by the <c>AddMethStatementAST</c>
-	/// labeled alternative in <see cref="AlphaParser.statement"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitAddMethStatementAST([NotNull] AlphaParser.AddMethStatementASTContext context);
-	/// <summary>
-	/// Visit a parse tree produced by the <c>DelMethStatementAST</c>
-	/// labeled alternative in <see cref="AlphaParser.statement"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitDelMethStatementAST([NotNull] AlphaParser.DelMethStatementASTContext context);
-	/// <summary>
 	/// Visit a parse tree produced by the <c>BlockStatementAST</c>
 	/// labeled alternative in <see cref="AlphaParser.statement"/>.
 	/// </summary>
@@ -277,48 +263,6 @@ public interface IAlphaParserVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
 	Result VisitParenFactorAST([NotNull] AlphaParser.ParenFactorASTContext context);
-	/// <summary>
-	/// Visit a parse tree produced by the <c>CastingCharToIntAST</c>
-	/// labeled alternative in <see cref="AlphaParser.factor"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitCastingCharToIntAST([NotNull] AlphaParser.CastingCharToIntASTContext context);
-	/// <summary>
-	/// Visit a parse tree produced by the <c>CastingIntToChargAST</c>
-	/// labeled alternative in <see cref="AlphaParser.factor"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitCastingIntToChargAST([NotNull] AlphaParser.CastingIntToChargASTContext context);
-	/// <summary>
-	/// Visit a parse tree produced by the <c>LenMethFactorAST</c>
-	/// labeled alternative in <see cref="AlphaParser.factor"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitLenMethFactorAST([NotNull] AlphaParser.LenMethFactorASTContext context);
-	/// <summary>
-	/// Visit a parse tree produced by the <c>AddMethAST</c>
-	/// labeled alternative in <see cref="AlphaParser.addMeth"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitAddMethAST([NotNull] AlphaParser.AddMethASTContext context);
-	/// <summary>
-	/// Visit a parse tree produced by the <c>DelMethAST</c>
-	/// labeled alternative in <see cref="AlphaParser.lenMeth"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitDelMethAST([NotNull] AlphaParser.DelMethASTContext context);
-	/// <summary>
-	/// Visit a parse tree produced by the <c>LenMethAST</c>
-	/// labeled alternative in <see cref="AlphaParser.delMeth"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitLenMethAST([NotNull] AlphaParser.LenMethASTContext context);
 	/// <summary>
 	/// Visit a parse tree produced by the <c>DesignatorAST</c>
 	/// labeled alternative in <see cref="AlphaParser.designator"/>.

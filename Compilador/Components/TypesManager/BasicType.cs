@@ -47,4 +47,10 @@ public class BasicType: Type
             _ => false,
         };
     }
+
+
+    public override string getType()
+    {
+        return type.ToString();
+    }
 }

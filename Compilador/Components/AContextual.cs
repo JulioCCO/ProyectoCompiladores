@@ -10,6 +10,7 @@ namespace Compilador.Components;
 public class AContextual : AlphaParserBaseVisitor<object>
 {
     public TablaSimbolos tabla; // tabla de simbolos global
+    
 
     public AContextual()
     {
@@ -279,13 +280,15 @@ public class AContextual : AlphaParserBaseVisitor<object>
      */
     public override object? VisitTypeAST(AlphaParser.TypeASTContext context)
     {
-        Visit(context.ident());
+        IToken ident = (IToken)Visit(context.ident());
+        
         if (context.array() != null)
         {
             Visit(context.array());
+
         }
 
-        return null;
+        return ident.Text;
     }
 
     /*
@@ -293,20 +296,38 @@ public class AContextual : AlphaParserBaseVisitor<object>
      */
     public override object? VisitAssignStatementAST(AlphaParser.AssignStatementASTContext context)
     {
-        Visit(context.designator());
-        System.Diagnostics.Debug.WriteLine("visit AssignStatementAST designator: " + context.designator().GetText());
+
+        string tipoDesignator = (string) Visit(context.designator());
+        System.Diagnostics.Debug.WriteLine("visit AssignStatementAST designator: " + tipoDesignator);
         if (context.expr() != null) //  si es una asignacion 
         {
-            System.Diagnostics.Debug.WriteLine("visit AssignStatementAST  expr: " + context.expr().GetText());
-            Visit(context.expr());
+            string tipo = (string) Visit(context.expr());
+            if (tipo != tipoDesignator)
+            {
+                System.Diagnostics.Debug.WriteLine("Error de tipo en asignacion" + tipo + " " + tipoDesignator);
+            }
+            else
+            {
+                System.Diagnostics.Debug.WriteLine("Asignacion correcta " + tipo + " " + tipoDesignator);
+                
+            }
         }
-        else if (context.actPars() != null) // si es una llamada a metodo
+        else if (context.LEFT_PAREN() != null) // si es una llamada a metodo
         {
-            Visit(context.actPars());
+            if (context.actPars() != null) Visit(context.actPars());
         }
-        else if (context.INC() != null || context.DEC() != null) // si es un incremento o decremento
+        else if (context.INC() != null ) // si es un incremento o decremento
         {
-            // TODO: revisar si es necesario hacer algo
+            // TODO: acceder al tipo de la variable y ver si es int y aumentar su valor 
+        }
+        else if (context.DEC() != null)
+        {
+            // TODO: acceder al tipo de la variable y ver si es int y disminuir su valor
+        }
+        else
+        {
+            System.Diagnostics.Debug.WriteLine("Error en visit AssignStatementAST, tipo recibido: " +
+                                               context.GetText());
         }
 
         return null;
@@ -328,7 +349,6 @@ public class AContextual : AlphaParserBaseVisitor<object>
             Visit(context.statement(1));
             tabla.CloseScope();
         }
-
         return null;
     }
 
@@ -405,28 +425,14 @@ public class AContextual : AlphaParserBaseVisitor<object>
      */
     public override object? VisitWriteStatementAST(AlphaParser.WriteStatementASTContext context)
     {
-        Visit(context.expr());
+        foreach (var child in context.children)
+        {
+            Visit(child);
+        }
+
         return null;
     }
-
-    /*
-    | addMeth SEMICOLON #AddMethStatementAST
-     */
-    public override object VisitAddMethStatementAST(AlphaParser.AddMethStatementASTContext context)
-    {
-        Visit(context.addMeth());
-        return null;
-    }
-
-    /*
-    | delMeth SEMICOLON #DelMethStatementAST
-     */
-    public override object VisitDelMethStatementAST(AlphaParser.DelMethStatementASTContext context)
-    {
-        Visit(context.delMeth());
-        return null;
-    }
-
+    
     /*
      * | block #BlockStatementAST
      */
@@ -447,24 +453,23 @@ public class AContextual : AlphaParserBaseVisitor<object>
     /*
      * block : LEFT_BRACE (varDecl | statement)* RIGHT_BRACE #BlockAST;
      */
-    public override object VisitBlockAST(AlphaParser.BlockASTContext context)
+    public override object? VisitBlockAST(AlphaParser.BlockASTContext context)
     {
-        if (context.varDecl().Length > 0)
+        foreach (var child in context.children)
         {
-            foreach (var child in context.varDecl())
+            if (child is AlphaParser.StatementContext)
+            {
+                Visit(child);
+            } else if (child is AlphaParser.VarDeclASTContext)
             {
                 Visit(child);
             }
-        }
-
-        if (context.statement().Length > 0)
-        {
-            foreach (var child in context.statement())
+            else
             {
-                Visit(child);
+                System.Diagnostics.Debug.WriteLine("Error de sintaxis");
+                //throw new SyntaxErrorException("Error de sintaxis");
             }
         }
-
         return null;
     }
 
@@ -473,20 +478,10 @@ public class AContextual : AlphaParserBaseVisitor<object>
      */
     public override object? VisitActParsAST(AlphaParser.ActParsASTContext context)
     {
-        // ocupo retornar la cantidad de parametros que tiene el metodo
-        // y el tipo de cada uno de ellos
-
-        Dictionary<string, string> actPars = new Dictionary<string, string>();
-
-        Visit(context.expr(0));
-        if (context.expr().Length > 1)
+        foreach (var child in context.children)
         {
-            for (int i = 1; i < context.expr().Length; i++)
-            {
-                Visit(context.expr(i));
-            }
+            Visit(child);
         }
-
         return null;
     }
 
@@ -495,16 +490,11 @@ public class AContextual : AlphaParserBaseVisitor<object>
      */
     public override object VisitConditionAST(AlphaParser.ConditionASTContext context)
     {
-        Visit(context.condTerm(0));
-        if (context.condTerm().Length > 1)
+        foreach (var child in context.condTerm())
         {
-            for (int i = 1; i < context.condTerm().Length; i++)
-            {
-                Visit(context.condTerm(i));
-            }
+            Visit(child);
         }
-
-        return base.VisitConditionAST(context);
+        return null;
     }
 
     /*
@@ -512,15 +502,10 @@ public class AContextual : AlphaParserBaseVisitor<object>
      */
     public override object? VisitCondTermAST(AlphaParser.CondTermASTContext context)
     {
-        Visit(context.condFact(0));
-        if (context.condFact().Length > 1)
+        foreach (var child in context.condFact())
         {
-            for (int i = 1; i < context.condFact().Length; i++)
-            {
-                Visit(context.condFact(i));
-            }
+            Visit(child);
         }
-
         return null;
     }
 
@@ -529,6 +514,7 @@ public class AContextual : AlphaParserBaseVisitor<object>
      */
     public override object? VisitCondFactAST(AlphaParser.CondFactASTContext context)
     {
+
         Visit(context.expr(0));
         Visit(context.relop());
         Visit(context.expr(1));
@@ -549,23 +535,37 @@ public class AContextual : AlphaParserBaseVisitor<object>
      */
     public override object VisitExprAST(AlphaParser.ExprASTContext context)
     {
+        if (context.MINUSEXP() != null)
+        {
+            Visit(context.MINUSEXP());
+        }
         if (context.cast() != null)
         {
             Visit(context.cast());
         }
-
-        Visit(context.term(0));
-
+        
+        string tipo = (string) Visit(context.term(0));
+        if(tipo == null)
+        {
+            Console.WriteLine("Error de tipos en la expresion");
+            return null;
+        }
+        
         if (context.term().Length > 1)
         {
             for (int i = 1; i < context.term().Length; i++)
             {
                 Visit(context.addop(i - 1));
-                Visit(context.term(i));
+                string tipoLista = (string) Visit(context.term(i));//2
+                if (tipoLista != tipo)
+                {
+                    Console.WriteLine("Error de tipos en la expresion");
+                    return null;
+                }
             }
         }
 
-        return null;
+        return tipo;
     }
 
     /*
@@ -573,17 +573,22 @@ public class AContextual : AlphaParserBaseVisitor<object>
      */
     public override object? VisitTermAST(AlphaParser.TermASTContext context)
     {
-        Visit(context.factor(0));
+        string tipo = (string) Visit(context.factor(0)); // tipo del primer factor
         if (context.factor().Length > 1)
         {
             for (int i = 1; i < context.factor().Length; i++)
             {
                 Visit(context.mulop(i - 1));
-                Visit(context.factor(i));
+                string tipoLista = (string)  Visit(context.factor(i));
+                if (tipo != tipoLista)
+                {
+                    System.Diagnostics.Debug.WriteLine("ERROR: TIPOS DIFERENTES");
+                    return null;
+                }
             }
         }
 
-        return null;
+        return tipo;
     }
 
     /*
@@ -594,12 +599,15 @@ public class AContextual : AlphaParserBaseVisitor<object>
      */
     public override object? VisitDesignatorFactorAST(AlphaParser.DesignatorFactorASTContext context)
     {
-        Visit(context.designator());
-        if (context.actPars() != null)
+        string tipo = (string) Visit(context.designator());
+        if (context.LEFT_PAREN() != null)
         {
-            Visit(context.actPars());
+            if (context.actPars() != null)
+            {
+                Visit(context.actPars());
+            }
         }
-
+        if(tipo != null) return tipo;
         return null;
     }
 
@@ -608,7 +616,7 @@ public class AContextual : AlphaParserBaseVisitor<object>
      */
     public override object? VisitCharFactorAST(AlphaParser.CharFactorASTContext context)
     {
-        return null;
+        return "Char";
     }
 
     /*
@@ -616,7 +624,7 @@ public class AContextual : AlphaParserBaseVisitor<object>
      */
     public override object? VisitStringFactorAST(AlphaParser.StringFactorASTContext context)
     {
-        return null;
+        return "String";
     }
 
     /*
@@ -624,7 +632,7 @@ public class AContextual : AlphaParserBaseVisitor<object>
      */
     public override object? VisitIntFactorAST(AlphaParser.IntFactorASTContext context)
     {
-        return null;
+        return "Int";
     }
 
     /*
@@ -632,7 +640,7 @@ public class AContextual : AlphaParserBaseVisitor<object>
      */
     public override object? VisitDoubleFactorAST(AlphaParser.DoubleFactorASTContext context)
     {
-        return null;
+        return "Double";
     }
 
     /*
@@ -640,7 +648,7 @@ public class AContextual : AlphaParserBaseVisitor<object>
      */
     public override object? VisitBoolFactorAST(AlphaParser.BoolFactorASTContext context)
     {
-        return null;
+        return "Boolean";
     }
 
     /*
@@ -648,8 +656,16 @@ public class AContextual : AlphaParserBaseVisitor<object>
      */
     public override object? VisitNewFactorAST(AlphaParser.NewFactorASTContext context)
     {
-        Visit(context.ident());
-        return null;
+        IToken ident = (IToken) Visit(context.ident());
+        
+        Type? tipo = tabla.Buscar(ident.Text); //msg[0] //msg
+        
+        if(tipo == null)
+        {
+            Console.WriteLine("Error de tipos en la expresion");
+            return null;
+        }
+        return tipo.getType();
     }
 
     /*
@@ -657,83 +673,72 @@ public class AContextual : AlphaParserBaseVisitor<object>
      */
     public override object? VisitParenFactorAST(AlphaParser.ParenFactorASTContext context)
     {
-        Visit(context.expr());
+        string tipo = (string) Visit(context.expr());
+        if (tipo != null) return tipo;
         return null;
-    }
-
-    /*
-     | ORD LEFT_PAREN (ident) RIGHT_PAREN #CastingCharToIntAST 
-     */
-    public override object? VisitCastingCharToIntAST(AlphaParser.CastingCharToIntASTContext context)
-    {
-        Visit(context.ident());
-        return null;
-    }
-
-    /*
-     | CHR LEFT_PAREN (ident) RIGHT_PAREN #CastingIntToChargAST
-     */
-    public override object VisitCastingIntToChargAST(AlphaParser.CastingIntToChargASTContext context)
-    {
-        Visit(context.ident());
-        return null;
-    }
-
-    /*
-     | lenMeth #LenMethFactorAST;
-     */
-    public override object VisitLenMethFactorAST(AlphaParser.LenMethFactorASTContext context)
-    {
-        Visit(context.lenMeth());
-        return null;
-    }
-
-    /*
-     addMeth: ident DOT ADDMETHOD LEFT_PAREN (CHAR_CONST | INT_CONST) RIGHT_PAREN #AddMethAST;
-     */
-    public override object VisitAddMethAST(AlphaParser.AddMethASTContext context)
-    {
-        Visit(context.ident());
-        return base.VisitAddMethAST(context);
     }
     
-    /*
-     lenMeth: ident DOT DELMETHOD LEFT_BRACKET INT_CONST RIGHT_BRACKET #DelMethAST;
-     */
-    public override object VisitLenMethAST(AlphaParser.LenMethASTContext context)
-    {
-        Visit(context.ident());
-        return null;
-    }
-
-    /*
-     delMeth: ident DOT LENMETHOD LEFT_PAREN RIGHT_PAREN  #LenMethAST;
-     */
-    public override object VisitDelMethAST(AlphaParser.DelMethASTContext context)
-    {
-        Visit(context.ident());
-        return null;
-    }
- 
     /*
      * designator : ident (DOT ident | LEFT_BRACKET expr RIGHT_BRACKET)*   #DesignatorAST;
      */
     public override object? VisitDesignatorAST(AlphaParser.DesignatorASTContext context)
     {
-        Visit(context.ident(0));
-        if (context.ident().Length > 1)
+        if(context.ident().Length > 1) 
         {
-            for (int i = 1; i < context.ident().Length; i++)
+            // validar si el tipo es arreglo 
+            
+            System.Diagnostics.Debug.WriteLine(context.ident(0).GetText() + " DESIGNATOR mas de 1 id");
+            CustomType tipo = (CustomType) tabla.Buscar(context.ident(context.ident().Length - 2).GetText());
+            if (tipo != null)
             {
-                Visit(context.ident(i));
+                ClassType classType = (ClassType)tabla.Buscar(tipo.TypeOf);
+                if (classType != null)
+                {
+                    // cast to classtype
+                    foreach (var data in  classType.attributes)
+                    {
+
+                        if (data.token.Text.Equals(context.ident(context.ident().Length - 1).GetText()))
+                        {
+                            System.Diagnostics.Debug.WriteLine(data.token.Text + "Se encontro en dicha clase");
+                            return data.getType();
+                        }
+                    }
+                    System.Diagnostics.Debug.WriteLine(" No se encontro en dicha clase");
+
+                    return null;
+                
+                }
             }
+
+            System.Diagnostics.Debug.WriteLine(" No se encontro en dicha clase " +
+                                               context.ident(context.ident().Length - 2).GetText());
+            return null;
         }
-        else if (context.expr().Length > 0)
+        
+        if (context.ident().Length == 1) // solo hay un id
         {
-            foreach (var child in context.expr())
+            //enterito = 1
+            Type tipo = tabla.Buscar(context.ident(0).GetText());
+            System.Diagnostics.Debug.WriteLine(context.ident(0).GetText()+ " DESIGNATOR");
+            if (tipo != null)
             {
-                Visit(child);
+                return tipo.getType();
             }
+            System.Diagnostics.Debug.WriteLine( " No se encontro");
+            return null;
+        }
+        if (context.expr() != null)
+        {
+            //int char //point no
+            //msg[0] // msg[0][0] no
+            Type tipo = tabla.Buscar(context.ident(0).GetText());
+            if (tipo != null )
+            {
+                return tipo.getType();
+            }
+
+            return null;
         }
 
         return null;
@@ -749,7 +754,7 @@ public class AContextual : AlphaParserBaseVisitor<object>
      */
     public override object? VisitRelop(AlphaParser.RelopContext context)
     {
-        return null;
+        return context.GetText();
     }
 
     /*
@@ -757,7 +762,7 @@ public class AContextual : AlphaParserBaseVisitor<object>
      */
     public override object? VisitAddop(AlphaParser.AddopContext context)
     {
-        return null;
+        return context.GetText();
     }
 
     /*
@@ -765,7 +770,7 @@ public class AContextual : AlphaParserBaseVisitor<object>
      */
     public override object? VisitMulop(AlphaParser.MulopContext context)
     {
-        return null;
+        return context.GetText();
     }
 
     /*

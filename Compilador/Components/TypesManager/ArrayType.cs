@@ -4,8 +4,6 @@ namespace Compilador.Components.TypesManager;
 
 public class ArrayType: Type
 {
-    public readonly string type = "array";
-    
     public enum Types
     {
         Int,
@@ -13,13 +11,21 @@ public class ArrayType: Type
         Error,
 
     }
+    public readonly string type = "array";
+    public int size = 0;
     public Types dataType;
     
     public ArrayType(IToken t, int n, Types dt) : base(t, n)
     {
         dataType = dt;
     }
-    
+
+    public int Size
+    {
+        get => size;
+        set => size = value;
+    }
+
     public static Types showType(string type)
     {
         return type switch
@@ -29,5 +35,9 @@ public class ArrayType: Type
             _ => Types.Error,
         };
     }
-    
+
+    public override string getType()
+    {
+        return dataType.ToString();
+    }
 }
