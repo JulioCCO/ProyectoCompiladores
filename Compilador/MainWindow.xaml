@@ -9,16 +9,15 @@
         ResizeMode="NoResize"
         Title="MainWindow" Height="460" Width="870">
     <Grid>
-        <TabControl 
+        <TabControl
             DisplayMemberPath="Header"
             Name="Tab"
             Height="375"
             Width="700"
             HorizontalAlignment="Left"
             VerticalAlignment="Top"
-            Margin="20,10,0,0"
-        >
-            <TabItem Header= "Principal" Name="Principal">
+            Margin="20,10,0,0">
+            <TabItem Header="Principal" Name="Principal">
                 <TextBox
                     TextChanged="Pantalla_TextChanged"
                     SelectionChanged="Pantalla_SelectionChanged"
@@ -33,47 +32,46 @@
                     TextWrapping="Wrap"
                     AcceptsTab="True"
                     AcceptsReturn="True"
-                    VerticalScrollBarVisibility="Visible"
-                ></TextBox>
-            </TabItem>     
+                    VerticalScrollBarVisibility="Visible">
+                </TextBox>
+            </TabItem>
 
         </TabControl>
-        <Button Background="Linen" 
+        <Button Background="Linen"
                 Content="Upload file"
                 Click="Upload_File_Button_Click"
-                HorizontalAlignment="Right" 
-                Margin="10,10,15,10" 
-                VerticalAlignment="Top" 
-                Width="75"
-        />
-        <Button Background="Linen" 
-                Content="Run" 
+                HorizontalAlignment="Right"
+                Margin="10,10,15,10"
+                VerticalAlignment="Top"
+                Width="75" />
+        <Button Background="Linen"
+                Content="Run"
                 Click="Run_Button_Click"
-                HorizontalAlignment="Right" 
-                Margin="10,40,15,10" 
-                VerticalAlignment="Top" 
-                Width="75"/>
-        <Button Background="Linen" 
+                HorizontalAlignment="Right"
+                Margin="10,40,15,10"
+                VerticalAlignment="Top"
+                Width="75" />
+        <Button Background="Linen"
                 Content="Add File"
                 Click="Add_Tab_Button_Click"
-                HorizontalAlignment="Right" 
-                Margin="10,70,15,10" 
-                VerticalAlignment="Top" 
-                Width="75"/>
-        <Button Background="Linen" 
+                HorizontalAlignment="Right"
+                Margin="10,70,15,10"
+                VerticalAlignment="Top"
+                Width="75" />
+        <Button Background="Linen"
                 Content="Remove File"
                 Click="closeButton_Click"
-                HorizontalAlignment="Right" 
-                Margin="10,100,15,10" 
-                VerticalAlignment="Top" 
-                Width="75"/>
-        <Button Background="Linen" 
+                HorizontalAlignment="Right"
+                Margin="10,100,15,10"
+                VerticalAlignment="Top"
+                Width="75" />
+        <Button Background="Linen"
                 Content="Exit"
                 Click="Exit_Button_Click"
-                HorizontalAlignment="Right" 
-                Margin="10,130,15,10" 
-                VerticalAlignment="Top" 
-                Width="75"/>
+                HorizontalAlignment="Right"
+                Margin="10,130,15,10"
+                VerticalAlignment="Top"
+                Width="75" />
         <Label
             BorderThickness="1"
             Name="Output"
@@ -81,9 +79,8 @@
             FontSize="14"
             HorizontalAlignment="Right"
             VerticalAlignment="Bottom"
-            Margin="0,0,10,10"
-            ></Label>
+            Margin="0,0,10,10">
+        </Label>
     </Grid>
 
 </Window>
-

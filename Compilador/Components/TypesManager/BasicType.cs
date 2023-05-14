@@ -3,7 +3,7 @@ using Antlr4.Runtime;
 
 namespace Compilador.Components.TypesManager;
 
-public class BasicType: Type
+public class BasicType : Type
 {
     public enum Types
     {
@@ -11,17 +11,17 @@ public class BasicType: Type
         Double,
         String,
         Boolean,
-        Char,       
+        Char,
         Error,
     }
 
     public Types type;
 
-    public BasicType(IToken t ,Types bs, int n): base(t, n)
+    public BasicType(IToken t, Types bs, int n) : base(t, n)
     {
         type = bs;
     }
-    
+
     public static Types showType(string type)
     {
         return type switch
@@ -34,7 +34,7 @@ public class BasicType: Type
             _ => Types.Error,
         };
     }
-    
+
     public static Boolean isBasicType(string type)
     {
         return type switch

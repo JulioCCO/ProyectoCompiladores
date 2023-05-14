@@ -42,7 +42,7 @@ condFact : expr relop expr                                                      
 
 cast : LEFT_PAREN type RIGHT_PAREN                                                              #CastAST;
 
-expr : MINUSEXP? cast ? term (addop term)*                                                       #ExprAST;
+expr : MINUSEXP? cast? term (addop term)*                                                       #ExprAST;
  
 term : factor (mulop factor)*                                                                   #TermAST;
 
@@ -50,9 +50,9 @@ factor : designator (LEFT_PAREN actPars? RIGHT_PAREN)?                          
        | CHAR_CONST                                                                             #CharFactorAST
        | STRING_CONST                                                                           #StringFactorAST
        | (MINUS)? INT_CONST                                                                     #IntFactorAST   
-       | DOUBLE_CONST                                                                           #DoubleFactorAST    
+       | (MINUS)? DOUBLE_CONST                                                                  #DoubleFactorAST    
        | BOOL_CONST                                                                             #BoolFactorAST
-       | NEW ident                                                                              #NewFactorAST
+       | NEW type                                                                               #NewFactorAST
        | LEFT_PAREN expr RIGHT_PAREN                                                            #ParenFactorAST;
 
 designator : ident (DOT ident | LEFT_BRACKET expr RIGHT_BRACKET)*                               #DesignatorAST;
@@ -70,7 +70,7 @@ mulop : MULT | DIV | MOD;
 
 ident : IDENTIFIER                                                                                #IdentAST;
 
-array : LEFT_BRACKET RIGHT_BRACKET                                                                #ArrayAST;
+array : LEFT_BRACKET INT_CONST? RIGHT_BRACKET                                                     #ArrayAST;
 
 
 

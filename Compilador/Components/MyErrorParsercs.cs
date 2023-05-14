@@ -4,23 +4,25 @@ using System.Text;
 using Antlr4.Runtime;
 using Antlr4.Runtime.Misc;
 using generated;
+
 namespace Compilador.Components;
 
 public class MyErrorParser : BaseErrorListener
 {
-    public LinkedList<string>  ErrorMsgs ;
-    
+    public LinkedList<string> ErrorMsgs;
+
     public MyErrorParser()
     {
         ErrorMsgs = new LinkedList<string>();
     }
 
-    public override void SyntaxError(TextWriter output, IRecognizer recognizer, IToken offendingSymbol, int line, int charPositionInLine,
+    public override void SyntaxError(TextWriter output, IRecognizer recognizer, IToken offendingSymbol, int line,
+        int charPositionInLine,
         string msg, RecognitionException e)
     {
-        if (recognizer.GetType() ==  typeof(AlphaParser))
+        if (recognizer.GetType() == typeof(AlphaParser))
             ErrorMsgs.AddFirst($"PARSER ERROR - line {line}:{charPositionInLine} {msg}");
-        
+
         else
             ErrorMsgs.AddFirst("Other Error");
     }
@@ -37,8 +39,9 @@ public class MyErrorParser : BaseErrorListener
         foreach (string s in ErrorMsgs)
         {
             //System.Diagnostics.Debug.WriteLine("\nError parser:  "+$"{s}" + " \n" );
-            builder.Append(s + " \n" );
+            builder.Append(s + " \n");
         }
+
         return builder.ToString();
     }
 }

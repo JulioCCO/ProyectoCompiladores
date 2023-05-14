@@ -2,19 +2,19 @@
 
 namespace Compilador.Components.TypesManager;
 
-public class ArrayType: Type
+public class ArrayType : Type
 {
     public enum Types
     {
         Int,
         Char,
         Error,
-
     }
+
     public readonly string type = "array";
     public int size = 0;
     public Types dataType;
-    
+
     public ArrayType(IToken t, int n, Types dt) : base(t, n)
     {
         dataType = dt;

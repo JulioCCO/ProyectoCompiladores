@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Windows;
 using Antlr4.Runtime;
+using Antlr4.Runtime.Tree;
 using generated;
 using Compilador.Components.TypesManager;
 using Type = Compilador.Components.TypesManager.Type;
@@ -10,7 +13,7 @@ namespace Compilador.Components;
 public class AContextual : AlphaParserBaseVisitor<object>
 {
     public TablaSimbolos tabla; // tabla de simbolos global
-    
+
 
     public AContextual()
     {
@@ -34,7 +37,6 @@ public class AContextual : AlphaParserBaseVisitor<object>
     {
         try
         {
-            System.Diagnostics.Debug.WriteLine("visit ProgramClassAST");
             tabla.OpenScope();
             IToken Tok = (IToken)Visit(context.ident());
             ClassType cls = new ClassType(Tok, TablaSimbolos.nivelActual);
@@ -76,7 +78,6 @@ public class AContextual : AlphaParserBaseVisitor<object>
     {
         try
         {
-            System.Diagnostics.Debug.WriteLine("visit VarDeclAST");
             var ultimasDosPosiciones =
                 context.type().GetText()
                     .Substring(context.type().GetText().Length - 2); // [] para saber si es arreglo
@@ -90,7 +91,36 @@ public class AContextual : AlphaParserBaseVisitor<object>
                     IToken tok = (IToken)Visit(child);
                     BasicType.Types varTipo = BasicType.showType(context.type().GetText());
                     BasicType var = new BasicType(tok, varTipo, TablaSimbolos.nivelActual);
-                    tabla.Insertar(var);
+                    if (tabla.currentClass != null) // es atributo de clase
+                    {
+                        if (!tabla.currentClass.BuscarAtributo(var.token.Text))
+                        {
+                            tabla.Insertar(var);
+                            tabla.currentClass.attributes.AddLast(var);
+                        }
+                        else
+                        {
+                            System.Diagnostics.Debug.WriteLine("Error en visit VarDeclAST, atributo ya existe: " +
+                                                               var.token.Text);
+                        }
+                    }
+                    else if (tabla.currentMethod != null) // es variable local de metodo
+                    {
+                        Type? tipo = tabla.Buscar(tok.Text);
+                        if (tipo != null && tipo.nivel == 0)
+                        {
+                            System.Diagnostics.Debug.WriteLine("Error en visit VarDeclAST, variable ya existe: " +
+                                                               tok.Text);
+                        }
+                        else
+                        {
+                            tabla.Insertar(var);
+                        }
+                    }
+                    else if (tabla.currentClass == null && tabla.currentMethod == null) // es variable global
+                    {
+                        tabla.Insertar(var);
+                    }
                 }
             }
             else if (ultimasDosPosiciones.Equals("[]")) // si es arreglo
@@ -106,9 +136,40 @@ public class AContextual : AlphaParserBaseVisitor<object>
                 {
                     foreach (var child in context.ident())
                     {
-                        IToken tok = (IToken)Visit(child);
-                        ArrayType arr = new ArrayType(tok, TablaSimbolos.nivelActual, type);
-                        tabla.Insertar(arr);
+                        if (tabla.currentClass != null)
+                        {
+                            System.Diagnostics.Debug.WriteLine("la clase solo puede tener variables de tipo basico.");
+                        }
+                        else if (tabla.currentMethod != null)
+                        {
+                            IToken tok = (IToken)Visit(child);
+                            Type? tipo = tabla.Buscar(tok.Text);
+                            if (tipo != null && tipo.nivel <= TablaSimbolos.nivelActual)
+                            {
+                                System.Diagnostics.Debug.WriteLine("Error en visit VarDeclAST, variable ya existe: " +
+                                                                   tok.Text);
+                            }
+                            else
+                            {
+                                ArrayType arr = new ArrayType(tok, TablaSimbolos.nivelActual, type);
+                                tabla.Insertar(arr);
+                            }
+                        }
+                        else if (tabla.currentClass == null && tabla.currentMethod == null) // es variable global
+                        {
+                            IToken tok = (IToken)Visit(child);
+                            Type? tipo = tabla.Buscar(tok.Text);
+                            if (tipo != null)
+                            {
+                                System.Diagnostics.Debug.WriteLine("Error en visit VarDeclAST, variable ya existe: " +
+                                                                   tok.Text);
+                            }
+                            else
+                            {
+                                ArrayType arr = new ArrayType(tok, TablaSimbolos.nivelActual, type);
+                                tabla.Insertar(arr);
+                            }
+                        }
                     }
                 }
             }
@@ -118,8 +179,38 @@ public class AContextual : AlphaParserBaseVisitor<object>
                 foreach (var child in context.ident())
                 {
                     IToken tok = (IToken)Visit(child);
-                    CustomType var = new CustomType(tok, TablaSimbolos.nivelActual, context.type().GetText());
-                    tabla.Insertar(var);
+                    if (tabla.currentClass != null)  // si estoy en una clase
+                    {
+                        System.Diagnostics.Debug.WriteLine("la clase solo puede tener variables de tipo basico.");
+                    }
+                    else if (tabla.currentMethod != null) // si estoy en un metodo
+                    {
+                        Type? tipo = tabla.Buscar(tok.Text);
+                        if (tipo != null && tipo.nivel <= TablaSimbolos.nivelActual)
+                        {
+                            System.Diagnostics.Debug.WriteLine("Error en visit VarDeclAST, variable ya existe: " +
+                                                               tok.Text);
+                        }
+                        else
+                        {
+                            CustomType var = new CustomType(tok, TablaSimbolos.nivelActual, context.type().GetText());
+                            tabla.Insertar(var);
+                        }
+                    }
+                    else if (tabla.currentClass == null && tabla.currentMethod == null) // es variable global
+                    {
+                        Type? tipo = tabla.Buscar(tok.Text);
+                        if (tipo != null)
+                        {
+                            System.Diagnostics.Debug.WriteLine("Error en visit VarDeclAST, variable ya existe: " +
+                                                               tok.Text);
+                        }
+                        else
+                        {
+                            CustomType var = new CustomType(tok, TablaSimbolos.nivelActual, context.type().GetText());
+                            tabla.Insertar(var);
+                        }
+                    }
                 }
             }
             else
@@ -131,7 +222,7 @@ public class AContextual : AlphaParserBaseVisitor<object>
         catch (Exception e)
         {
             System.Diagnostics.Debug.WriteLine("Error en visit VarDeclAST" + e.Message);
-            throw;
+            //throw;
         }
 
         return null;
@@ -142,21 +233,27 @@ public class AContextual : AlphaParserBaseVisitor<object>
      */
     public override object? VisitClassDeclAST(AlphaParser.ClassDeclASTContext context)
     {
-        System.Diagnostics.Debug.WriteLine("visit ClassDeclAST: " + context.ident().GetText());
-
+        if (tabla.Buscar(context.ident().GetText()) != null)
+        {
+            System.Diagnostics.Debug.WriteLine("Error en visit ClassDeclAST, clase ya existe: " +
+                                               context.ident().GetText());
+            return null;
+        }
+        
         IToken tok = (IToken)Visit(context.ident());
         ClassType cls = new ClassType(tok, TablaSimbolos.nivelActual);
         tabla.Insertar(cls);
+        tabla.currentClass = cls; // para saber en que clase estoy
         tabla.OpenScope();
-        if (context.varDecl().Length > 0)
+
+        foreach (var child in context.varDecl())
         {
-            foreach (var child in context.varDecl())
-            {
-                Visit(child);
-            }
+            Visit(child);
         }
 
         tabla.CloseScope();
+
+        tabla.currentClass = null; // como se sale de la clase, se pone en null
         return null;
     }
 
@@ -165,17 +262,24 @@ public class AContextual : AlphaParserBaseVisitor<object>
      */
     public override object? VisitMethodDeclAST(AlphaParser.MethodDeclASTContext context)
     {
-        System.Diagnostics.Debug.WriteLine("visit MethodDeclAST: " + context.ident().GetText());
+        IToken tok = (IToken)Visit(context.ident());
+        Type tipo = tabla.Buscar(tok.Text) as Type;
+
+        if (tabla.Buscar(tok.Text) != null)
+        {
+            System.Diagnostics.Debug.WriteLine("Error en visit MethodDeclAST ya existe un objeto llamado: "
+                                               + context.ident().GetText() + " de tipo: " + tipo.GetType());
+            return null;
+        }
 
         LinkedList<Type> parametros = new LinkedList<Type>();
+
         if (context.formPars() != null)
         {
             tabla.OpenScope();
             parametros = (LinkedList<Type>)Visit(context.formPars());
             tabla.CloseScope();
         }
-
-        IToken tok = (IToken)Visit(context.ident());
 
         if (context.type() != null) // Si tiene tipo 
         {
@@ -186,6 +290,7 @@ public class AContextual : AlphaParserBaseVisitor<object>
                     MethodType method = new MethodType(tok, TablaSimbolos.nivelActual, parametros.Count,
                         context.type().GetText(), parametros);
                     tabla.Insertar(method);
+                    tabla.currentMethod = method;
                 }
             }
             else if (tabla.Buscar(context.type().GetText()) != null &&
@@ -194,6 +299,7 @@ public class AContextual : AlphaParserBaseVisitor<object>
                 MethodType method = new MethodType(tok, TablaSimbolos.nivelActual, parametros.Count,
                     context.type().GetText(), parametros);
                 tabla.Insertar(method);
+                tabla.currentMethod = method;
             }
             else // error
             {
@@ -205,6 +311,7 @@ public class AContextual : AlphaParserBaseVisitor<object>
         {
             MethodType method = new MethodType(tok, TablaSimbolos.nivelActual, parametros.Count, "void", parametros);
             tabla.Insertar(method);
+            tabla.currentMethod = method;
         }
         else // error
         {
@@ -212,9 +319,17 @@ public class AContextual : AlphaParserBaseVisitor<object>
                                                context.type().GetText());
         }
 
+
+        foreach (var child in parametros)
+        {
+            tabla.Insertar(child);
+        }
+
         tabla.OpenScope();
         Visit(context.block());
+        tabla.Sacar(tok.Text);
         tabla.CloseScope();
+        tabla.currentMethod = null;
         return null;
     }
 
@@ -225,9 +340,7 @@ public class AContextual : AlphaParserBaseVisitor<object>
      */
     public override LinkedList<Type>? VisitFormParsAST(AlphaParser.FormParsASTContext context)
     {
-        System.Diagnostics.Debug.WriteLine("visit FormParsAST: " + context.GetText());
         LinkedList<Type> parametros = new LinkedList<Type>();
-
 
         for (int i = 0; i < context.ident().Length; i++)
         {
@@ -256,7 +369,7 @@ public class AContextual : AlphaParserBaseVisitor<object>
 
                 if (type is ArrayType.Types.Error)
                 {
-                    System.Diagnostics.Debug.WriteLine("Error en visit VarDeclAST, tipo recibido: " +
+                    System.Diagnostics.Debug.WriteLine("Error en visit formPars, tipo recibido: " +
                                                        context.type(i).GetText());
                 }
                 else if (type is ArrayType.Types.Int or ArrayType.Types.Char)
@@ -281,14 +394,13 @@ public class AContextual : AlphaParserBaseVisitor<object>
     public override object? VisitTypeAST(AlphaParser.TypeASTContext context)
     {
         IToken ident = (IToken)Visit(context.ident());
-        
+
         if (context.array() != null)
         {
             Visit(context.array());
-
         }
 
-        return ident.Text;
+        return ident;
     }
 
     /*
@@ -296,29 +408,186 @@ public class AContextual : AlphaParserBaseVisitor<object>
      */
     public override object? VisitAssignStatementAST(AlphaParser.AssignStatementASTContext context)
     {
-
-        string tipoDesignator = (string) Visit(context.designator());
-        System.Diagnostics.Debug.WriteLine("visit AssignStatementAST typo del designator: " + tipoDesignator);
-        if (context.expr() != null) //  si es una asignacion 
+        string tipoDesignator = (string)Visit(context.designator());
+        if (context.expr() !=
+            null) //  si es una asignacion ------------------------------------------------------------------------------------
         {
-            string tipo = (string) Visit(context.expr());
-            if (tipo != tipoDesignator)
+            string tipoExp = (string)Visit(context.expr());
+
+            if (tipoDesignator != null && tipoExp != null)
             {
-                System.Diagnostics.Debug.WriteLine("Error de tipo en asignacion" + tipo + " " + tipoDesignator);
+                if (tipoDesignator.Contains("[]") && context.expr().GetText().Contains("new"))
+                {
+                    if (!tipoDesignator.ToLower().Contains(tipoExp.ToLower()))
+                    {
+                        System.Diagnostics.Debug.WriteLine("Error de tipo en asignacion: " + tipoDesignator +
+                                                           " diferente a " +
+                                                           tipoExp);
+                    }
+
+                    return null;
+                }
+
+                if (!String.Equals(tipoDesignator, tipoExp, StringComparison.CurrentCultureIgnoreCase))
+                {
+                    System.Diagnostics.Debug.WriteLine("Error de tipo en asignacion: " + tipoDesignator +
+                                                       " diferente a " +
+                                                       tipoExp);
+                }
             }
             else
             {
-                System.Diagnostics.Debug.WriteLine("Asignacion correcta " + tipo + " " + tipoDesignator);
-                
+                System.Diagnostics.Debug.WriteLine("Error de tipo en asignacion nula");
             }
         }
-        else if (context.LEFT_PAREN() != null) // si es una llamada a metodo
+        else if
+            (context.LEFT_PAREN() !=
+             null) // si es una llamada a metodo ------------------------------------------------------------------------------------
         {
-            // TODO: Verificar que el metodo exista y que los parametros sean correctos
-            
-            if (context.actPars() != null) Visit(context.actPars());
+            Type? type = tabla.Buscar(context.designator().GetText());
+
+            if (context.designator().GetText() ==
+                "del") // si es del ------------------------------------------------------------------------------------
+            {
+                //del(arreglo, 1);
+                // TODO: acceder al tipo de la variable y ver si es int y disminuir su valor
+                if (context.actPars() == null)
+                {
+                    System.Diagnostics.Debug.WriteLine("Error metodo  del sin parametros");
+                }
+                else
+                {
+                    // lista de parametros del metodo
+                    LinkedList<Type> actParm = (LinkedList<Type>)Visit(context.actPars());
+                    if (actParm.Count != 2)
+                    {
+                        System.Diagnostics.Debug.WriteLine(
+                            "Error de parametros, cantidad de parametros no coinciden en el del");
+                    }
+                    else
+                    {
+                        if (actParm.ElementAt(0) is ArrayType &&
+                            actParm.ElementAt(1).getType().Equals("Int"))
+                        {
+                        }
+                        else
+                        {
+                            System.Diagnostics.Debug.WriteLine(
+                                "Error de parametros, tipos de parametros no coinciden en el del");
+                            return null;
+                        }
+                    }
+                }
+            }
+            else if
+                (context.designator().GetText() ==
+                 "len") // si es len ------------------------------------------------------------------------------------
+            {
+                //len(arreglo);
+                // TODO: acceder al tipo de la variable y ver si es int y disminuir su valor
+                if (context.actPars() == null)
+                {
+                    System.Diagnostics.Debug.WriteLine("Error metodo len sin parametros");
+                }
+                else
+                {
+                    // lista de parametros del metodo
+                    LinkedList<Type> actParm = (LinkedList<Type>)Visit(context.actPars());
+                    if (actParm.Count != 1)
+                    {
+                        System.Diagnostics.Debug.WriteLine(
+                            "Error de parametros, cantidad de parametros no coinciden en el len");
+                    }
+                    else
+                    {
+                        if (actParm.ElementAt(0) is ArrayType)
+                        {
+                        }
+                        else
+                        {
+                            System.Diagnostics.Debug.WriteLine(
+                                "Error de parametros, tipos de parametros no coinciden en el len");
+                        }
+                    }
+                }
+            }
+            else if
+                (context.designator().GetText() ==
+                 "add") // si es add ------------------------------------------------------------------------------------
+            {
+                //add(arreglo, 0);
+                // TODO: acceder al tipo de la variable y ver si es int y disminuir su valor
+                if (context.actPars() == null)
+                {
+                    System.Diagnostics.Debug.WriteLine("Error metodo add sin parametros");
+                }
+                else
+                {
+                    // lista de parametros del metodo
+                    LinkedList<Type> actParm = (LinkedList<Type>)Visit(context.actPars());
+                    if (actParm.Count != 2)
+                    {
+                        System.Diagnostics.Debug.WriteLine(
+                            "Error de parametros, cantidad de parametros no coinciden en el add");
+                    }
+                    else
+                    {
+                        if (actParm.ElementAt(0).getType().Equals(actParm.ElementAt(1).getType()))
+                        {
+                        }
+                        else
+                        {
+                            System.Diagnostics.Debug.WriteLine(
+                                "Error de parametros, tipos de parametros no coinciden en el add");
+                        }
+                    }
+                }
+            }
+            else if
+                (type is MethodType method) // si es un metodo ------------------------------------------------------------------------------------
+            {
+                // TODO: Verificar que el metodo exista y que los parametros sean correctos
+                if (context.actPars() != null)
+                {
+                    LinkedList<Type> actParm = new LinkedList<Type>();
+                    actParm = (LinkedList<Type>)Visit(context.actPars());
+
+                    if (actParm.Count == method.cantParams)
+                    {
+                        for (int i = 0; i < method.cantParams; i++)
+                        {
+                            if (method.paramsTypes.ElementAt(i).getType() != actParm.ElementAt(i).getType())
+                            {
+                                System.Diagnostics.Debug.WriteLine(
+                                    "Error de parametros, tipos de parametros no coinciden");
+                            }
+                        }
+                    }
+                    else if (actParm.Count < method.cantParams)
+                    {
+                        System.Diagnostics.Debug.WriteLine("Error de parametros, faltan parametros");
+                    }
+                    else
+                    {
+                        System.Diagnostics.Debug.WriteLine("Error de parametros, sobran parametros");
+                    }
+                }
+                else if (method.cantParams > 0)
+                {
+                    System.Diagnostics.Debug.WriteLine("Error en visit AssignStatementAST, faltan parametros: " +
+                                                       context.GetText());
+                }
+            }
+            else
+            {
+                System.Diagnostics.Debug.WriteLine(
+                    "Error en visit AssignStatementAST method validation, tipo recibido: " +
+                    context.GetText());
+            }
         }
-        else if (context.INC() != null ) // si es un incremento o decremento
+        else if
+            (context.INC() !=
+             null) // si es un incremento o decremento ------------------------------------------------------------------------------------
         {
             // TODO: acceder al tipo de la variable y ver si es int y aumentar su valor 
         }
@@ -341,16 +610,24 @@ public class AContextual : AlphaParserBaseVisitor<object>
     public override object? VisitIfStatementAST(AlphaParser.IfStatementASTContext context)
     {
         tabla.OpenScope();
-        Visit(context.condition());
-        Visit(context.statement(0));
-        tabla.CloseScope();
-
-        if (context.statement(1) != null)
+        bool conditionStatus = (bool)Visit(context.condition());
+        if (conditionStatus)
         {
-            tabla.OpenScope();
-            Visit(context.statement(1));
-            tabla.CloseScope();
+            Visit(context.statement(0));
         }
+        else
+        {
+            System.Diagnostics.Debug.WriteLine("Error en visit IfStatementAST, condicion falsa: " +
+                                               context.condition().GetText());
+            if (context.statement(1) != null)
+            {
+                tabla.OpenScope();
+                Visit(context.statement(1));
+                tabla.CloseScope();
+            }
+        }
+
+        tabla.CloseScope();
         return null;
     }
 
@@ -363,7 +640,27 @@ public class AContextual : AlphaParserBaseVisitor<object>
         Visit(context.expr());
         if (context.condition() != null)
         {
-            Visit(context.condition());
+            bool conditionStatus = (bool)Visit(context.condition());
+            if (conditionStatus)
+            {
+                if (context.statement().Length > 1)
+                {
+                    Visit(context.statement(0));
+                    Visit(context.statement(1));
+                }
+                else
+                {
+                    Visit(context.statement(0));
+                }
+            }
+            else
+            {
+                System.Diagnostics.Debug.WriteLine("Error en visit ForStatementAST, condicion falsa: " +
+                                                   context.GetText());
+            }
+
+            tabla.CloseScope();
+            return null;
         }
 
         if (context.statement().Length > 1)
@@ -386,8 +683,17 @@ public class AContextual : AlphaParserBaseVisitor<object>
     public override object? VisitWhileStatementAST(AlphaParser.WhileStatementASTContext context)
     {
         tabla.OpenScope();
-        Visit(context.condition());
-        Visit(context.statement());
+        bool condition = (bool)Visit(context.condition());
+        if (condition)
+        {
+            Visit(context.statement());
+        }
+        else
+        {
+            System.Diagnostics.Debug.WriteLine("Error en visit WhileStatementAST, condicion falsa: " +
+                                               context.condition().GetText());
+        }
+
         tabla.CloseScope();
         return null;
     }
@@ -407,8 +713,20 @@ public class AContextual : AlphaParserBaseVisitor<object>
     {
         if (context.expr() != null)
         {
-            // TODO: Verificar que el tipo de la expresion sea igual al tipo de retorno del metodo
-            Visit(context.expr());
+            string tipoReturn = (string)Visit(context.expr());
+            if (tabla.currentMethod.returnType == "void")
+            {
+                System.Diagnostics.Debug.WriteLine(
+                    "Error en visit ReturnStatementAST, metodos void no retornan datos: " +
+                    context.expr().GetText());
+            }
+            else if (tipoReturn.ToLower() != tabla.currentMethod.returnType)
+            {
+                System.Diagnostics.Debug.WriteLine("Error en visit ReturnStatementAST, tipo de retorno incorrecto: " +
+                                                   " El tipo de return del metodo es: " +
+                                                   tabla.currentMethod.returnType +
+                                                   " y el tipo de retorno del return es: " + tipoReturn);
+            }
         }
 
         return null;
@@ -435,7 +753,7 @@ public class AContextual : AlphaParserBaseVisitor<object>
 
         return null;
     }
-    
+
     /*
      * | block #BlockStatementAST
      */
@@ -460,19 +778,26 @@ public class AContextual : AlphaParserBaseVisitor<object>
     {
         foreach (var child in context.children)
         {
+            if (child.Equals(context.LEFT_BRACE()) || child.Equals(context.RIGHT_BRACE()))
+            {
+                continue;
+            }
+
             if (child is AlphaParser.StatementContext)
             {
                 Visit(child);
-            } else if (child is AlphaParser.VarDeclASTContext)
+            }
+            else if (child is AlphaParser.VarDeclASTContext)
             {
                 Visit(child);
             }
             else
             {
-                System.Diagnostics.Debug.WriteLine("Error de sintaxis");
-                //throw new SyntaxErrorException("Error de sintaxis");
+                System.Diagnostics.Debug.WriteLine("ERROR: Se esperaba un statement o una declaracion de variable: " +
+                                                   child.GetText());
             }
         }
+
         return null;
     }
 
@@ -481,11 +806,25 @@ public class AContextual : AlphaParserBaseVisitor<object>
      */
     public override object? VisitActParsAST(AlphaParser.ActParsASTContext context)
     {
-        foreach (var child in context.children)
+        LinkedList<Type> tipos = new LinkedList<Type>();
+        foreach (var child in context.expr())
         {
-            Visit(child);
+            string tipoB = (string)Visit(child);
+
+            Type? tipo = tabla.Buscar(child.GetText());
+            if (tipo != null)
+            {
+                tipos.AddLast(tipo);
+            }
+            else
+            {
+                if (tipoB != null)
+                    tipos.AddLast(new BasicType(child.Start, BasicType.showType(tipoB.ToLower()),
+                        TablaSimbolos.nivelActual));
+            }
         }
-        return null;
+
+        return tipos;
     }
 
     /*
@@ -495,9 +834,16 @@ public class AContextual : AlphaParserBaseVisitor<object>
     {
         foreach (var child in context.condTerm())
         {
-            Visit(child);
+            bool comparationStatus = (bool)Visit(child);
+
+            if (comparationStatus == true)
+            {
+                return true;
+            }
         }
-        return null;
+
+        System.Diagnostics.Debug.WriteLine("ERROR condition: La condicion no se cumple, no se puede continuar");
+        return false;
     }
 
     /*
@@ -507,9 +853,15 @@ public class AContextual : AlphaParserBaseVisitor<object>
     {
         foreach (var child in context.condFact())
         {
-            Visit(child);
+            bool comparationStatus = (bool)Visit(child);
+            if (comparationStatus == false)
+            {
+                System.Diagnostics.Debug.WriteLine("ERROR condTerm: La condicion no se cumple, no se puede continuar");
+                return false;
+            }
         }
-        return null;
+
+        return true;
     }
 
     /*
@@ -517,11 +869,23 @@ public class AContextual : AlphaParserBaseVisitor<object>
      */
     public override object? VisitCondFactAST(AlphaParser.CondFactASTContext context)
     {
-
-        Visit(context.expr(0));
+        string tipoA = (string)Visit(context.expr(0));
         Visit(context.relop());
-        Visit(context.expr(1));
-        return null;
+        string tipoB = (string)Visit(context.expr(1));
+
+        if (tipoA == null || tipoB == null)
+        {
+            System.Diagnostics.Debug.WriteLine("ERROR condFact: No se puede comparar un valor nulo");
+            return false;
+        }
+
+        if (tipoA == tipoB)
+        {
+            return true;
+        }
+
+        System.Diagnostics.Debug.WriteLine("ERROR condFact: No se puede comparar tipos diferentes");
+        return false;
     }
 
     /*
@@ -529,8 +893,14 @@ public class AContextual : AlphaParserBaseVisitor<object>
      */
     public override object? VisitCastAST(AlphaParser.CastASTContext context)
     {
-        Visit(context.type());
-        return null;
+        IToken tipo = (IToken)Visit(context.type());
+
+        if (tipo.Text == null)
+        {
+            System.Diagnostics.Debug.WriteLine("ERROR cast: No se puede castear un valor nulo");
+        }
+
+        return tipo.Text;
     }
 
     /*
@@ -542,29 +912,28 @@ public class AContextual : AlphaParserBaseVisitor<object>
         {
             Visit(context.MINUSEXP());
         }
+
         if (context.cast() != null)
         {
-            Visit(context.cast());
+            string tipoCast = (string)Visit(context.cast());
+            return tipoCast;
         }
-        
-        string tipo = (string) Visit(context.term(0));
-        if(tipo == null)
+
+        string tipo = (string)Visit(context.term(0));
+        if (tipo == null)
         {
             Console.WriteLine("Error de tipos en la expresion");
             return null;
         }
-        
-        if (context.term().Length > 1)
+
+        for (int i = 1; i < context.term().Length; i++)
         {
-            for (int i = 1; i < context.term().Length; i++)
+            Visit(context.addop(i - 1));
+            string tipoLista = (string)Visit(context.term(i));
+            if (tipoLista != tipo)
             {
-                Visit(context.addop(i - 1));
-                string tipoLista = (string) Visit(context.term(i));//2
-                if (tipoLista != tipo)
-                {
-                    Console.WriteLine("Error de tipos en la expresion");
-                    return null;
-                }
+                Console.WriteLine("Error de tipos en la expresion");
+                return null;
             }
         }
 
@@ -576,14 +945,14 @@ public class AContextual : AlphaParserBaseVisitor<object>
      */
     public override object? VisitTermAST(AlphaParser.TermASTContext context)
     {
-        string tipo = (string) Visit(context.factor(0)); // tipo del primer factor
+        string tipo = (string)Visit(context.factor(0)); // tipo del primer factor
         //TODO verificar que el tipo del factor sea el correcto, ¿DEBERIA SER ENTERO?
         if (context.factor().Length > 1)
         {
             for (int i = 1; i < context.factor().Length; i++)
             {
                 Visit(context.mulop(i - 1));
-                string tipoLista = (string)  Visit(context.factor(i));
+                string tipoLista = (string)Visit(context.factor(i));
                 if (tipo != tipoLista)
                 {
                     System.Diagnostics.Debug.WriteLine("ERROR: TIPOS DIFERENTES EN LA EXPRESION");
@@ -603,18 +972,46 @@ public class AContextual : AlphaParserBaseVisitor<object>
      */
     public override object? VisitDesignatorFactorAST(AlphaParser.DesignatorFactorASTContext context)
     {
-        string tipo = (string) Visit(context.designator());
+        string tipo = (string)Visit(context.designator());
         if (context.LEFT_PAREN() != null)
         {
-            //TODO verificar que el designator sea un metodo
-            if (context.actPars() != null)
+            LinkedList<Type> tipos = (LinkedList<Type>)Visit(context.actPars());
+
+            Type? metodo = (Type)tabla.Buscar(context.designator().GetText());
+            if (metodo is MethodType)
             {
-                // TODO verificar que el metodo tenga la cantidad de parametros correctos y que el tipo de los parametros sea el correcto 
-                Visit(context.actPars());
+                if (((MethodType)metodo).cantParams == tipos.Count)
+                {
+                    // verificar que los tipos de los parametros sean los correctos
+                    for (int i = 0; i < tipos.Count; i++)
+                    {
+                        if (((MethodType)metodo).paramsTypes.ElementAt(i).getType() != tipos.ElementAt(i).getType())
+                        {
+                            System.Diagnostics.Debug.WriteLine("ERROR: TIPOS DE PARAMETROS INCORRECTOS:"
+                                                               + ((MethodType)metodo).paramsTypes.ElementAt(i).getType()
+                                                               + " != " + tipos.ElementAt(i).getType());
+                            return null;
+                        }
+                    }
+
+                    return ((MethodType)metodo).returnType;
+                }
+                else
+                {
+                    System.Diagnostics.Debug.WriteLine("ERROR: CANTIDAD DE PARAMETROS INCORRECTA");
+                    return null;
+                }
+            }
+            else
+            {
+                System.Diagnostics.Debug.WriteLine("ERROR: NO SE ENCONTRO EL METODO");
+                return null;
             }
         }
-        if(tipo != null) return tipo;
-        return null;
+        else
+        {
+            return tipo;
+        }
     }
 
     /*
@@ -658,20 +1055,25 @@ public class AContextual : AlphaParserBaseVisitor<object>
     }
 
     /*
-     * | NEW ident #NewFactorAST
+     * | NEW type #NewFactorAST
      */
     public override object? VisitNewFactorAST(AlphaParser.NewFactorASTContext context)
     {
-        IToken ident = (IToken) Visit(context.ident());
-        
-        Type? tipo = tabla.Buscar(ident.Text); //msg[0] //msg
-        
-        if(tipo == null)
+        IToken ident = (IToken)Visit(context.type());
+        Type? tipo = tabla.Buscar(ident.Text);
+        if (tipo is ClassType)
         {
-            Console.WriteLine("Error de tipos en la expresion");
-            return null;
+            return tipo.getType();
         }
-        return tipo.getType();
+
+        ArrayType.Types? typo = ArrayType.showType(ident.Text);
+        if (typo != ArrayType.Types.Error)
+        {
+            return typo.ToString();
+        }
+
+        System.Diagnostics.Debug.WriteLine("ERROR: Tipo en el NEW no encontrado o no es un tipo valido");
+        return null;
     }
 
     /*
@@ -679,53 +1081,42 @@ public class AContextual : AlphaParserBaseVisitor<object>
      */
     public override object? VisitParenFactorAST(AlphaParser.ParenFactorASTContext context)
     {
-        string tipo = (string) Visit(context.expr());
+        string tipo = (string)Visit(context.expr());
         if (tipo != null) return tipo;
         return null;
     }
-    
+
     /*
      * designator : ident (DOT ident | LEFT_BRACKET expr RIGHT_BRACKET)*   #DesignatorAST;
      * Clase.array[1] = 1;
      */
     public override object? VisitDesignatorAST(AlphaParser.DesignatorASTContext context)
     {
-        if (context.ident().Length == 1) // solo hay un id
-        {
-            //enterito = 1
-            Type tipo = tabla.Buscar(context.ident(0).GetText());
-            System.Diagnostics.Debug.WriteLine(context.ident(0).GetText()+ " DESIGNATOR");
-            if (tipo != null)
-            {
-                return tipo.getType();
-            }
-            System.Diagnostics.Debug.WriteLine( " No se encontro");
-            return null;
-        }
+        //TODO validar el tipo de arreglo que sea correcto y q este en el alcance
+        Type? tipo = tabla.Buscar(context.ident(0).GetText());
 
-        if(context.DOT() != null && context.ident().Length > 1) 
+        if (context.ident().Length > 1) // Cuando es un atributo de una clase
         {
-            // TODO aqui se debe esperar la respuesta del profe sobre que tipo  de variables puede tener una clase 
-            
-            System.Diagnostics.Debug.WriteLine(context.ident(0).GetText() + " DESIGNATOR mas de 1 id");
-            CustomType tipo = (CustomType) tabla.Buscar(context.ident(context.ident().Length - 2).GetText());
-            if (tipo != null)
+            Type? tipo1 = tabla.BuscarCustomVar(context.ident(0).GetText());
+
+            if (tipo1 != null)
             {
-                ClassType classType = (ClassType)tabla.Buscar(tipo.TypeOf);
+                CustomType tipoCustom = (CustomType)tipo1;
+                ClassType classType = (ClassType)tabla.Buscar(tipoCustom.TypeOf);
                 if (classType != null)
                 {
                     // cast to classtype
-                    foreach (var data in  classType.attributes)
-                    {
 
-                        if (data.token.Text.Equals(context.ident(context.ident().Length - 1).GetText()))
+                    foreach (var data in classType.attributes)
+                    {
+                        if (data.token.Text.Equals(context.ident(1).GetText()))
                         {
-                            System.Diagnostics.Debug.WriteLine(data.token.Text + "Se encontro en dicha clase");
                             return data.getType();
                         }
                     }
-                    System.Diagnostics.Debug.WriteLine(" No se encontro en dicha clase");
 
+                    System.Diagnostics.Debug.WriteLine(" No se encontro en dicha clase la variable " +
+                                                       context.ident(1).GetText());
                     return null;
                 }
             }
@@ -735,20 +1126,51 @@ public class AContextual : AlphaParserBaseVisitor<object>
             return null;
         }
 
-        if (context.LEFT_BRACKET()!= null && context.RIGHT_BRACKET() != null && context.expr() != null)
+        if (tipo is ArrayType && context.expr().Length == 1) // cuando es un arreglo
         {
-            // TODO Validar que el tipo del arreglo sea el correcto, que este en el alcance y que el indice sea un entero
-            // TODO consultar cuando y como se le da tamaño a un arreglo
-            Type tipo = tabla.Buscar(context.ident(0).GetText());
-            if (tipo != null )
+            string tipoExp = (string)Visit(context.expr(0));
+            if (tipoExp != null)
+            {
+                if (tipoExp.Equals("Int"))
+                {
+                    return tipo.getType();
+                }
+
+                System.Diagnostics.Debug.WriteLine("ERROR: indice incorrecto: " + context.ident(0).GetText());
+            }
+
+            return null;
+        }
+
+        if (context.ident().Length == 1) // solo hay un id 
+        {
+            if (context.ident(0).GetText().Equals("del"))
+            {
+                return "Boolean";
+            }
+
+            if (context.ident(0).GetText().Equals("add"))
+            {
+                return "Boolean";
+            }
+
+            if (context.ident(0).GetText().Equals("len"))
+            {
+                return "Int";
+            }
+
+            if (tipo is ArrayType)
+            {
+                return tipo.getType() + "[]";
+            }
+
+            if (tipo != null)
             {
                 return tipo.getType();
             }
-            return null;
-        }
-        else
-        {
-            System.Diagnostics.Debug.WriteLine("Error en el designator arreglo mal declarado");
+
+            System.Diagnostics.Debug.WriteLine(
+                "No se encontro el siguente identificador: " + context.ident(0).GetText());
             return null;
         }
 

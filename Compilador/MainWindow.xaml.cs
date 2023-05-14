@@ -151,7 +151,7 @@ namespace Compilador
                 _errorListener = new MyErrorListener();
                 _errorStrategy = new MyDefaultErrorStrategy();
                 try
-                {   
+                {
                     ICharStream input = CharStreams.fromString(text);
                     AlphaScanner lexer = new AlphaScanner(input);
                     CommonTokenStream tokens = new CommonTokenStream(lexer);
@@ -181,7 +181,8 @@ namespace Compilador
                         context.Visit(tree);
                         // Crear una instancia de la nueva ventana
                         consola.SalidaConsola.Text =
-                            "Compilación exitosa\n\n" + tree.ToStringTree(parser) + "\n\n" +"Path del archivo:" + txtPathPrincipal + "\n\n";
+                            "Compilación exitosa\n\n" + tree.ToStringTree(parser) + "\n\n" + "Path del archivo:" +
+                            txtPathPrincipal + "\n\n";
                         // Mostrar la ventana
                         consola.Show();
                     }

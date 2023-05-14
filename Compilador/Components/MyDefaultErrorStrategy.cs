@@ -1,5 +1,4 @@
-﻿
-using Antlr4.Runtime.Atn;
+﻿using Antlr4.Runtime.Atn;
 using Antlr4.Runtime.Misc;
 using System;
 using Antlr4.Runtime;
@@ -8,7 +7,7 @@ namespace Compilador.Components;
 
 public class MyDefaultErrorStrategy : DefaultErrorStrategy
 {
-  // Decompiled with JetBrains decompiler
+    // Decompiled with JetBrains decompiler
 // Type: Antlr4.Runtime.DefaultErrorStrategy
 // Assembly: Antlr4.Runtime.Standard, Version=4.12.0.0, Culture=neutral, PublicKeyToken=e78b2c5abd1fcb3f
 // MVID: 6CFA73E9-2155-4825-BA8B-B834E09CD96E
@@ -16,13 +15,12 @@ public class MyDefaultErrorStrategy : DefaultErrorStrategy
 // XML documentation location: C:\Users\Josue\.nuget\packages\antlr4.runtime.standard\4.12.0\lib\netstandard2.0\Antlr4.Runtime.Standard.xml
 
 
-  /// <summary>
-  /// This is the default implementation of
-  /// <see cref="T:Antlr4.Runtime.IAntlrErrorStrategy" />
-  /// used for
-  /// error reporting and recovery in ANTLR parsers.
-  /// </summary>
-  
+    /// <summary>
+    /// This is the default implementation of
+    /// <see cref="T:Antlr4.Runtime.IAntlrErrorStrategy" />
+    /// used for
+    /// error reporting and recovery in ANTLR parsers.
+    /// </summary>
     /// <summary>
     /// Indicates whether the error strategy is currently "recovering from an
     /// error".
@@ -34,6 +32,7 @@ public class MyDefaultErrorStrategy : DefaultErrorStrategy
     /// </remarks>
     /// <seealso cref="M:Antlr4.Runtime.DefaultErrorStrategy.InErrorRecoveryMode(Antlr4.Runtime.Parser)" />
     protected internal bool errorRecoveryMode;
+
     /// <summary>The index into the input stream where the last error occurred.</summary>
     /// <remarks>
     /// The index into the input stream where the last error occurred.
@@ -43,7 +42,9 @@ public class MyDefaultErrorStrategy : DefaultErrorStrategy
     /// one token/tree node is consumed for two errors.
     /// </remarks>
     protected internal int lastErrorIndex = -1;
+
     protected internal IntervalSet lastErrorStates;
+
     /// This field is used to propagate information about the lookahead following
     ///             the previous match. Since prediction prefers completing the current rule
     ///             to error recovery efforts, error reporting may occur later than the
@@ -51,6 +52,7 @@ public class MyDefaultErrorStrategy : DefaultErrorStrategy
     ///             compute the true expected sets as though the reporting occurred as early
     ///             as possible.
     protected ParserRuleContext nextTokensContext;
+
     /// @see #nextTokensContext
     protected int nextTokensState;
 
@@ -88,9 +90,9 @@ public class MyDefaultErrorStrategy : DefaultErrorStrategy
     /// <param name="recognizer" />
     protected internal virtual void EndErrorCondition(Parser recognizer)
     {
-      this.errorRecoveryMode = false;
-      this.lastErrorStates = (IntervalSet) null;
-      this.lastErrorIndex = -1;
+        this.errorRecoveryMode = false;
+        this.lastErrorStates = (IntervalSet)null;
+        this.lastErrorIndex = -1;
     }
 
     /// <summary>
@@ -133,33 +135,33 @@ public class MyDefaultErrorStrategy : DefaultErrorStrategy
     /// </summary>
     public override void ReportError(Parser recognizer, RecognitionException e)
     {
-      if (this.InErrorRecoveryMode(recognizer))
-        return;
-      this.BeginErrorCondition(recognizer);
-      switch (e)
-      {
-        case NoViableAltException _:
-          this.ReportNoViableAlternative(recognizer, (NoViableAltException) e);
-          break;
-        case InputMismatchException _:
-          this.ReportInputMismatch(recognizer, (InputMismatchException) e);
-          break;
-        case FailedPredicateException _:
-          this.ReportFailedPredicate(recognizer, (FailedPredicateException) e);
-          break;
-        default:
-          Console.Error.WriteLine("tipo de error de reconocimiento desconocido: " + e.GetType().FullName);
-          this.NotifyErrorListeners(recognizer, e.Message, e);
-          break;
-      }
+        if (this.InErrorRecoveryMode(recognizer))
+            return;
+        this.BeginErrorCondition(recognizer);
+        switch (e)
+        {
+            case NoViableAltException _:
+                this.ReportNoViableAlternative(recognizer, (NoViableAltException)e);
+                break;
+            case InputMismatchException _:
+                this.ReportInputMismatch(recognizer, (InputMismatchException)e);
+                break;
+            case FailedPredicateException _:
+                this.ReportFailedPredicate(recognizer, (FailedPredicateException)e);
+                break;
+            default:
+                Console.Error.WriteLine("tipo de error de reconocimiento desconocido: " + e.GetType().FullName);
+                this.NotifyErrorListeners(recognizer, e.Message, e);
+                break;
+        }
     }
 
     protected internal virtual void NotifyErrorListeners(
-      Parser recognizer,
-      string message,
-      RecognitionException e)
+        Parser recognizer,
+        string message,
+        RecognitionException e)
     {
-      recognizer.NotifyErrorListeners(e.OffendingToken, message, e);
+        recognizer.NotifyErrorListeners(e.OffendingToken, message, e);
     }
 
     /// <summary>
@@ -170,14 +172,15 @@ public class MyDefaultErrorStrategy : DefaultErrorStrategy
     /// </summary>
     public override void Recover(Parser recognizer, RecognitionException e)
     {
-      if (this.lastErrorIndex == recognizer.InputStream.Index && this.lastErrorStates != null && this.lastErrorStates.Contains(recognizer.State))
-        recognizer.Consume();
-      this.lastErrorIndex = recognizer.InputStream.Index;
-      if (this.lastErrorStates == null)
-        this.lastErrorStates = new IntervalSet(Array.Empty<int>());
-      this.lastErrorStates.Add(recognizer.State);
-      IntervalSet errorRecoverySet = this.GetErrorRecoverySet(recognizer);
-      this.ConsumeUntil(recognizer, errorRecoverySet);
+        if (this.lastErrorIndex == recognizer.InputStream.Index && this.lastErrorStates != null &&
+            this.lastErrorStates.Contains(recognizer.State))
+            recognizer.Consume();
+        this.lastErrorIndex = recognizer.InputStream.Index;
+        if (this.lastErrorStates == null)
+            this.lastErrorStates = new IntervalSet(Array.Empty<int>());
+        this.lastErrorStates.Add(recognizer.State);
+        IntervalSet errorRecoverySet = this.GetErrorRecoverySet(recognizer);
+        this.ConsumeUntil(recognizer, errorRecoverySet);
     }
 
     /// <summary>
@@ -227,42 +230,42 @@ public class MyDefaultErrorStrategy : DefaultErrorStrategy
     /// <exception cref="T:Antlr4.Runtime.RecognitionException" />
     public override void Sync(Parser recognizer)
     {
-      ATNState state = recognizer.Interpreter.atn.states[recognizer.State];
-      if (this.InErrorRecoveryMode(recognizer))
-        return;
-      int el = recognizer.InputStream.LA(1);
-      IntervalSet intervalSet = recognizer.Atn.NextTokens(state);
-      if (intervalSet.Contains(el))
-      {
-        this.nextTokensContext = (ParserRuleContext) null;
-        this.nextTokensState = -1;
-      }
-      else if (intervalSet.Contains(-2))
-      {
-        if (this.nextTokensContext != null)
-          return;
-        this.nextTokensContext = recognizer.Context;
-        this.nextTokensState = recognizer.State;
-      }
-      else
-      {
-        switch (state.StateType)
+        ATNState state = recognizer.Interpreter.atn.states[recognizer.State];
+        if (this.InErrorRecoveryMode(recognizer))
+            return;
+        int el = recognizer.InputStream.LA(1);
+        IntervalSet intervalSet = recognizer.Atn.NextTokens(state);
+        if (intervalSet.Contains(el))
         {
-          case StateType.BlockStart:
-          case StateType.PlusBlockStart:
-          case StateType.StarBlockStart:
-          case StateType.StarLoopEntry:
-            if (this.SingleTokenDeletion(recognizer) != null)
-              break;
-            throw new InputMismatchException(recognizer);
-          case StateType.StarLoopBack:
-          case StateType.PlusLoopBack:
-            this.ReportUnwantedToken(recognizer);
-            IntervalSet set = recognizer.GetExpectedTokens().Or((IIntSet) this.GetErrorRecoverySet(recognizer));
-            this.ConsumeUntil(recognizer, set);
-            break;
+            this.nextTokensContext = (ParserRuleContext)null;
+            this.nextTokensState = -1;
         }
-      }
+        else if (intervalSet.Contains(-2))
+        {
+            if (this.nextTokensContext != null)
+                return;
+            this.nextTokensContext = recognizer.Context;
+            this.nextTokensState = recognizer.State;
+        }
+        else
+        {
+            switch (state.StateType)
+            {
+                case StateType.BlockStart:
+                case StateType.PlusBlockStart:
+                case StateType.StarBlockStart:
+                case StateType.StarLoopEntry:
+                    if (this.SingleTokenDeletion(recognizer) != null)
+                        break;
+                    throw new InputMismatchException(recognizer);
+                case StateType.StarLoopBack:
+                case StateType.PlusLoopBack:
+                    this.ReportUnwantedToken(recognizer);
+                    IntervalSet set = recognizer.GetExpectedTokens().Or((IIntSet)this.GetErrorRecoverySet(recognizer));
+                    this.ConsumeUntil(recognizer, set);
+                    break;
+            }
+        }
     }
 
     /// <summary>
@@ -276,12 +279,14 @@ public class MyDefaultErrorStrategy : DefaultErrorStrategy
     /// <param name="recognizer">the parser instance</param>
     /// <param name="e">the recognition exception</param>
     protected internal virtual void ReportNoViableAlternative(
-      Parser recognizer,
-      NoViableAltException e)
+        Parser recognizer,
+        NoViableAltException e)
     {
-      ITokenStream inputStream = (ITokenStream) recognizer.InputStream;
-      string message = "ninguna alternativa viable en la entrada" + this.EscapeWSAndQuote(inputStream == null ? "<entrada desconocida>" : (e.StartToken.Type != -1 ? inputStream.GetText(e.StartToken, e.OffendingToken) : "<EOF>"));
-      this.NotifyErrorListeners(recognizer, message, (RecognitionException) e);
+        ITokenStream inputStream = (ITokenStream)recognizer.InputStream;
+        string message = "ninguna alternativa viable en la entrada" + this.EscapeWSAndQuote(inputStream == null
+            ? "<entrada desconocida>"
+            : (e.StartToken.Type != -1 ? inputStream.GetText(e.StartToken, e.OffendingToken) : "<EOF>"));
+        this.NotifyErrorListeners(recognizer, message, (RecognitionException)e);
     }
 
     /// <summary>
@@ -296,8 +301,9 @@ public class MyDefaultErrorStrategy : DefaultErrorStrategy
     /// <param name="e">the recognition exception</param>
     protected internal virtual void ReportInputMismatch(Parser recognizer, InputMismatchException e)
     {
-      string message = "entrada no coincidente " + this.GetTokenErrorDisplay(e.OffendingToken) + " esperando " + e.GetExpectedTokens().ToString(recognizer.Vocabulary);
-      this.NotifyErrorListeners(recognizer, message, (RecognitionException) e);
+        string message = "entrada no coincidente " + this.GetTokenErrorDisplay(e.OffendingToken) + " esperando " +
+                         e.GetExpectedTokens().ToString(recognizer.Vocabulary);
+        this.NotifyErrorListeners(recognizer, message, (RecognitionException)e);
     }
 
     /// <summary>
@@ -311,11 +317,11 @@ public class MyDefaultErrorStrategy : DefaultErrorStrategy
     /// <param name="recognizer">the parser instance</param>
     /// <param name="e">the recognition exception</param>
     protected internal virtual void ReportFailedPredicate(
-      Parser recognizer,
-      FailedPredicateException e)
+        Parser recognizer,
+        FailedPredicateException e)
     {
-      string message = "regla " + recognizer.RuleNames[recognizer.RuleContext.RuleIndex] + " " + e.Message;
-      this.NotifyErrorListeners(recognizer, message, (RecognitionException) e);
+        string message = "regla " + recognizer.RuleNames[recognizer.RuleContext.RuleIndex] + " " + e.Message;
+        this.NotifyErrorListeners(recognizer, message, (RecognitionException)e);
     }
 
     /// <summary>
@@ -347,12 +353,13 @@ public class MyDefaultErrorStrategy : DefaultErrorStrategy
     /// <param name="recognizer">the parser instance</param>
     protected internal virtual void ReportUnwantedToken(Parser recognizer)
     {
-      if (this.InErrorRecoveryMode(recognizer))
-        return;
-      this.BeginErrorCondition(recognizer);
-      IToken currentToken = recognizer.CurrentToken;
-      string msg = "entrada extraña " + this.GetTokenErrorDisplay(currentToken) + " esperando " + this.GetExpectedTokens(recognizer).ToString(recognizer.Vocabulary);
-      recognizer.NotifyErrorListeners(currentToken, msg, (RecognitionException) null);
+        if (this.InErrorRecoveryMode(recognizer))
+            return;
+        this.BeginErrorCondition(recognizer);
+        IToken currentToken = recognizer.CurrentToken;
+        string msg = "entrada extraña " + this.GetTokenErrorDisplay(currentToken) + " esperando " +
+                     this.GetExpectedTokens(recognizer).ToString(recognizer.Vocabulary);
+        recognizer.NotifyErrorListeners(currentToken, msg, (RecognitionException)null);
     }
 
     /// <summary>
@@ -382,12 +389,13 @@ public class MyDefaultErrorStrategy : DefaultErrorStrategy
     /// <param name="recognizer">the parser instance</param>
     protected internal virtual void ReportMissingToken(Parser recognizer)
     {
-      if (this.InErrorRecoveryMode(recognizer))
-        return;
-      this.BeginErrorCondition(recognizer);
-      IToken currentToken = recognizer.CurrentToken;
-      string msg = "Falta " + this.GetExpectedTokens(recognizer).ToString(recognizer.Vocabulary) + " en " + this.GetTokenErrorDisplay(currentToken);
-      recognizer.NotifyErrorListeners(currentToken, msg, (RecognitionException) null);
+        if (this.InErrorRecoveryMode(recognizer))
+            return;
+        this.BeginErrorCondition(recognizer);
+        IToken currentToken = recognizer.CurrentToken;
+        string msg = "Falta " + this.GetExpectedTokens(recognizer).ToString(recognizer.Vocabulary) + " en " +
+                     this.GetTokenErrorDisplay(currentToken);
+        recognizer.NotifyErrorListeners(currentToken, msg, (RecognitionException)null);
     }
 
     /// <summary>
@@ -470,13 +478,16 @@ public class MyDefaultErrorStrategy : DefaultErrorStrategy
     /// <exception cref="T:Antlr4.Runtime.RecognitionException" />
     public override IToken RecoverInline(Parser recognizer)
     {
-      IToken token = this.SingleTokenDeletion(recognizer);
-      if (token != null)
-      {
-        recognizer.Consume();
-        return token;
-      }
-      return this.SingleTokenInsertion(recognizer) ? this.GetMissingSymbol(recognizer) : throw new InputMismatchException(recognizer);
+        IToken token = this.SingleTokenDeletion(recognizer);
+        if (token != null)
+        {
+            recognizer.Consume();
+            return token;
+        }
+
+        return this.SingleTokenInsertion(recognizer)
+            ? this.GetMissingSymbol(recognizer)
+            : throw new InputMismatchException(recognizer);
     }
 
     /// <summary>
@@ -516,12 +527,12 @@ public class MyDefaultErrorStrategy : DefaultErrorStrategy
     /// </returns>
     protected internal virtual bool SingleTokenInsertion(Parser recognizer)
     {
-      int el = recognizer.InputStream.LA(1);
-      ATNState target = recognizer.Interpreter.atn.states[recognizer.State].Transition(0).target;
-      if (!recognizer.Interpreter.atn.NextTokens(target, (RuleContext) recognizer.RuleContext).Contains(el))
-        return false;
-      this.ReportMissingToken(recognizer);
-      return true;
+        int el = recognizer.InputStream.LA(1);
+        ATNState target = recognizer.Interpreter.atn.states[recognizer.State].Transition(0).target;
+        if (!recognizer.Interpreter.atn.NextTokens(target, (RuleContext)recognizer.RuleContext).Contains(el))
+            return false;
+        this.ReportMissingToken(recognizer);
+        return true;
     }
 
     /// <summary>
@@ -559,14 +570,14 @@ public class MyDefaultErrorStrategy : DefaultErrorStrategy
     [return: Nullable]
     protected internal virtual IToken SingleTokenDeletion(Parser recognizer)
     {
-      int el = recognizer.InputStream.LA(2);
-      if (!this.GetExpectedTokens(recognizer).Contains(el))
-        return (IToken) null;
-      this.ReportUnwantedToken(recognizer);
-      recognizer.Consume();
-      IToken currentToken = recognizer.CurrentToken;
-      this.ReportMatch(recognizer);
-      return currentToken;
+        int el = recognizer.InputStream.LA(2);
+        if (!this.GetExpectedTokens(recognizer).Contains(el))
+            return (IToken)null;
+        this.ReportUnwantedToken(recognizer);
+        recognizer.Consume();
+        IToken currentToken = recognizer.CurrentToken;
+        this.ReportMatch(recognizer);
+        return currentToken;
     }
 
     /// <summary>Conjure up a missing token during error recovery.</summary>
@@ -592,23 +603,27 @@ public class MyDefaultErrorStrategy : DefaultErrorStrategy
     [return: NotNull]
     protected internal virtual IToken GetMissingSymbol(Parser recognizer)
     {
-      IToken currentToken = recognizer.CurrentToken;
-      int minElement = this.GetExpectedTokens(recognizer).MinElement;
-      string tokenText = minElement != -1 ? "<Falta " + recognizer.Vocabulary.GetDisplayName(minElement) + ">" : "<Falta EOF>";
-      IToken current = currentToken;
-      IToken token = ((ITokenStream) recognizer.InputStream).LT(-1);
-      if (current.Type == -1 && token != null)
-        current = token;
-      return this.ConstructToken(((ITokenStream) recognizer.InputStream).TokenSource, minElement, tokenText, current);
+        IToken currentToken = recognizer.CurrentToken;
+        int minElement = this.GetExpectedTokens(recognizer).MinElement;
+        string tokenText = minElement != -1
+            ? "<Falta " + recognizer.Vocabulary.GetDisplayName(minElement) + ">"
+            : "<Falta EOF>";
+        IToken current = currentToken;
+        IToken token = ((ITokenStream)recognizer.InputStream).LT(-1);
+        if (current.Type == -1 && token != null)
+            current = token;
+        return this.ConstructToken(((ITokenStream)recognizer.InputStream).TokenSource, minElement, tokenText, current);
     }
 
     protected internal virtual IToken ConstructToken(
-      ITokenSource tokenSource,
-      int expectedTokenType,
-      string tokenText,
-      IToken current)
+        ITokenSource tokenSource,
+        int expectedTokenType,
+        string tokenText,
+        IToken current)
     {
-      return tokenSource.TokenFactory.Create(Tuple.Create<ITokenSource, ICharStream>(tokenSource, current.TokenSource.InputStream), expectedTokenType, tokenText, 0, -1, -1, current.Line, current.Column);
+        return tokenSource.TokenFactory.Create(
+            Tuple.Create<ITokenSource, ICharStream>(tokenSource, current.TokenSource.InputStream), expectedTokenType,
+            tokenText, 0, -1, -1, current.Line, current.Column);
     }
 
     [return: NotNull]
@@ -628,7 +643,10 @@ public class MyDefaultErrorStrategy : DefaultErrorStrategy
     /// your token objects because you don't have to go modify your lexer
     /// so that it creates a new Java type.
     /// </remarks>
-    protected internal virtual string GetTokenErrorDisplay(IToken t) => t == null ? "<no token>" : this.EscapeWSAndQuote(this.GetSymbolText(t) ?? (this.GetSymbolType(t) != -1 ? "<" + this.GetSymbolType(t).ToString() + ">" : "<EOF>"));
+    protected internal virtual string GetTokenErrorDisplay(IToken t) => t == null
+        ? "<no token>"
+        : this.EscapeWSAndQuote(this.GetSymbolText(t) ??
+                                (this.GetSymbolType(t) != -1 ? "<" + this.GetSymbolType(t).ToString() + ">" : "<EOF>"));
 
     protected internal virtual string GetSymbolText(IToken symbol) => symbol.Text;
 
@@ -637,35 +655,34 @@ public class MyDefaultErrorStrategy : DefaultErrorStrategy
     [return: NotNull]
     protected internal virtual string EscapeWSAndQuote(string s)
     {
-      s = s.Replace("\n", "\\n");
-      s = s.Replace("\r", "\\r");
-      s = s.Replace("\t", "\\t");
-      return "'" + s + "'";
+        s = s.Replace("\n", "\\n");
+        s = s.Replace("\r", "\\r");
+        s = s.Replace("\t", "\\t");
+        return "'" + s + "'";
     }
 
     [return: NotNull]
     protected internal virtual IntervalSet GetErrorRecoverySet(Parser recognizer)
     {
-      ATN atn = recognizer.Interpreter.atn;
-      RuleContext ruleContext = (RuleContext) recognizer.RuleContext;
-      IntervalSet errorRecoverySet = new IntervalSet(Array.Empty<int>());
-      for (; ruleContext != null && ruleContext.invokingState >= 0; ruleContext = ruleContext.Parent)
-      {
-        RuleTransition ruleTransition = (RuleTransition) atn.states[ruleContext.invokingState].Transition(0);
-        IntervalSet set = atn.NextTokens(ruleTransition.followState);
-        errorRecoverySet.AddAll((IIntSet) set);
-      }
-      errorRecoverySet.Remove(-2);
-      return errorRecoverySet;
+        ATN atn = recognizer.Interpreter.atn;
+        RuleContext ruleContext = (RuleContext)recognizer.RuleContext;
+        IntervalSet errorRecoverySet = new IntervalSet(Array.Empty<int>());
+        for (; ruleContext != null && ruleContext.invokingState >= 0; ruleContext = ruleContext.Parent)
+        {
+            RuleTransition ruleTransition = (RuleTransition)atn.states[ruleContext.invokingState].Transition(0);
+            IntervalSet set = atn.NextTokens(ruleTransition.followState);
+            errorRecoverySet.AddAll((IIntSet)set);
+        }
+
+        errorRecoverySet.Remove(-2);
+        return errorRecoverySet;
     }
 
     /// <summary>Consume tokens until one matches the given token set.</summary>
     /// <remarks>Consume tokens until one matches the given token set.</remarks>
     protected internal virtual void ConsumeUntil(Parser recognizer, IntervalSet set)
     {
-      for (int el = recognizer.InputStream.LA(1); el != -1 && !set.Contains(el); el = recognizer.InputStream.LA(1))
-        recognizer.Consume();
+        for (int el = recognizer.InputStream.LA(1); el != -1 && !set.Contains(el); el = recognizer.InputStream.LA(1))
+            recognizer.Consume();
     }
-  }
-
-  
+}

@@ -5,132 +5,154 @@ class AllProds
   int nPoints;
   char exclaim;
   char caracterEspecial;
-  Point estoP;
+  int[] arreglo;
+  
+   class Point {
+    int x, y, x, m;
+    char exclaim;
+  }
 
-  class Point {
-    int x, y; 
-  }
-  
-  
-  class Point1 {
-    int x, y; 
-    Point p;
-  }  
-  
-  class Point2 {
-     int x, y; 
-     oint1 p;
-  }
-  
-   
   char[] msg;
-  Point[] pArr;
   boolean test1;
+  Point point;
 
-  void WriteError (int julio, int[] arreglo)
+  void WriteError (int julio)
   {
+    char[] msg;
     Point point;
     point = new Point;
+    char exclaim;
     point.x = 0;
-    //add(arreglo, 0);
-    //add(arreglo, 1);
-    //del(arreglo, 1);
-   
+    add(arreglo, 1);
+    del(arreglo, 1);
+    len(arreglo);
+    len(arreglo);
     int b;
-    //b = len(arreglo);
+    int b;
     char exc;
-    
+    exc = (char) point.x;
     boolean test1;
+    exclaim = (char) point.x;
+    caracterEspecial = 'a';
+    test1 = true;
+
+    while(b<5){
+        write(msg[b]);
+        b++; 
+        int cesar;
+    }
  
-   exclaim = '4';
-   caracterEspecial = 'a';
+    for(b;b<7;b++;){
+        write(msg[b]);
+    }
 
-   /* imprimir mensaje error  /* 
- 	imprimir mensaje error */ */
-  //error de caracteres invalidos
-   test1 = true;
+    write(exclaim);
 
-   while(b<5){write(msg[b]);b++; int cesar;}
- 
-   for(j;j<7;j++;){write(msg[j]);}
-
-   write(exclaim);
-
-   while (b >8) {
-      b--;
-      if (b < 3 && test1==true) break;	
-      write(msg[b], 2);
-   }
+    while (b >8) {
+        b--;
+        if (b < 3 && test1==true) 
+            break;
+        write(msg[b], 2);
+    }
+    
   }
-  
-  int GetX (Point p1, int x, char ju) { return p1.x+2; }
 
+  int GetX (Point y, int x, char ju) 
+  { 
+        return y.y; 
+  }
 
-  void SetX (int x, Point p2) {
-    int[] arreglito;
-    if (x > -10 && x <= 9 || x == 4*3/4%4+12- -11*(2147483647/(-2147483647+-1)%2)){
-      p2.x = x;
-	  int camino; 
-    }
-    else {
-      
-      WriteError();
-    }
-    x = 4*3/4%4+12;
+  int GetX () 
+  { 
+     int k;
+  }
+  void SetX (int m, Point p2) {
+        int[] arreglito;
+        if (m > -10 && m < 10) {
+          //p2.x = m;
+          int camino; 
+          camino = GetX(p2, 2, 'a');
+        }
+        else {
+             WriteError(m);
+        }
+        m = 43/4%4+12;
+        return;
   }
 
   void SetMsg () {
-    msg = new char;
-    msg[] = 'E';
-    msg[true] = 'r';
-    msg[hola] = 'r';
-    msg[3] = 'r';
-    msg[4] = msg[true];
-    read(msg[3]) ;    
+    msg = new char[5];  
+    msg[1] = 'E';
+    read(msg[3]);
   }
 
   void SetPoints ()
   {
     int[] pArr;
     int c;
-    //pArr = Point[nPoints];
 
-	
     while (c <5) {
-     // pArr[c] = new Point;
-      //pArr[c].x = c;
-      //pArr[c].y = c;
       c++;
     }
   }
 
-  int prueba(Point x, char w)
+  int prueba(Point x, int w)
   {
-      return algo;
-      /*comentario /*mal*/ /*anidado */*/
+      return x.x;
+    
   }
 
   void Main ()
   {
+    Point x3;
     int a;
     SetMsg();
     SetPoints();
     read(a);
-    if (a < nPoints) {
-      write(GetX(pArr[a]));
-      write(pArr[a]);
+    if (a < 0){
+      Point x3;
+      char caracterEspecial;
+      write(GetX(x3, 2, 'a'));
     }
     else
-      WriteError();
+      WriteError(1);
     write('n');
 
+  }
+  
+   class Point {
+    int x, y, x, m;
+    char exclaim;
   }
 
 } 
 
 
-//ANOTAR SUS COMENTARIOS EN MAYUSCULA Y NO QUITAR NADA DE LO QUE VIENE EN EL ARCHIVO SINO SOLO COMENTARLO PERO A LA VEZ COLOCAR EL EQUIVALENTE CORRECTO
-//CUALQUIER COSA QUE SEA ERROR MIO AL MOMENTO DE HACER LA PRUEBA, FAVOR CORREGIRLO Y ANOTARLO
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

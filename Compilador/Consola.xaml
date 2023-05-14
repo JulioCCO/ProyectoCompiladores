@@ -18,11 +18,11 @@
             Height="245"
             Width="795"
             Margin="10,10,0,0"
-            TextWrapping="Wrap" 
-            VerticalAlignment="Top" 
-            AcceptsTab="True" 
+            TextWrapping="Wrap"
+            VerticalAlignment="Top"
+            AcceptsTab="True"
             AcceptsReturn="True"
-            VerticalScrollBarVisibility="Visible"
-        ></TextBox>
+            VerticalScrollBarVisibility="Visible">
+        </TextBox>
     </Grid>
 </Window>
