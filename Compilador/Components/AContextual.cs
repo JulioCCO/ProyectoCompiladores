@@ -656,15 +656,27 @@ public class AContextual : AlphaParserBaseVisitor<object>
                                       context.GetText() + " " + obtenerCoordenadas(context.Start));
             }
         }
-        else if
-            (context.INC() !=
-             null) // si es un incremento o decremento ------------------------------------------------------------------------------------
+        else if (context.INC()!=null) // si es incremento ------------------------------------------------------------------------------------
         {
-            // TODO: acceder al tipo de la variable y ver si es int y aumentar su valor 
+            if(tipoDesignator.ToLower() != "int")
+            {
+                System.Diagnostics.Debug.WriteLine("Error de asignacion: " + context.INC().GetText() + " solo se puede incrementar " +'"'+"++"+'"' +" un entero" 
+                                                   + " " + obtenerCoordenadas(context.Start) );
+                errorBuilder.AddError("Error de asignacion: " + context.INC().GetText() + " solo se puede incrementar " +'"'+"++"+'"' +" un entero" 
+                                      + " " + obtenerCoordenadas(context.Start) );
+            }
+            
         }
-        else if (context.DEC() != null)
+        else if (context.DEC()!=null) // si es decremento ------------------------------------------------------------------------------------
         {
-            // TODO: acceder al tipo de la variable y ver si es int y disminuir su valor
+            if(tipoDesignator.ToLower() != "int")
+            {
+                System.Diagnostics.Debug.WriteLine("Error de asignacion: " + context.DEC().GetText() + " solo se puede decrementar " +'"'+"--"+'"' +" un entero" 
+                           + " " + obtenerCoordenadas(context.Start) );
+                errorBuilder.AddError("Error de asignacion: " + context.DEC().GetText()+ " solo se puede decrementar " +'"'+"--"+'"' +" un entero" 
+                                      + " " + obtenerCoordenadas(context.Start) );
+            }
+            
         }
         else
         {
