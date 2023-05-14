@@ -27,7 +27,8 @@ namespace Compilador
             System.Diagnostics.Debug.WriteLine("System Diagnostics Debug");
             InitializeComponent();
         }
-
+        
+        
         private void Add_Tab_Button_Click(object sender, EventArgs e)
         {
             OpenFileDialog openFileDialog1 = new OpenFileDialog();
@@ -178,11 +179,11 @@ namespace Compilador
                     if (_errorParser.HasErrors() == false && _errorListener.HasErrors() == false)
                     {
                         AContextual context = new AContextual();
-                        context.Visit(tree);
+                         string retornoDeProgram = (string) context.Visit(tree);
                         // Crear una instancia de la nueva ventana
                         consola.SalidaConsola.Text =
-                            "Compilación exitosa\n\n" + tree.ToStringTree(parser) + "\n\n" + "Path del archivo:" +
-                            txtPathPrincipal + "\n\n";
+                            "Compilación exitosa\n\n" + "\n\n" + "Path del archivo:" +
+                            txtPathPrincipal + "\n\n" + retornoDeProgram;
                         // Mostrar la ventana
                         consola.Show();
                     }

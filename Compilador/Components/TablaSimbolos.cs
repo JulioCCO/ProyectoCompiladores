@@ -148,6 +148,12 @@ public class TablaSimbolos
                                                               + " Tipo de dato: " +
                                                               ((CustomType)tabla.ElementAt(i)).TypeOf);
             }
+            else if (tabla.ElementAt(i).GetType() == typeof(UsingType))
+            {
+                System.Diagnostics.Debug.WriteLine("Nombre: " + ((UsingType)tabla.ElementAt(i)).token.Text
+                                                              + " Nivel: " + ((UsingType)tabla.ElementAt(i)).nivel
+                                                              + " Tipo: " + ((UsingType)tabla.ElementAt(i)).type);
+            }
         }
 
         System.Diagnostics.Debug.WriteLine("----- FIN TABLA ------");
