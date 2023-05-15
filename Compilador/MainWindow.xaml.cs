@@ -182,7 +182,7 @@ namespace Compilador
                          string retornoDeProgram = (string) context.Visit(tree);
                         // Crear una instancia de la nueva ventana
                         consola.SalidaConsola.Text =
-                            "Compilación exitosa\n\n" + "\n\n" + "Path del archivo:" +
+                            "Compilación exitosa\n\n" + "Path del archivo:" +
                             txtPathPrincipal + "\n\n" + retornoDeProgram;
                         // Mostrar la ventana
                         consola.Show();

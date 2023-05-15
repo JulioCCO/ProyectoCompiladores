@@ -9,13 +9,12 @@ namespace Compilador.Components;
 
 public class TablaSimbolos
 {
-    LinkedList<Object> tabla;
+    LinkedList<Object> tabla; // Lista de objetos de tipo Type
 
     public static int nivelActual;
 
     public MethodType? currentMethod;
     public ClassType? currentClass;
-    
     
     public TablaSimbolos()
     {
@@ -100,8 +99,10 @@ public class TablaSimbolos
         nivelActual--;
     }
 
-    public void Imprimir()
+    public  List<string> Imprimir()
     {
+        List<string> lista = new List<string>();
+        lista.Add("----- INICIO TABLA ------\n");
         System.Diagnostics.Debug.WriteLine("----- INICIO TABLA ------");
         for (int i = 0; i < tabla.Count; i++)
         {
@@ -110,12 +111,18 @@ public class TablaSimbolos
                 System.Diagnostics.Debug.WriteLine("Nombre: " + ((BasicType)tabla.ElementAt(i)).token.Text
                                                               + " Nivel: " + ((BasicType)tabla.ElementAt(i)).nivel
                                                               + " Tipo: " + ((BasicType)tabla.ElementAt(i)).type);
+                lista.Add("Nombre: " + ((BasicType)tabla.ElementAt(i)).token.Text
+                          + " Nivel: " + ((BasicType)tabla.ElementAt(i)).nivel
+                          + " Tipo: " + ((BasicType)tabla.ElementAt(i)).type + "\n");
             }
             else if (tabla.ElementAt(i).GetType() == typeof(ClassType))
             {
                 System.Diagnostics.Debug.WriteLine("Nombre: " + ((ClassType)tabla.ElementAt(i)).token.Text
                                                               + " Nivel: " + ((ClassType)tabla.ElementAt(i)).nivel
                                                               + " Tipo: " + ((ClassType)tabla.ElementAt(i)).type);
+                lista.Add("Nombre: " + ((ClassType)tabla.ElementAt(i)).token.Text
+                          + " Nivel: " + ((ClassType)tabla.ElementAt(i)).nivel
+                          + " Tipo: " + ((ClassType)tabla.ElementAt(i)).type + "\n");
             }
             else if (tabla.ElementAt(i).GetType() == typeof(MethodType))
             {
@@ -126,10 +133,21 @@ public class TablaSimbolos
                                                               ((MethodType)tabla.ElementAt(i)).cantParams
                                                               + " Tipo de retorno: " +
                                                               ((MethodType)tabla.ElementAt(i)).returnType);
+                lista.Add("Nombre: " + ((MethodType)tabla.ElementAt(i)).token.Text
+                          + " Nivel: " + ((MethodType)tabla.ElementAt(i)).nivel
+                          + " Tipo: " + ((MethodType)tabla.ElementAt(i)).type
+                          + " Cantidad de parametros: " +
+                          ((MethodType)tabla.ElementAt(i)).cantParams
+                          + " Tipo de retorno: " +
+                          ((MethodType)tabla.ElementAt(i)).returnType);
 
                 if (((MethodType)tabla.ElementAt(i)).paramsTypes.Count > 0)
                 {
-                    ((MethodType)tabla.ElementAt(i)).imprimirParams();
+                    lista.Add( ((MethodType)tabla.ElementAt(i)).imprimirParams());
+                }
+                else
+                {
+                    lista.Add("\n");
                 }
             }
             else if (tabla.ElementAt(i).GetType() == typeof(ArrayType))
@@ -139,6 +157,11 @@ public class TablaSimbolos
                                                               + " Tipo: " + ((ArrayType)tabla.ElementAt(i)).type
                                                               + " Tipo de dato: " +
                                                               ((ArrayType)tabla.ElementAt(i)).dataType);
+                lista.Add("Nombre: " + ((ArrayType)tabla.ElementAt(i)).token.Text
+                          + " Nivel: " + ((ArrayType)tabla.ElementAt(i)).nivel
+                          + " Tipo: " + ((ArrayType)tabla.ElementAt(i)).type
+                          + " Tipo de dato: " +
+                          ((ArrayType)tabla.ElementAt(i)).dataType + "\n");
             }
             else if (tabla.ElementAt(i).GetType() == typeof(CustomType))
             {
@@ -147,15 +170,24 @@ public class TablaSimbolos
                                                               + " Tipo: " + ((CustomType)tabla.ElementAt(i)).Type
                                                               + " Tipo de dato: " +
                                                               ((CustomType)tabla.ElementAt(i)).TypeOf);
+                lista.Add("Nombre: " + ((CustomType)tabla.ElementAt(i)).token.Text
+                          + " Nivel: " + ((CustomType)tabla.ElementAt(i)).nivel
+                          + " Tipo: " + ((CustomType)tabla.ElementAt(i)).Type
+                          + " Tipo de dato: " +
+                          ((CustomType)tabla.ElementAt(i)).TypeOf + "\n");
             }
             else if (tabla.ElementAt(i).GetType() == typeof(UsingType))
             {
                 System.Diagnostics.Debug.WriteLine("Nombre: " + ((UsingType)tabla.ElementAt(i)).token.Text
                                                               + " Nivel: " + ((UsingType)tabla.ElementAt(i)).nivel
                                                               + " Tipo: " + ((UsingType)tabla.ElementAt(i)).type);
+                lista.Add("Nombre: " + ((UsingType)tabla.ElementAt(i)).token.Text
+                          + " Nivel: " + ((UsingType)tabla.ElementAt(i)).nivel
+                          + " Tipo: " + ((UsingType)tabla.ElementAt(i)).type + "\n");
             }
         }
-
+        lista.Add("----- FIN TABLA ------\n");
         System.Diagnostics.Debug.WriteLine("----- FIN TABLA ------");
+        return lista;
     }
 }

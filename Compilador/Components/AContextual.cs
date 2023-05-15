@@ -49,8 +49,8 @@ public class AContextual : AlphaParserBaseVisitor<object>
             throw;
         }
 
-        tabla.Imprimir();
-        return errorBuilder.BuildMessage();
+        List<string> TablaList = tabla.Imprimir();
+        return errorBuilder.BuildMessage() + "\n" + string.Join("\n", TablaList);
     }
 
     /*
@@ -149,14 +149,14 @@ public class AContextual : AlphaParserBaseVisitor<object>
                 {
                     foreach (var child in context.ident())
                     {
-                        if (tabla.currentClass != null)
+                        if (tabla.currentClass != null) // es una varaible de una clase
                         {
                             System.Diagnostics.Debug.WriteLine("la clase solo puede tener variables de tipo basico." +
                                                                obtenerCoordenadas(child.Start));
                             errorBuilder.AddError("la clase solo puede tener variables de tipo basico." +
                                                   obtenerCoordenadas(child.Start));
                         }
-                        else if (tabla.currentMethod != null)
+                        else if (tabla.currentMethod != null) // es variable local de metodo
                         {
                             IToken tok = (IToken)Visit(child);
                             Type? tipo = tabla.Buscar(tok.Text);
