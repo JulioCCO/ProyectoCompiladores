@@ -10,7 +10,7 @@ public class CustomType : Type
     public LinkedList<Type> attributeList = new LinkedList<Type>();
 
 
-    public CustomType(IToken token, int level, string typeOf) : base(token, level)
+    public CustomType(IToken t, int n, string typeOf, ParserRuleContext c) : base(t, n, c)
     {
         TypeOf = typeOf;
     }

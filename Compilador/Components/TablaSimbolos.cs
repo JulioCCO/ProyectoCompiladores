@@ -86,7 +86,11 @@ public class TablaSimbolos
         }
 
     }
-        
+
+    public Type? buscarEnMetodo()
+    {
+        return null;
+    }
 
     public void OpenScope()
     {

@@ -3,13 +3,13 @@ using Data;
 class AllProds 
 {
   int nPoints;
-  char exclaim;
+  //char exclaim;
   char caracterEspecial;
   int[] arreglo;
   
    class Point {
-    int x, y, x, m; // aqui hay un error de declaracion de variables
-    char exclaim; // aqui hay un error de declaracion de variables
+    int x, y, m, j;
+    char exclaim;
   }
 
   char[] msg;
@@ -18,26 +18,23 @@ class AllProds
 
   void WriteError (int julio)
   {
-    char[] msg; //error
-    Point point;        // aqui hay un error de declaracion de variables dentro de un metodo
+    
     point = new Point;
-    char exclaim;       // aqui hay un error de declaracion de variables dentro de un metodo
+    char exclaim;
     point.j = 0;
     add(arreglo, 1);
     del(arreglo, 1);
-    len();              // aqui hay un error de llamada a metodo
     len(arreglo);
     int x;
     int b;
-    int b;             // aqui hay un error de declaracion de variables
     char exc;
-    exc = (char) point.x;
-    boolean test1;
+    //exc = (char) point.x;
     exclaim = (char) point.x;
     caracterEspecial = 'a';
     test1 = true;
 
-    while(b<5){
+    while(b< 5 ){
+ int b;
         write(msg[b]);
         b++; 
         int cesar;
@@ -47,7 +44,7 @@ class AllProds
 		
     }
  
-    for(b;b<7;b++;){
+    for(b;b<5;b++;){
         write(msg[b]);
     }
 
@@ -55,27 +52,23 @@ class AllProds
 
     while (b >8) {
         b--;
-        if (b < 3 && test1==1)  // aqui hay un error de tipos de datos
+        if (b < 3 && test1==true)  
             break;
         write(msg[b], 2);
     }
     
   }
 
-  int GetX (Point y, int x, char ju) 
+  int GetX (Point y, int m, char ju) 
   { 
         return y.y; 
   }
 
-  int GetX ()   // aqui hay un error de declaracion de metodo
-  { 
-     int k;
-  }
+
   void SetX (int m, Point p2) {
         int[] arreglito;
         if (m > -10 && m < 10) {
           int camino; 
-          camino = GetX(p2, 2, 'a');  // aqui hay un error de llamada a metodo
         }
         else {
              WriteError(m);
@@ -87,7 +80,6 @@ class AllProds
   void SetMsg () {
     msg = new char[5];  
     msg[1] = 'E';
-    msg[2] = 1;  // aqui hay un error de tipos de datos 
     read(msg[3]);
   }
 
@@ -115,8 +107,6 @@ class AllProds
     SetPoints();
     read(a);
     if (a < 0){
-      Point x3;  // Variable ya existe dentro del scope
-      char caracterEspecial;
       write(GetX(x3, 2, 'a'));
     }
     else
@@ -125,9 +115,28 @@ class AllProds
 
   }
   
-   class Point {  // aqui hay un error de declaracion de clase
-    int x, y, x, m;
-    char exclaim;
-  }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

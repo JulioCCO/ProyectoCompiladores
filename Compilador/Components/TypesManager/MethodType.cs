@@ -12,7 +12,7 @@ public class MethodType : Type
 
     public LinkedList<Type> paramsTypes;
 
-    public MethodType(IToken t, int n, int cantParams, string r, LinkedList<Type> paramsList) : base(t, n)
+    public MethodType(IToken t, int n, int cantParams, string r, LinkedList<Type> paramsList, ParserRuleContext c) : base(t, n, c)
     {
         this.cantParams = cantParams;
         this.returnType = r;

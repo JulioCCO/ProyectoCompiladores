@@ -15,7 +15,7 @@ public class ArrayType : Type
     public int size = 0;
     public Types dataType;
 
-    public ArrayType(IToken t, int n, Types dt) : base(t, n)
+    public ArrayType(IToken t, int n, Types dt, ParserRuleContext c) : base(t, n, c)
     {
         dataType = dt;
     }

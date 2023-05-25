@@ -9,7 +9,7 @@ program : (using)* CLASS ident LEFT_BRACE (varDecl | classDecl | methodDecl)* RI
     
 using : USING ident SEMICOLON                                                                   #UsingClassAST;
 
-varDecl : type ident (COMMA ident)* SEMICOLON                                                   #VarDeclAST;
+varDecl locals [int indexVar=0]: type ident (COMMA ident)* SEMICOLON                            #VarDeclAST;
 
 classDecl : CLASS ident LEFT_BRACE (varDecl)* RIGHT_BRACE                                       #ClassDeclAST;
 
@@ -68,7 +68,7 @@ addop : PLUS | MINUSEXP;
 
 mulop : MULT | DIV | MOD;
 
-ident : IDENTIFIER                                                                                #IdentAST;
+ident locals [ParserRuleContext declPointer = null]: IDENTIFIER                                   #IdentAST;
 
 array : LEFT_BRACKET INT_CONST? RIGHT_BRACKET                                                     #ArrayAST;
 

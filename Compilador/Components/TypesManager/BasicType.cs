@@ -17,7 +17,7 @@ public class BasicType : Type
 
     public Types type;
 
-    public BasicType(IToken t, Types bs, int n) : base(t, n)
+    public BasicType(IToken t, Types bs, int n, ParserRuleContext c) : base(t, n, c)
     {
         type = bs;
     }

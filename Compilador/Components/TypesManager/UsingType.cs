@@ -5,7 +5,7 @@ namespace Compilador.Components.TypesManager;
 public class UsingType: Type
 {
     public readonly string type = "using";
-    public UsingType(IToken t,  int n) : base(t, n){}
+    public UsingType(IToken t,  int n, ParserRuleContext c) : base(t, n, c){}
 
     public override string getType()
     {

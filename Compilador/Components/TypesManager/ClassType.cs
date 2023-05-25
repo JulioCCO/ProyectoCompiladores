@@ -8,7 +8,7 @@ public class ClassType : Type
     public readonly string type = "class";
     public LinkedList<Type> attributes = new LinkedList<Type>();
 
-    public ClassType(IToken t, int n) : base(t, n)
+    public ClassType(IToken t, int n, ParserRuleContext c) : base(t, n, c)
     {
     }
 
