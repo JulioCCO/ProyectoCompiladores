@@ -140,22 +140,44 @@ public class AContextual : AlphaParserBaseVisitor<object>
                                 errorBuilder.AddError("Error en visit VarDeclAST tipo basico, variable ya existe: " +
                                                       Tok.Text + " " + obtenerCoordenadas(Tok));
                             }
-                            else if (tipo.nivel == 1) // es variable local
+                            else if (tipo.nivel >= 1) // es variable local
                             {
-                                // TODO: revisar si es el mismo metodo
                                 
-                            }
-                            else
-                            {
-                                tabla.Insertar(var);
+                                // TODO: revisar si es el mismo metodo
+                                var validar = tabla.buscarEnMetodo(Tok.Text);
+                                if (validar == true)
+                                {
+                                    System.Diagnostics.Debug.WriteLine("Error en visit VarDeclAST tipo basico, variable ya existe: " +
+                                                                       Tok.Text + " " + obtenerCoordenadas(Tok));
+                                    errorBuilder.AddError("Error en visit VarDeclAST tipo basico, variable ya existe: " +
+                                                          Tok.Text + " " + obtenerCoordenadas(Tok));
+                                }
+                                else
+                                {
+                                    tabla.Insertar(var);
+                                }
                             }
                         }
-
-
+                        else
+                        {
+                            System.Diagnostics.Debug.WriteLine("Error en visit VarDeclaAST variable no encontrada");
+                            errorBuilder.AddError("Error en visit VarDeclaAST variable no encontrada");
+                        }
                     }
                     else if (tabla.currentClass == null && tabla.currentMethod == null) // es variable global
                     {
-                        tabla.Insertar(var);
+                        Type? tipo = tabla.Buscar(Tok.Text);
+                        if (tipo != null && tipo.nivel == 0)
+                        {
+                            System.Diagnostics.Debug.WriteLine("Error en visit VarDeclAST tipo basico, variable ya existe: " +
+                                                               Tok.Text + " " + obtenerCoordenadas(Tok));
+                            errorBuilder.AddError("Error en visit VarDeclAST tipo basico, variable ya existe: " +
+                                                  Tok.Text + " " + obtenerCoordenadas(Tok));
+                        }
+                        else
+                        {
+                            tabla.Insertar(var);
+                        }
                     }
                 }
             }
@@ -1267,6 +1289,7 @@ public class AContextual : AlphaParserBaseVisitor<object>
     {
         //TODO validar el tipo de arreglo que sea correcto y q este en el alcance
         Type? tipo = tabla.Buscar(context.ident(0).GetText());
+        System.Diagnostics.Debug.WriteLine("Tipo: " + tipo );
 
         if (context.ident().Length > 1) // Cuando es un atributo de una clase
         {
@@ -1324,6 +1347,7 @@ public class AContextual : AlphaParserBaseVisitor<object>
 
         if (context.ident().Length == 1) // solo hay un id 
         {
+            System.Diagnostics.Debug.WriteLine("tipo.token.Text: " + tipo?.token.Text);
             if (context.ident(0).GetText().Equals("del"))
             {
                 return "Boolean";
@@ -1347,6 +1371,7 @@ public class AContextual : AlphaParserBaseVisitor<object>
             if (tipo != null)
             {
                 return tipo.getType();
+                
             }
 
             System.Diagnostics.Debug.WriteLine(

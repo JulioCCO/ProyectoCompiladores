@@ -3,6 +3,7 @@ using Data;
 class AllProds 
 {
   int nPoints;
+  int nPoints;
   //char exclaim;
   char caracterEspecial;
   int[] arreglo;
@@ -25,8 +26,11 @@ class AllProds
     add(arreglo, 1);
     del(arreglo, 1);
     len(arreglo);
+    int s;
+    int x;
     int x;
     int b;
+    s = 7;
     char exc;
     //exc = (char) point.x;
     exclaim = (char) point.x;
@@ -34,7 +38,8 @@ class AllProds
     test1 = true;
 
     while(b< 5 ){
- int b;
+        s = 7;
+        int b;
         write(msg[b]);
         b++; 
         int cesar;
@@ -116,6 +121,15 @@ class AllProds
   }
   
 }
+
+
+
+
+
+
+
+
+
 
 
 

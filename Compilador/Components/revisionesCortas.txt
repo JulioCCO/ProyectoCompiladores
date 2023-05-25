@@ -1,0 +1,32 @@
+class AllProds 
+{
+  int nPoints;
+  char exclaim;
+  
+   class Point {
+    int x, y, m, j;
+  }
+
+
+  void WriteError ()
+  {
+
+    int m;
+    int o;
+    m = 12;
+
+    //boolean var;
+    //var = true;
+    
+    string str;
+    str = "Hola Mundo";
+    
+   
+    o = 12;
+
+
+  }
+  
+  }
+
+
