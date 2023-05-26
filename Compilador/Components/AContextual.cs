@@ -13,17 +13,17 @@ public class AContextual : AlphaParserBaseVisitor<object>
 {
     public TablaSimbolos tabla; // tabla de simbolos global
     public ErrorBuilder errorBuilder = new ErrorBuilder();
-    
+
     public AContextual()
     {
         tabla = new TablaSimbolos();
     }
-    
+
     public string obtenerCoordenadas(IToken token)
     {
         return " Linea: " + token.Line + " Columna: " + token.Column;
     }
-    
+
     /*
     // program : (using)* CLASS ident LEFT_BRACE (varDecl | classDecl | methodDecl)* RIGHT_BRACE EOF   #ProgramClassAST;
     */
@@ -32,23 +32,25 @@ public class AContextual : AlphaParserBaseVisitor<object>
         try
         {
             tabla.OpenScope();
-            AlphaParser.IdentASTContext ident = (AlphaParser.IdentASTContext) Visit(context.ident());
-            IToken Tok = (IToken) ident.IDENTIFIER().Symbol;
-            
+            AlphaParser.IdentASTContext ident = (AlphaParser.IdentASTContext)Visit(context.ident());
+            IToken Tok = (IToken)ident.IDENTIFIER().Symbol;
+
             ClassType cls = new ClassType(Tok, TablaSimbolos.nivelActual, context);
             tabla.Insertar(cls);
             foreach (var child in context.children)
             {
                 Visit(child);
             }
+
             tabla.CloseScope();
         }
         catch (Exception e)
         {
-            AlphaParser.IdentASTContext ident = (AlphaParser.IdentASTContext) Visit(context.ident());
-            IToken Tok = (IToken) ident.IDENTIFIER().Symbol;
+            AlphaParser.IdentASTContext ident = (AlphaParser.IdentASTContext)Visit(context.ident());
+            IToken Tok = (IToken)ident.IDENTIFIER().Symbol;
             errorBuilder.AddError("Error en visit ProgramClassAST" + e.Message + " " + obtenerCoordenadas(Tok));
-            System.Diagnostics.Debug.WriteLine("Error en visit ProgramClassAST" + e.Message + " " + obtenerCoordenadas(Tok));
+            System.Diagnostics.Debug.WriteLine("Error en visit ProgramClassAST" + e.Message + " " +
+                                               obtenerCoordenadas(Tok));
             throw;
         }
 
@@ -63,19 +65,21 @@ public class AContextual : AlphaParserBaseVisitor<object>
     {
         try
         {
-            AlphaParser.IdentASTContext ident = (AlphaParser.IdentASTContext) Visit(context.ident());
-            IToken Tok = (IToken) ident.IDENTIFIER().Symbol;
+            AlphaParser.IdentASTContext ident = (AlphaParser.IdentASTContext)Visit(context.ident());
+            IToken Tok = (IToken)ident.IDENTIFIER().Symbol;
             UsingType usingType = new UsingType(Tok, TablaSimbolos.nivelActual, context);
             tabla.Insertar(usingType);
         }
         catch (Exception e)
         {
-            AlphaParser.IdentASTContext ident = (AlphaParser.IdentASTContext) Visit(context.ident());
-            IToken Tok = (IToken) ident.IDENTIFIER().Symbol;
-            System.Diagnostics.Debug.WriteLine("Error en visit UsingClassAST " + e.Message + " " + obtenerCoordenadas(Tok));
+            AlphaParser.IdentASTContext ident = (AlphaParser.IdentASTContext)Visit(context.ident());
+            IToken Tok = (IToken)ident.IDENTIFIER().Symbol;
+            System.Diagnostics.Debug.WriteLine("Error en visit UsingClassAST " + e.Message + " " +
+                                               obtenerCoordenadas(Tok));
             errorBuilder.AddError("Error en visit UsingClassAST " + e.Message + " " + obtenerCoordenadas(Tok));
             throw;
         }
+
         return null;
     }
 
@@ -96,12 +100,15 @@ public class AContextual : AlphaParserBaseVisitor<object>
             var textoSinUltimosDosCaracteres =
                 context.type().GetText().Substring(0, context.type().GetText().Length - 2);
 
-            if (BasicType.isBasicType(context.type().GetText()) == true) // si es tipo basico ----------------------------------------------------------------
+            if (BasicType.isBasicType(context.type().GetText()) ==
+                true) // si es tipo basico ----------------------------------------------------------------
             {
                 foreach (var child in context.ident())
                 {
-                    AlphaParser.IdentASTContext ident = (AlphaParser.IdentASTContext) Visit(child);
-                    IToken Tok = (IToken) ident.IDENTIFIER().Symbol;
+                    AlphaParser.IdentASTContext ident = (AlphaParser.IdentASTContext)Visit(child);
+                    IToken Tok = (IToken)ident.IDENTIFIER().Symbol;
+                    System.Diagnostics.Debug.WriteLine("visit VarDeclAST tipo basico: " + Tok.Text + " " +
+                                                       obtenerCoordenadas(Tok));
                     BasicType.Types varTipo = BasicType.showType(context.type().GetText());
                     BasicType var = new BasicType(Tok, varTipo, TablaSimbolos.nivelActual, context);
                     if (tabla.currentClass != null) // es atributo de clase 
@@ -111,12 +118,14 @@ public class AContextual : AlphaParserBaseVisitor<object>
                             Type? tipo = tabla.Buscar(Tok.Text);
                             if (tipo != null && tipo.nivel == 0)
                             {
-                                System.Diagnostics.Debug.WriteLine("Error en visit VarDeclAST tipo basico, variable ya existe: " +
-                                                                   Tok.Text + " " + obtenerCoordenadas(Tok));
-                                
+                                System.Diagnostics.Debug.WriteLine(
+                                    "Error en visit VarDeclAST tipo basico, variable ya existe: " +
+                                    Tok.Text + " " + obtenerCoordenadas(Tok));
+
                                 errorBuilder.AddError("Error en visit VarDeclAST tipo basico, variable ya existe: " +
-                                                        Tok.Text + " " + obtenerCoordenadas(Tok));
+                                                      Tok.Text + " " + obtenerCoordenadas(Tok));
                             }
+
                             tabla.Insertar(var);
                             tabla.currentClass.attributes.AddLast(var);
                         }
@@ -125,43 +134,42 @@ public class AContextual : AlphaParserBaseVisitor<object>
                             System.Diagnostics.Debug.WriteLine("Error en visit VarDeclAST, atributo ya existe: " +
                                                                var.token.Text + " " + obtenerCoordenadas(Tok));
                             errorBuilder.AddError("Error en visit VarDeclAST, atributo ya existe: " +
-                                                  var.token.Text+ " " + obtenerCoordenadas(Tok));
+                                                  var.token.Text + " " + obtenerCoordenadas(Tok));
                         }
                     }
                     else if (tabla.currentMethod != null) // es variable local de metodo
                     {
+                        System.Diagnostics.Debug.Write("Es variable local de metodo: " + Tok.Text);
                         Type? tipo = tabla.Buscar(Tok.Text);
                         if (tipo != null)
                         {
                             if (tipo.nivel == 0) // es variable global
                             {
-                                System.Diagnostics.Debug.WriteLine("Error en visit VarDeclAST tipo basico, variable ya existe: " +
-                                                                   Tok.Text + " " + obtenerCoordenadas(Tok));
+                                System.Diagnostics.Debug.WriteLine(
+                                    "Error en visit VarDeclAST tipo basico, variable ya existe: " +
+                                    Tok.Text + " " + obtenerCoordenadas(Tok));
                                 errorBuilder.AddError("Error en visit VarDeclAST tipo basico, variable ya existe: " +
                                                       Tok.Text + " " + obtenerCoordenadas(Tok));
                             }
                             else if (tipo.nivel >= 1) // es variable local
                             {
-                                
                                 // TODO: revisar si es el mismo metodo
                                 var validar = tabla.buscarEnMetodo(Tok.Text);
                                 if (validar == true)
                                 {
-                                    System.Diagnostics.Debug.WriteLine("Error en visit VarDeclAST tipo basico, variable ya existe: " +
-                                                                       Tok.Text + " " + obtenerCoordenadas(Tok));
-                                    errorBuilder.AddError("Error en visit VarDeclAST tipo basico, variable ya existe: " +
-                                                          Tok.Text + " " + obtenerCoordenadas(Tok));
+                                    System.Diagnostics.Debug.WriteLine(
+                                        "Error en visit VarDeclAST tipo basico, variable ya existe: " +
+                                        Tok.Text + " " + obtenerCoordenadas(Tok));
+                                    errorBuilder.AddError(
+                                        "Error en visit VarDeclAST tipo basico, variable ya existe: " +
+                                        Tok.Text + " " + obtenerCoordenadas(Tok));
                                 }
-                                else
-                                {
-                                    tabla.Insertar(var);
-                                }
+                                tabla.Insertar(var);
                             }
                         }
                         else
                         {
-                            System.Diagnostics.Debug.WriteLine("Error en visit VarDeclaAST variable no encontrada");
-                            errorBuilder.AddError("Error en visit VarDeclaAST variable no encontrada");
+                            tabla.Insertar(var);
                         }
                     }
                     else if (tabla.currentClass == null && tabla.currentMethod == null) // es variable global
@@ -169,8 +177,9 @@ public class AContextual : AlphaParserBaseVisitor<object>
                         Type? tipo = tabla.Buscar(Tok.Text);
                         if (tipo != null && tipo.nivel == 0)
                         {
-                            System.Diagnostics.Debug.WriteLine("Error en visit VarDeclAST tipo basico, variable ya existe: " +
-                                                               Tok.Text + " " + obtenerCoordenadas(Tok));
+                            System.Diagnostics.Debug.WriteLine(
+                                "Error en visit VarDeclAST tipo basico, variable ya existe: " +
+                                Tok.Text + " " + obtenerCoordenadas(Tok));
                             errorBuilder.AddError("Error en visit VarDeclAST tipo basico, variable ya existe: " +
                                                   Tok.Text + " " + obtenerCoordenadas(Tok));
                         }
@@ -188,7 +197,8 @@ public class AContextual : AlphaParserBaseVisitor<object>
                 if (type is ArrayType.Types.Error)
                 {
                     System.Diagnostics.Debug.WriteLine("Error en visit VarDeclAST, tipo recibido: " +
-                                                       context.type().GetText() + " " + obtenerCoordenadas(context.type().Start));
+                                                       context.type().GetText() + " " +
+                                                       obtenerCoordenadas(context.type().Start));
                     errorBuilder.AddError("Error en visit VarDeclAST, tipo recibido: " +
                                           context.type().GetText() + " " + obtenerCoordenadas(context.type().Start));
                 }
@@ -205,13 +215,14 @@ public class AContextual : AlphaParserBaseVisitor<object>
                         }
                         else if (tabla.currentMethod != null) // es variable local de metodo
                         {
-                            AlphaParser.IdentASTContext ident = (AlphaParser.IdentASTContext) Visit(child);
-                            IToken tok = (IToken) ident.IDENTIFIER().Symbol;
+                            AlphaParser.IdentASTContext ident = (AlphaParser.IdentASTContext)Visit(child);
+                            IToken tok = (IToken)ident.IDENTIFIER().Symbol;
                             Type? tipo = tabla.Buscar(tok.Text);
                             if (tipo != null && tipo.nivel <= TablaSimbolos.nivelActual)
                             {
-                                System.Diagnostics.Debug.WriteLine("Error en visit VarDeclAST tipo arreglo, variable ya existe: " +
-                                                                   tok.Text + " " + obtenerCoordenadas(tok));
+                                System.Diagnostics.Debug.WriteLine(
+                                    "Error en visit VarDeclAST tipo arreglo, variable ya existe: " +
+                                    tok.Text + " " + obtenerCoordenadas(tok));
                                 errorBuilder.AddError("Error en visit VarDeclAST tipo arreglo, variable ya existe: " +
                                                       tok.Text + " " + obtenerCoordenadas(tok));
                             }
@@ -223,15 +234,17 @@ public class AContextual : AlphaParserBaseVisitor<object>
                         }
                         else if (tabla.currentClass == null && tabla.currentMethod == null) // es variable global
                         {
-                            AlphaParser.IdentASTContext ident = (AlphaParser.IdentASTContext) Visit(child);
-                            IToken tok = (IToken) ident.IDENTIFIER().Symbol;
+                            AlphaParser.IdentASTContext ident = (AlphaParser.IdentASTContext)Visit(child);
+                            IToken tok = (IToken)ident.IDENTIFIER().Symbol;
                             Type? tipo = tabla.Buscar(tok.Text);
                             if (tipo != null)
                             {
-                                System.Diagnostics.Debug.WriteLine("Error en visit VarDeclAST variable global, variable ya existe: " +
-                                                                   tok.Text + " " + obtenerCoordenadas(tok));
-                                errorBuilder.AddError("Error en visit VarDeclAST variable global, variable ya existe: " +
-                                                      tok.Text + " " + obtenerCoordenadas(tok)); 
+                                System.Diagnostics.Debug.WriteLine(
+                                    "Error en visit VarDeclAST variable global, variable ya existe: " +
+                                    tok.Text + " " + obtenerCoordenadas(tok));
+                                errorBuilder.AddError(
+                                    "Error en visit VarDeclAST variable global, variable ya existe: " +
+                                    tok.Text + " " + obtenerCoordenadas(tok));
                             }
                             else
                             {
@@ -247,9 +260,9 @@ public class AContextual : AlphaParserBaseVisitor<object>
             {
                 foreach (var child in context.ident())
                 {
-                    AlphaParser.IdentASTContext ident = (AlphaParser.IdentASTContext) Visit(child);
-                    IToken tok = (IToken) ident.IDENTIFIER().Symbol;
-                    if (tabla.currentClass != null)  // si estoy en una clase
+                    AlphaParser.IdentASTContext ident = (AlphaParser.IdentASTContext)Visit(child);
+                    IToken tok = (IToken)ident.IDENTIFIER().Symbol;
+                    if (tabla.currentClass != null) // si estoy en una clase
                     {
                         System.Diagnostics.Debug.WriteLine("la clase solo puede tener variables de tipo basico.");
                     }
@@ -265,7 +278,8 @@ public class AContextual : AlphaParserBaseVisitor<object>
                         }
                         else
                         {
-                            CustomType var = new CustomType(tok, TablaSimbolos.nivelActual, context.type().GetText(), context);
+                            CustomType var = new CustomType(tok, TablaSimbolos.nivelActual, context.type().GetText(),
+                                context);
                             tabla.Insertar(var);
                         }
                     }
@@ -281,7 +295,8 @@ public class AContextual : AlphaParserBaseVisitor<object>
                         }
                         else
                         {
-                            CustomType var = new CustomType(tok, TablaSimbolos.nivelActual, context.type().GetText(), context);
+                            CustomType var = new CustomType(tok, TablaSimbolos.nivelActual, context.type().GetText(),
+                                context);
                             tabla.Insertar(var);
                         }
                     }
@@ -290,15 +305,18 @@ public class AContextual : AlphaParserBaseVisitor<object>
             else
             {
                 System.Diagnostics.Debug.WriteLine("Error en visit VarDeclAST, tipo recibido: " +
-                                                   context.type().GetText() + " " + obtenerCoordenadas(context.type().Start));
+                                                   context.type().GetText() + " " +
+                                                   obtenerCoordenadas(context.type().Start));
                 errorBuilder.AddError("Error en visit VarDeclAST, tipo recibido: " +
-                                      context.type().GetText() + " " + obtenerCoordenadas(context.type().Start)); 
+                                      context.type().GetText() + " " + obtenerCoordenadas(context.type().Start));
             }
         }
         catch (Exception e)
         {
-            System.Diagnostics.Debug.WriteLine("Error en visit VarDeclAST: " + e.Message + " " + obtenerCoordenadas(context.type().Start));
-            errorBuilder.AddError("Error en visit VarDeclAST: " + e.Message + " " + obtenerCoordenadas(context.type().Start));
+            System.Diagnostics.Debug.WriteLine("Error en visit VarDeclAST: " + e.Message + " " +
+                                               obtenerCoordenadas(context.type().Start));
+            errorBuilder.AddError("Error en visit VarDeclAST: " + e.Message + " " +
+                                  obtenerCoordenadas(context.type().Start));
             //throw;
         }
 
@@ -320,7 +338,7 @@ public class AContextual : AlphaParserBaseVisitor<object>
                                   context.ident().GetText() + " " + obtenerCoordenadas(tok));
             return null;
         }
-        
+
         ClassType cls = new ClassType(tok, TablaSimbolos.nivelActual, context);
         tabla.Insertar(cls);
         tabla.currentClass = cls; // para saber en que clase estoy
@@ -349,9 +367,11 @@ public class AContextual : AlphaParserBaseVisitor<object>
         if (tabla.Buscar(tok.Text) != null)
         {
             System.Diagnostics.Debug.WriteLine("Error en visit MethodDeclAST ya existe un objeto llamado: "
-                                               + context.ident().GetText() + " de tipo: " + tipo.GetType() + " " + obtenerCoordenadas(tok));
+                                               + context.ident().GetText() + " de tipo: " + tipo.GetType() + " " +
+                                               obtenerCoordenadas(tok));
             errorBuilder.AddError("Error en visit MethodDeclAST ya existe un objeto llamado: "
-                                  + context.ident().GetText() + " de tipo: " + tipo.GetType() + " " + obtenerCoordenadas(tok));
+                                  + context.ident().GetText() + " de tipo: " + tipo.GetType() + " " +
+                                  obtenerCoordenadas(tok));
             return null;
         }
 
@@ -387,14 +407,16 @@ public class AContextual : AlphaParserBaseVisitor<object>
             else // error
             {
                 System.Diagnostics.Debug.WriteLine("Error en visit MethodDeclAST, tipo recibido: " +
-                                                   context.type().GetText() + " " + obtenerCoordenadas(context.type().Start));
+                                                   context.type().GetText() + " " +
+                                                   obtenerCoordenadas(context.type().Start));
                 errorBuilder.AddError("Error en visit MethodDeclAST, tipo recibido: " +
                                       context.type().GetText() + " " + obtenerCoordenadas(context.type().Start));
             }
         }
         else if (context.VOID() != null) // si no tiene tipo, es void
         {
-            MethodType method = new MethodType(tok, TablaSimbolos.nivelActual, parametros.Count, "void", parametros,context);
+            MethodType method = new MethodType(tok, TablaSimbolos.nivelActual, parametros.Count, "void", parametros,
+                context);
             tabla.Insertar(method);
             tabla.currentMethod = method;
         }
@@ -475,6 +497,7 @@ public class AContextual : AlphaParserBaseVisitor<object>
                                       context.type(i).GetText() + " " + obtenerCoordenadas(tok));
             }
         }
+
         return parametros;
     }
 
@@ -489,6 +512,7 @@ public class AContextual : AlphaParserBaseVisitor<object>
         {
             Visit(context.array());
         }
+
         return token;
     }
 
@@ -554,7 +578,7 @@ public class AContextual : AlphaParserBaseVisitor<object>
                     System.Diagnostics.Debug.WriteLine("Error metodo del sin parametros" + " " +
                                                        obtenerCoordenadas(context.Start));
                     errorBuilder.AddError("Error metodo del sin parametros" + " " +
-                                          obtenerCoordenadas(context.Start)); 
+                                          obtenerCoordenadas(context.Start));
                 }
                 else
                 {
@@ -563,8 +587,10 @@ public class AContextual : AlphaParserBaseVisitor<object>
                     if (actParm.Count != 2)
                     {
                         System.Diagnostics.Debug.WriteLine(
-                            "Error de parametros, cantidad de parametros no coinciden en el del" + " " + obtenerCoordenadas(context.Start));
-                        errorBuilder.AddError("Error de parametros, cantidad de parametros no coinciden en el del" + " " + obtenerCoordenadas(context.Start));
+                            "Error de parametros, cantidad de parametros no coinciden en el del" + " " +
+                            obtenerCoordenadas(context.Start));
+                        errorBuilder.AddError("Error de parametros, cantidad de parametros no coinciden en el del" +
+                                              " " + obtenerCoordenadas(context.Start));
                     }
                     else
                     {
@@ -575,8 +601,10 @@ public class AContextual : AlphaParserBaseVisitor<object>
                         else
                         {
                             System.Diagnostics.Debug.WriteLine(
-                                "Error de parametros, tipos de parametros no coinciden en el del" + " " + obtenerCoordenadas(context.Start));
-                            errorBuilder.AddError("Error de parametros, tipos de parametros no coinciden en el del" + " " + obtenerCoordenadas(context.Start));
+                                "Error de parametros, tipos de parametros no coinciden en el del" + " " +
+                                obtenerCoordenadas(context.Start));
+                            errorBuilder.AddError("Error de parametros, tipos de parametros no coinciden en el del" +
+                                                  " " + obtenerCoordenadas(context.Start));
                             return null;
                         }
                     }
@@ -602,8 +630,10 @@ public class AContextual : AlphaParserBaseVisitor<object>
                     if (actParm.Count != 1)
                     {
                         System.Diagnostics.Debug.WriteLine(
-                            "Error de parametros, cantidad de parametros no coinciden en el len" + " " + obtenerCoordenadas(context.Start));
-                        errorBuilder.AddError("Error de parametros, cantidad de parametros no coinciden en el len" + " " + obtenerCoordenadas(context.Start));
+                            "Error de parametros, cantidad de parametros no coinciden en el len" + " " +
+                            obtenerCoordenadas(context.Start));
+                        errorBuilder.AddError("Error de parametros, cantidad de parametros no coinciden en el len" +
+                                              " " + obtenerCoordenadas(context.Start));
                     }
                     else
                     {
@@ -613,8 +643,10 @@ public class AContextual : AlphaParserBaseVisitor<object>
                         else
                         {
                             System.Diagnostics.Debug.WriteLine(
-                                "Error de parametros, tipos de parametros no coinciden en el len" + " " + obtenerCoordenadas(context.Start));
-                            errorBuilder.AddError("Error de parametros, tipos de parametros no coinciden en el len" + " " + obtenerCoordenadas(context.Start));
+                                "Error de parametros, tipos de parametros no coinciden en el len" + " " +
+                                obtenerCoordenadas(context.Start));
+                            errorBuilder.AddError("Error de parametros, tipos de parametros no coinciden en el len" +
+                                                  " " + obtenerCoordenadas(context.Start));
                         }
                     }
                 }
@@ -639,8 +671,10 @@ public class AContextual : AlphaParserBaseVisitor<object>
                     if (actParm.Count != 2)
                     {
                         System.Diagnostics.Debug.WriteLine(
-                            "Error de parametros, cantidad de parametros no coinciden en el add" + " " + obtenerCoordenadas(context.Start));
-                        errorBuilder.AddError("Error de parametros, cantidad de parametros no coinciden en el add" + " " + obtenerCoordenadas(context.Start));
+                            "Error de parametros, cantidad de parametros no coinciden en el add" + " " +
+                            obtenerCoordenadas(context.Start));
+                        errorBuilder.AddError("Error de parametros, cantidad de parametros no coinciden en el add" +
+                                              " " + obtenerCoordenadas(context.Start));
                     }
                     else
                     {
@@ -650,8 +684,10 @@ public class AContextual : AlphaParserBaseVisitor<object>
                         else
                         {
                             System.Diagnostics.Debug.WriteLine(
-                                "Error de parametros, tipos de parametros no coinciden en el add" + " " + obtenerCoordenadas(context.Start));
-                            errorBuilder.AddError("Error de parametros, tipos de parametros no coinciden en el add" + " " + obtenerCoordenadas(context.Start));
+                                "Error de parametros, tipos de parametros no coinciden en el add" + " " +
+                                obtenerCoordenadas(context.Start));
+                            errorBuilder.AddError("Error de parametros, tipos de parametros no coinciden en el add" +
+                                                  " " + obtenerCoordenadas(context.Start));
                         }
                     }
                 }
@@ -672,8 +708,10 @@ public class AContextual : AlphaParserBaseVisitor<object>
                             if (method.paramsTypes.ElementAt(i).getType() != actParm.ElementAt(i).getType())
                             {
                                 System.Diagnostics.Debug.WriteLine(
-                                    "Error de parametros, tipos de parametros no coinciden" + " " + obtenerCoordenadas(context.Start));
-                                errorBuilder.AddError("Error de parametros, tipos de parametros no coinciden" + " " + obtenerCoordenadas(context.Start));
+                                    "Error de parametros, tipos de parametros no coinciden" + " " +
+                                    obtenerCoordenadas(context.Start));
+                                errorBuilder.AddError("Error de parametros, tipos de parametros no coinciden" + " " +
+                                                      obtenerCoordenadas(context.Start));
                             }
                         }
                     }
@@ -709,27 +747,33 @@ public class AContextual : AlphaParserBaseVisitor<object>
                                       context.GetText() + " " + obtenerCoordenadas(context.Start));
             }
         }
-        else if (context.INC()!=null) // si es incremento ------------------------------------------------------------------------------------
+        else if
+            (context.INC() !=
+             null) // si es incremento ------------------------------------------------------------------------------------
         {
-            if(tipoDesignator.ToLower() != "int")
+            if (tipoDesignator.ToLower() != "int")
             {
-                System.Diagnostics.Debug.WriteLine("Error de asignacion: " + context.INC().GetText() + " solo se puede incrementar " +'"'+"++"+'"' +" un entero" 
-                                                   + " " + obtenerCoordenadas(context.Start) );
-                errorBuilder.AddError("Error de asignacion: " + context.INC().GetText() + " solo se puede incrementar " +'"'+"++"+'"' +" un entero" 
-                                      + " " + obtenerCoordenadas(context.Start) );
+                System.Diagnostics.Debug.WriteLine("Error de asignacion: " + context.INC().GetText() +
+                                                   " solo se puede incrementar " + '"' + "++" + '"' + " un entero"
+                                                   + " " + obtenerCoordenadas(context.Start));
+                errorBuilder.AddError("Error de asignacion: " + context.INC().GetText() +
+                                      " solo se puede incrementar " + '"' + "++" + '"' + " un entero"
+                                      + " " + obtenerCoordenadas(context.Start));
             }
-            
         }
-        else if (context.DEC()!=null) // si es decremento ------------------------------------------------------------------------------------
+        else if
+            (context.DEC() !=
+             null) // si es decremento ------------------------------------------------------------------------------------
         {
-            if(tipoDesignator.ToLower() != "int")
+            if (tipoDesignator.ToLower() != "int")
             {
-                System.Diagnostics.Debug.WriteLine("Error de asignacion: " + context.DEC().GetText() + " solo se puede decrementar " +'"'+"--"+'"' +" un entero" 
-                           + " " + obtenerCoordenadas(context.Start) );
-                errorBuilder.AddError("Error de asignacion: " + context.DEC().GetText()+ " solo se puede decrementar " +'"'+"--"+'"' +" un entero" 
-                                      + " " + obtenerCoordenadas(context.Start) );
+                System.Diagnostics.Debug.WriteLine("Error de asignacion: " + context.DEC().GetText() +
+                                                   " solo se puede decrementar " + '"' + "--" + '"' + " un entero"
+                                                   + " " + obtenerCoordenadas(context.Start));
+                errorBuilder.AddError("Error de asignacion: " + context.DEC().GetText() +
+                                      " solo se puede decrementar " + '"' + "--" + '"' + " un entero"
+                                      + " " + obtenerCoordenadas(context.Start));
             }
-            
         }
         else
         {
@@ -863,11 +907,13 @@ public class AContextual : AlphaParserBaseVisitor<object>
                 System.Diagnostics.Debug.WriteLine("Error en visit ReturnStatementAST, tipo de retorno incorrecto: " +
                                                    " El tipo de return del metodo es: " +
                                                    tabla.currentMethod.returnType +
-                                                   " y el tipo de retorno del return es: " + tipoReturn + " " + obtenerCoordenadas(context.Start));
+                                                   " y el tipo de retorno del return es: " + tipoReturn + " " +
+                                                   obtenerCoordenadas(context.Start));
                 errorBuilder.AddError("Error en visit ReturnStatementAST, tipo de retorno incorrecto: " +
                                       " El tipo de return del metodo es: " +
                                       tabla.currentMethod.returnType +
-                                      " y el tipo de retorno del return es: " + tipoReturn + " " + obtenerCoordenadas(context.Start));
+                                      " y el tipo de retorno del return es: " + tipoReturn + " " +
+                                      obtenerCoordenadas(context.Start));
             }
             else if (tabla.currentMethod.returnType == "void")
             {
@@ -882,11 +928,13 @@ public class AContextual : AlphaParserBaseVisitor<object>
                 System.Diagnostics.Debug.WriteLine("Error en visit ReturnStatementAST, tipo de retorno incorrecto: " +
                                                    " El tipo de return del metodo es: " +
                                                    tabla.currentMethod.returnType +
-                                                   " y el tipo de retorno del return es: " + tipoReturn + " " + obtenerCoordenadas(context.Start));
+                                                   " y el tipo de retorno del return es: " + tipoReturn + " " +
+                                                   obtenerCoordenadas(context.Start));
                 errorBuilder.AddError("Error en visit ReturnStatementAST, tipo de retorno incorrecto: " +
                                       " El tipo de return del metodo es: " +
                                       tabla.currentMethod.returnType +
-                                      " y el tipo de retorno del return es: " + tipoReturn + " " + obtenerCoordenadas(context.Start));
+                                      " y el tipo de retorno del return es: " + tipoReturn + " " +
+                                      obtenerCoordenadas(context.Start));
             }
         }
 
@@ -1111,7 +1159,8 @@ public class AContextual : AlphaParserBaseVisitor<object>
             string tipoLista = (string)Visit(context.term(i));
             if (tipoLista != tipo)
             {
-                System.Diagnostics.Debug.WriteLine("Error de tipos en la expresion " + obtenerCoordenadas(context.Start));
+                System.Diagnostics.Debug.WriteLine(
+                    "Error de tipos en la expresion " + obtenerCoordenadas(context.Start));
                 errorBuilder.AddError("Error de tipos en la expresion " + obtenerCoordenadas(context.Start));
                 return null;
             }
@@ -1172,10 +1221,12 @@ public class AContextual : AlphaParserBaseVisitor<object>
                         {
                             System.Diagnostics.Debug.WriteLine("ERROR: TIPOS DE PARAMETROS INCORRECTOS:"
                                                                + ((MethodType)metodo).paramsTypes.ElementAt(i).getType()
-                                                               + " != " + tipos.ElementAt(i).getType() + " "+ obtenerCoordenadas(context.Start));
+                                                               + " != " + tipos.ElementAt(i).getType() + " " +
+                                                               obtenerCoordenadas(context.Start));
                             errorBuilder.AddError("ERROR: TIPOS DE PARAMETROS INCORRECTOS:"
                                                   + ((MethodType)metodo).paramsTypes.ElementAt(i).getType()
-                                                  + " != " + tipos.ElementAt(i).getType() + " " + obtenerCoordenadas(context.Start));
+                                                  + " != " + tipos.ElementAt(i).getType() + " " +
+                                                  obtenerCoordenadas(context.Start));
                             return null;
                         }
                     }
@@ -1287,13 +1338,24 @@ public class AContextual : AlphaParserBaseVisitor<object>
      */
     public override object? VisitDesignatorAST(AlphaParser.DesignatorASTContext context)
     {
-        //TODO validar el tipo de arreglo que sea correcto y q este en el alcance
-        Type? tipo = tabla.Buscar(context.ident(0).GetText());
-        System.Diagnostics.Debug.WriteLine("Tipo: " + tipo );
+        AlphaParser.IdentASTContext ident = (AlphaParser.IdentASTContext)Visit(context.ident(0));
+        System.Diagnostics.Debug.WriteLine("ident.IDENTIFIER().Symbol.Text: " + ident.IDENTIFIER().Symbol.Text);
+        tabla.Imprimir();
+        Type? tipo = tabla.Buscar(ident.IDENTIFIER().Symbol.Text);
+        if (tipo == null)
+        {
+            System.Diagnostics.Debug.WriteLine("ERROR: No se encontro el identificador " +
+                                               ident.IDENTIFIER().Symbol.Text + " " +
+                                               obtenerCoordenadas(context.Start));
+            errorBuilder.AddError("ERROR: No se encontro el identificador " +
+                                  ident.IDENTIFIER().Symbol.Text + " " + obtenerCoordenadas(context.Start));
+            return null;
+        }
+
 
         if (context.ident().Length > 1) // Cuando es un atributo de una clase
         {
-            Type? tipo1 = tabla.BuscarCustomVar(context.ident(0).GetText());
+            Type? tipo1 = tabla.BuscarCustomVar(ident.IDENTIFIER().Symbol.Text);
 
             if (tipo1 != null)
             {
@@ -1305,14 +1367,16 @@ public class AContextual : AlphaParserBaseVisitor<object>
 
                     foreach (var data in classType.attributes)
                     {
-                        if (data.token.Text.Equals(context.ident(1).GetText()))
+                        AlphaParser.IdentASTContext ident2 = (AlphaParser.IdentASTContext)Visit(context.ident(1));
+                        if (data.token.Text.Equals(ident2.IDENTIFIER().Symbol.Text))
                         {
                             return data.getType();
                         }
                     }
 
                     System.Diagnostics.Debug.WriteLine(" No se encontro en dicha clase la variable " +
-                                                       context.ident(1).GetText() + " " + obtenerCoordenadas(context.Start));
+                                                       context.ident(1).GetText() + " " +
+                                                       obtenerCoordenadas(context.Start));
                     errorBuilder.AddError(" No se encontro en dicha clase la variable " +
                                           context.ident(1).GetText() + " " + obtenerCoordenadas(context.Start));
                     return null;
@@ -1320,9 +1384,11 @@ public class AContextual : AlphaParserBaseVisitor<object>
             }
 
             System.Diagnostics.Debug.WriteLine(" No se encontro en dicha clase " +
-                                               context.ident(context.ident().Length - 2).GetText() + " " + obtenerCoordenadas(context.Start));
+                                               context.ident(context.ident().Length - 2).GetText() + " " +
+                                               obtenerCoordenadas(context.Start));
             errorBuilder.AddError(" No se encontro en dicha clase " +
-                                  context.ident(context.ident().Length - 2).GetText() + " " + obtenerCoordenadas(context.Start));
+                                  context.ident(context.ident().Length - 2).GetText() + " " +
+                                  obtenerCoordenadas(context.Start));
             return null;
         }
 
@@ -1347,18 +1413,18 @@ public class AContextual : AlphaParserBaseVisitor<object>
 
         if (context.ident().Length == 1) // solo hay un id 
         {
-            System.Diagnostics.Debug.WriteLine("tipo.token.Text: " + tipo?.token.Text);
-            if (context.ident(0).GetText().Equals("del"))
+            System.Diagnostics.Debug.WriteLine("tipo.token.Text: " + tipo.token.Text);
+            if (ident.IDENTIFIER().Symbol.Text.Equals("del"))
             {
                 return "Boolean";
             }
 
-            if (context.ident(0).GetText().Equals("add"))
+            if (ident.IDENTIFIER().Symbol.Text.Equals("add"))
             {
                 return "Boolean";
             }
 
-            if (context.ident(0).GetText().Equals("len"))
+            if (ident.IDENTIFIER().Symbol.Text.Equals("len"))
             {
                 return "Int";
             }
@@ -1371,15 +1437,17 @@ public class AContextual : AlphaParserBaseVisitor<object>
             if (tipo != null)
             {
                 return tipo.getType();
-                
             }
 
             System.Diagnostics.Debug.WriteLine(
-                "No se encontro el siguente identificador: " + context.ident(0).GetText() + " " + obtenerCoordenadas(context.Start));
+                "No se encontro el siguente identificador: " + context.ident(0).GetText() + " " +
+                obtenerCoordenadas(context.Start));
             errorBuilder.AddError(
-                "No se encontro el siguente identificador: " + context.ident(0).GetText() + " " + obtenerCoordenadas(context.Start));
+                "No se encontro el siguente identificador: " + context.ident(0).GetText() + " " +
+                obtenerCoordenadas(context.Start));
             return null;
         }
+
         return null;
     }
 

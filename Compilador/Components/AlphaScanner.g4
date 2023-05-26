@@ -40,7 +40,6 @@ PLUS: '+';
 MULT: '*';
 DIV: '/';
 MOD: '%';
-VAR: 'var';
 
 // Brackets
 LEFT_PAREN: '(';

@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Proyecto Compi\\ProyectoCompiladores\\Compilador\\Compilador.csproj": {}
+    "E:\\Compi\\Compilador\\Compilador\\Compilador.csproj": {}
   },
   "projects": {
-    "C:\\Proyecto Compi\\ProyectoCompiladores\\Compilador\\Compilador.csproj": {
+    "E:\\Compi\\Compilador\\Compilador\\Compilador.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Proyecto Compi\\ProyectoCompiladores\\Compilador\\Compilador.csproj",
+        "projectUniqueName": "E:\\Compi\\Compilador\\Compilador\\Compilador.csproj",
         "projectName": "Compilador",
-        "projectPath": "C:\\Proyecto Compi\\ProyectoCompiladores\\Compilador\\Compilador.csproj",
+        "projectPath": "E:\\Compi\\Compilador\\Compilador\\Compilador.csproj",
         "packagesPath": "C:\\Users\\jjuli\\.nuget\\packages\\",
-        "outputPath": "C:\\Proyecto Compi\\ProyectoCompiladores\\Compilador\\obj\\",
+        "outputPath": "E:\\Compi\\Compilador\\Compilador\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\jjuli\\AppData\\Roaming\\NuGet\\NuGet.Config"

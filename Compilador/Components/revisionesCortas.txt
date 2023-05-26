@@ -4,29 +4,36 @@ class AllProds
   char exclaim;
   
    class Point {
-    int x, y, m, j;
+    int x, y, j;
   }
 
 
   void WriteError ()
   {
-
     int m;
+    m = 10;
+
     int o;
-    m = 12;
+    o = 6;
 
-    //boolean var;
-    //var = true;
-    
+    boolean var1;
     string str;
-    str = "Hola Mundo";
-    
-   
-    o = 12;
-
 
   }
   
   }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
