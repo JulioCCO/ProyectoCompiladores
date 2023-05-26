@@ -2,26 +2,50 @@ class AllProds
 {
   int nPoints;
   char exclaim;
-  
+  int[] arreglo;
+  boolean test1;
+ 
    class Point {
-    int x, y, j;
+    int x, y,m, j;
   }
-
-
+  int retornaInt(){
+    return 10;
+ }
+  Point point;
   void WriteError ()
   {
+    //point = new Point;
     int m;
-    m = 10;
+    //m = 10;
 
     int o;
-    o = 6;
-
+    //o = 6;
+    //add(arreglo, 1);
+    //del(arreglo, 1);
+    //len(arreglo);
     boolean var1;
     string str;
-
+    //exclaim = (char) point.x;
+    //test1 = true;
+    while( len(arreglo) < m ){
+    	
+    }
   }
   
   }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

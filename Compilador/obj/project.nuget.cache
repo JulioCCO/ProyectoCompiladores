@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "q3vzPPJIMBe/Sis4tJHgZYp0plMkaTbMCPVcd3Aofl+x+TNMaxvGy1xfHQFcAN9lXa0j9iw+e9sCNpeoagflZg==",
+  "dgSpecHash": "41XBTo5/T/5KfqemmMI6fi/4MJn38qKhBVawle7OYUpRNuyr9dJUswSICKvErsA/jsvgvPrIq5RFGx68aaguFw==",
   "success": true,
-  "projectFilePath": "E:\\Compi\\Compilador\\Compilador\\Compilador.csproj",
+  "projectFilePath": "C:\\Proyecto Compi\\ProyectoCompiladores\\Compilador\\Compilador.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\jjuli\\.nuget\\packages\\antlr\\3.5.0.2\\antlr.3.5.0.2.nupkg.sha512",
     "C:\\Users\\jjuli\\.nuget\\packages\\antlr4.runtime.standard\\4.12.0\\antlr4.runtime.standard.4.12.0.nupkg.sha512",

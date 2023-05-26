@@ -31,11 +31,8 @@ public class TablaSimbolos
     {
         foreach (Type i in tabla)
         {
-            //if (i.token.Text.Equals(id) && i.nivel <= nivelActual)
-            System.Diagnostics.Debug.WriteLine("i.token.Text: " + i.token.Text + " id: " + id);
             if (i.token.Text.Equals(id))
             {
-                System.Diagnostics.Debug.WriteLine("Encontre el id: " + i.token.Text);
                 return i;
             }
         }
