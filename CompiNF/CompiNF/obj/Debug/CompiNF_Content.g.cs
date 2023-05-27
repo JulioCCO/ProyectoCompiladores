@@ -18,6 +18,5 @@
 [assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("components/prueba.txt")]
 [assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("components/pruebasintactica.txt")]
 [assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("components/revisionescortas.txt")]
-[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("components/terceraetapa.txt")]
 
 

@@ -187,6 +187,7 @@
       <Content Include="Components\prueba.txt" />
       <Content Include="Components\PruebaSintactica.txt" />
       <Content Include="Components\revisionesCortas.txt" />
+      <Compile Include="Components\CodeGen.cs" />
     </ItemGroup>
     <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
     <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
