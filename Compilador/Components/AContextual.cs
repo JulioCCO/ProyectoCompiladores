@@ -32,7 +32,8 @@ public class AContextual : AlphaParserBaseVisitor<object>
         try
         {
             tabla.OpenScope();
-            IToken Tok = (IToken)Visit(context.ident());;
+            IToken Tok = (IToken)Visit(context.ident());
+            ;
             ClassType cls = new ClassType(Tok, TablaSimbolos.nivelActual, context);
             tabla.Insertar(cls);
             foreach (var child in context.children)
@@ -348,7 +349,6 @@ public class AContextual : AlphaParserBaseVisitor<object>
      */
     public override object? VisitMethodDeclAST(AlphaParser.MethodDeclASTContext context)
     {
-
         IToken tok = (IToken)Visit(context.ident());
         Type tipo = tabla.Buscar(tok.Text) as Type;
 
@@ -424,6 +424,7 @@ public class AContextual : AlphaParserBaseVisitor<object>
 
         tabla.OpenScope();
         Visit(context.block());
+        
         tabla.Sacar(tok.Text);
         tabla.CloseScope();
         tabla.currentMethod = null;
@@ -446,7 +447,7 @@ public class AContextual : AlphaParserBaseVisitor<object>
                     .Substring(context.type(i).GetText().Length - 2); // [] para saber si es arreglo
             var textoSinUltimosDosCaracteres =
                 context.type(i).GetText().Substring(0, context.type(i).GetText().Length - 2);
-            
+
             IToken tok = (IToken)Visit(context.ident(i));
             if (BasicType.isBasicType(context.type(i).GetText())) // si es tipo basico
             {
@@ -494,7 +495,6 @@ public class AContextual : AlphaParserBaseVisitor<object>
      */
     public override object? VisitTypeAST(AlphaParser.TypeASTContext context)
     {
-
         IToken token = (IToken)Visit(context.ident());
         if (context.array() != null)
         {
@@ -528,6 +528,7 @@ public class AContextual : AlphaParserBaseVisitor<object>
                                               " diferente a " +
                                               tipoExp + " " + obtenerCoordenadas(context.Start));
                     }
+
                     return null;
                 }
 
@@ -886,45 +887,66 @@ public class AContextual : AlphaParserBaseVisitor<object>
      */
     public override object? VisitReturnStatementAST(AlphaParser.ReturnStatementASTContext context)
     {
-        if (context.expr() != null)
+        if (tabla.currentMethod?.returnType == "void")
         {
-            string? tipoReturn = (string)Visit(context.expr());
-            if (tipoReturn == null)
-            {
-                System.Diagnostics.Debug.WriteLine("Error en visit ReturnStatementAST, tipo de retorno incorrecto: " +
-                                                   " El tipo de return del metodo es: " +
-                                                   tabla.currentMethod.returnType +
-                                                   " y el tipo de retorno del return es: " + tipoReturn + " " +
-                                                   obtenerCoordenadas(context.Start));
-                errorBuilder.AddError("Error en visit ReturnStatementAST, tipo de retorno incorrecto: " +
-                                      " El tipo de return del metodo es: " +
-                                      tabla.currentMethod.returnType +
-                                      " y el tipo de retorno del return es: " + tipoReturn + " " +
-                                      obtenerCoordenadas(context.Start));
-            }
-            else if (tabla.currentMethod.returnType == "void")
+            if (context.RETURN() != null)
             {
                 System.Diagnostics.Debug.WriteLine(
-                    "Error en visit ReturnStatementAST, metodos void no retornan datos: " +
-                    context.expr().GetText() + " " + obtenerCoordenadas(context.Start));
-                errorBuilder.AddError("Error en visit ReturnStatementAST, metodos void no retornan datos: " +
-                                      context.expr().GetText() + " " + obtenerCoordenadas(context.Start));
-            }
-            else if (tipoReturn.ToLower() != tabla.currentMethod.returnType)
-            {
-                System.Diagnostics.Debug.WriteLine("Error en visit ReturnStatementAST, tipo de retorno incorrecto: " +
-                                                   " El tipo de return del metodo es: " +
-                                                   tabla.currentMethod.returnType +
-                                                   " y el tipo de retorno del return es: " + tipoReturn + " " +
-                                                   obtenerCoordenadas(context.Start));
-                errorBuilder.AddError("Error en visit ReturnStatementAST, tipo de retorno incorrecto: " +
-                                      " El tipo de return del metodo es: " +
-                                      tabla.currentMethod.returnType +
-                                      " y el tipo de retorno del return es: " + tipoReturn + " " +
-                                      obtenerCoordenadas(context.Start));
+                    "Error en visit ReturnStatementAST, los metodos void no retornan datos.");
+                errorBuilder.AddError("Error en visit ReturnStatementAST, los metodos void no retornan datos.");
+                return null;
             }
         }
 
+        else if (tabla.currentMethod?.returnType != "void")
+        {
+            if (context.RETURN() != null && context.expr() != null)
+            {
+                string? tipoReturn = (string)Visit(context.expr());
+                if (tipoReturn == null)
+                {
+                    System.Diagnostics.Debug.WriteLine(
+                        "Error en visit ReturnStatementAST, tipo de retorno incorrecto: " +
+                        " El tipo de return del metodo es: " +
+                        tabla.currentMethod.returnType +
+                        " y el tipo de retorno del return es: " + tipoReturn + " " +
+                        obtenerCoordenadas(context.Start));
+                    errorBuilder.AddError("Error en visit ReturnStatementAST, tipo de retorno incorrecto: " +
+                                          " El tipo de return del metodo es: " +
+                                          tabla.currentMethod.returnType +
+                                          " y el tipo de retorno del return es: " + tipoReturn + " " +
+                                          obtenerCoordenadas(context.Start));
+                }
+                else if (tabla.currentMethod.returnType == "void")
+                {
+                    System.Diagnostics.Debug.WriteLine(
+                        "Error en visit ReturnStatementAST, metodos void no retornan datos: " +
+                        context.expr().GetText() + " " + obtenerCoordenadas(context.Start));
+                    errorBuilder.AddError("Error en visit ReturnStatementAST, metodos void no retornan datos: " +
+                                          context.expr().GetText() + " " + obtenerCoordenadas(context.Start));
+                }
+                else if (tipoReturn.ToLower() != tabla.currentMethod.returnType)
+                {
+                    System.Diagnostics.Debug.WriteLine(
+                        "Error en visit ReturnStatementAST, tipo de retorno incorrecto: " +
+                        " El tipo de return del metodo es: " +
+                        tabla.currentMethod.returnType +
+                        " y el tipo de retorno del return es: " + tipoReturn + " " +
+                        obtenerCoordenadas(context.Start));
+                    errorBuilder.AddError("Error en visit ReturnStatementAST, tipo de retorno incorrecto: " +
+                                          " El tipo de return del metodo es: " +
+                                          tabla.currentMethod.returnType +
+                                          " y el tipo de retorno del return es: " + tipoReturn + " " +
+                                          obtenerCoordenadas(context.Start));
+                }
+            }
+            else
+            {
+                System.Diagnostics.Debug.WriteLine("Error en visit ReturnStatementAST, falta return.");
+                errorBuilder.AddError("Error en visit ReturnStatementAST, falta return.");
+                return null;
+            }
+        }
         return null;
     }
 
@@ -1091,9 +1113,10 @@ public class AContextual : AlphaParserBaseVisitor<object>
             return true;
         }
 
-        System.Diagnostics.Debug.WriteLine("ERROR condFact: No se puede comparar tipos diferentes" 
-                                           + " tipoA: " + tipoA + " tipoB: " + tipoB + obtenerCoordenadas(context.Start));
-        errorBuilder.AddError("ERROR condFact: No se puede comparar tipos diferentes" 
+        System.Diagnostics.Debug.WriteLine("ERROR condFact: No se puede comparar tipos diferentes"
+                                           + " tipoA: " + tipoA + " tipoB: " + tipoB +
+                                           obtenerCoordenadas(context.Start));
+        errorBuilder.AddError("ERROR condFact: No se puede comparar tipos diferentes"
                               + " tipoA:" + tipoA + " tipoB:" + tipoB + obtenerCoordenadas(context.Start));
         return false;
     }
@@ -1135,8 +1158,10 @@ public class AContextual : AlphaParserBaseVisitor<object>
         string tipo = (string)Visit(context.term(0));
         if (tipo == null)
         {
-            System.Diagnostics.Debug.WriteLine("Error de tipos en la expresion, la expresion es nula" + obtenerCoordenadas(context.Start));
-            errorBuilder.AddError("Error de tipos en la expresion, la expresion es nula" + obtenerCoordenadas(context.Start));
+            System.Diagnostics.Debug.WriteLine("Error de tipos en la expresion, la expresion es nula" +
+                                               obtenerCoordenadas(context.Start));
+            errorBuilder.AddError("Error de tipos en la expresion, la expresion es nula" +
+                                  obtenerCoordenadas(context.Start));
             return null;
         }
 
@@ -1179,6 +1204,7 @@ public class AContextual : AlphaParserBaseVisitor<object>
                 }
             }
         }
+
         System.Diagnostics.Debug.WriteLine("TIPO TERM: " + tipo);
         return tipo;
     }
@@ -1193,7 +1219,7 @@ public class AContextual : AlphaParserBaseVisitor<object>
     {
         string tipo = (string)Visit(context.designator());
         System.Diagnostics.Debug.WriteLine("TIPO DESIGNATOR #DesignatorFactorAST: " + tipo);
-        
+
         if (context.LEFT_PAREN() != null)
         {
             if (context.actPars() != null)
@@ -1221,6 +1247,7 @@ public class AContextual : AlphaParserBaseVisitor<object>
                                 return null;
                             }
                         }
+
                         return ((MethodType)metodo).returnType;
                     }
                     else
@@ -1231,6 +1258,18 @@ public class AContextual : AlphaParserBaseVisitor<object>
                                               obtenerCoordenadas(context.Start));
                         return null;
                     }
+                }
+                else if (context.designator().GetText().Equals("len"))
+                {
+                    return "Int";
+                }
+                else
+                {
+                    System.Diagnostics.Debug.WriteLine("ERROR: NO SE ENCONTRO EL METODO" +
+                                                       obtenerCoordenadas(context.Start));
+                    errorBuilder.AddError("ERROR: NO SE ENCONTRO EL METODO" +
+                                          obtenerCoordenadas(context.Start));
+                    return null;
                 }
             }
             else
@@ -1254,7 +1293,6 @@ public class AContextual : AlphaParserBaseVisitor<object>
         {
             // TODO: verificar que el designator sea un metodo
             return tipo;
-
         }
 
         return null;
@@ -1344,7 +1382,7 @@ public class AContextual : AlphaParserBaseVisitor<object>
     {
         IToken ident = (IToken)Visit(context.ident(0));
         Type? tipo = tabla.Buscar(ident.Text);
-        
+
         if (context.ident().Length > 1) // Cuando es un atributo de una clase
         {
             System.Diagnostics.Debug.WriteLine("Es un atributo de una clase");
@@ -1360,7 +1398,6 @@ public class AContextual : AlphaParserBaseVisitor<object>
 
                     foreach (var data in classType.attributes)
                     {
-                        
                         if (data.token.Text.Equals(context.ident(1).GetText()))
                         {
                             return data.getType();
@@ -1388,7 +1425,7 @@ public class AContextual : AlphaParserBaseVisitor<object>
         if (tipo is ArrayType && context.expr().Length == 1) // cuando es un arreglo
         {
             System.Diagnostics.Debug.WriteLine("Es un arreglo");
-            
+
             string tipoExp = (string)Visit(context.expr(0));
             if (tipoExp != null)
             {
@@ -1408,8 +1445,6 @@ public class AContextual : AlphaParserBaseVisitor<object>
 
         if (context.ident().Length == 1) // solo hay un id 
         {
-            System.Diagnostics.Debug.WriteLine("Es un id");
-            System.Diagnostics.Debug.WriteLine("Ident.Text: " + ident.Text);
             if (ident.Text.Equals("del"))
             {
                 return "Boolean";
@@ -1422,13 +1457,12 @@ public class AContextual : AlphaParserBaseVisitor<object>
 
             if (ident.Text.Equals("len"))
             {
-                System.Diagnostics.Debug.WriteLine("Es un len");
                 return "Int";
             }
 
             if (tipo is ArrayType)
             {
-                return tipo.getType(); //+ "[]";
+                return tipo.getType();
             }
 
             if (tipo != null)
@@ -1444,6 +1478,7 @@ public class AContextual : AlphaParserBaseVisitor<object>
                 obtenerCoordenadas(context.Start));
             return null;
         }
+
         if (tipo == null)
         {
             System.Diagnostics.Debug.WriteLine("ERROR: NO SE ENCONTRO LA VARIABLE " +
@@ -1454,6 +1489,7 @@ public class AContextual : AlphaParserBaseVisitor<object>
                                   obtenerCoordenadas(context.Start));
             return null;
         }
+
         return null;
     }
 
@@ -1492,7 +1528,7 @@ public class AContextual : AlphaParserBaseVisitor<object>
     public override object VisitIdentAST(AlphaParser.IdentASTContext context)
     {
         //System.Diagnostics.Debug.WriteLine("visit IdentAST :" + context.IDENTIFIER().Symbol.Text);
-        
+
         return context.IDENTIFIER().Symbol;
     }
 
