@@ -1,0 +1,157 @@
+using Data;
+
+class AllProds 
+{
+  int nPoints;
+  int nPoints;
+  //char exclaim;
+  char caracterEspecial;
+  int[] arreglo;
+  
+   class Point {
+    int x, y, m, j;
+    char exclaim;
+  }
+
+  char[] msg;
+  boolean test1;
+  Point point;
+
+  void WriteError (int julio)
+  {
+    
+    point = new Point;
+    char exclaim;
+    point.j = 0;
+    add(arreglo, 1);
+    del(arreglo, 1);
+    len(arreglo);
+    int s;
+    int x;
+    int x;
+    int b;
+    s = 7;
+    char exc;
+    //exc = (char) point.x;
+    exclaim = (char) point.x;
+    caracterEspecial = 'a';
+    test1 = true;
+
+    while(b< 5 ){
+        s = 7;
+        int b;
+        write(msg[b]);
+        b++; 
+        int cesar;
+	 if(exc == 'a'){
+		len(arreglo);
+	 }
+		
+    }
+ 
+    for(b;b<5;b++;){
+        write(msg[b]);
+    }
+
+    write(exclaim);
+
+    while (b >8) {
+        b--;
+        if (b < 3 && test1==true)  
+            break;
+        write(msg[b], 2);
+    }
+    
+  }
+
+  int GetX (Point y, int m, char ju) 
+  { 
+        return y.y; 
+  }
+
+
+  void SetX (int m, Point p2) {
+        int[] arreglito;
+        if (m > -10 && m < 10) {
+          int camino; 
+        }
+        else {
+             WriteError(m);
+        }
+        m = 43/4%4+12+m;
+        return;
+  }
+
+  void SetMsg () {
+    msg = new char[5];  
+    msg[1] = 'E';
+    read(msg[3]);
+  }
+
+  void SetPoints ()
+  {
+    int[] pArr;
+    int c;
+
+    while (c <5) {
+      c++;
+    }
+  }
+
+  int prueba(Point x, int w)
+  {
+      return x.x;
+    
+  }
+
+  void Main ()
+  {
+    Point x3;
+    int a;
+    SetMsg();
+    SetPoints();
+    read(a);
+    if (a < 0){
+      write(GetX(x3, 2, 'a'));
+    }
+    else
+      WriteError(1);
+    write('n');
+
+  }
+  
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

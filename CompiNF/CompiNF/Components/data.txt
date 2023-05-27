@@ -1,0 +1,126 @@
+
+class AllProds
+{
+  int nPoints; // DECLARO LA VARIABLE PARA VALIDACIONES EN METODOS 
+  //int nPoints = 2; POR REGLA DE PARSER A ESTE NIVEL NO SE HACEN ASIGNACIONES
+  //char exclaim = '!'; POR REGLA DE PARSER A ESTE NIVEL NO SE HACEN ASIGNACIONES
+
+  //float i; SEGUN LOS ENUNCIADOS DEL PROYECTO EL FLOAT NO ESTA CONTEMPLADO LO MAS SIMILAR QUE SI SE EXISTE ES EL DOUBLE
+  int i;
+  int test2;
+
+  class Point {
+     int x, y;
+     //float i; SEGUN LOS ENUNCIADOS DEL PROYECTO EL FLOAT NO ESTA CONTEMPLADO LO MAS SIMILAR QUE SI SE EXISTE ES EL DOUBLE
+     double i;
+  }
+
+  char[] msg;
+  //Point[] pArr; LOS ARREGLOS SON SE PUEDEN DECLARA DE TIPO CHAR O INT
+  boolean test1;
+
+  void WriteError ()
+  {
+    //int i; LA VARIABLE I EXISTE A NIVEL GLOBAL ERORR ATRAPADO 
+    //boolean test2; LA VARIABLE TEST2 ES GLOBAL ERROR ATRAPADO
+    
+    //i = 0	
+    i = 0; // AL SER DE TIPO DOUBLE SE DEBE ASIGNAR CON DATO 0.0
+
+    test1 = true;   //verificación de alcances
+    //test2 = test1;  // AQUI SE ATRAPA UN ERROR NO DE ALCANCE SI NO DE TIPOS
+
+    for(i;i<5;i++;){ // TENEMOS ERROR NO ME RECONOCE EL METODO LEN EN LA CONDICION AUNQUE A NIVEL DE LOGICA SI SE ENCUENTRA VALIDADO EL TIPO QUE DEVUELVE
+	write(msg[i]);
+    }
+      while (i > 0) {
+        i--;
+        if (i < 3 && test1==true) break;    
+        write(msg[i], 2);
+      }
+  }
+
+  int GetX (Point p, Point p) // SE ATRAPA EL ERROR RETORNA DOUBLE Y EL METODO DEBE RETORNAR INT
+     { return p.x; } // error de tipos, en caso de reconocerlo, cambiar a "return p.x"
+  
+  void SetX (double x, Point p) {
+    // AL HABER VARIOS STATEMENTS EL IF POR OBLIGACION DEBE LLEVAR {} 
+    if (x > -10 && x <= 9 || x == 4*3/4%4+12- 11*(2147483647/(-2147483647- 1)%2)){
+         p.x = x;
+	  i = x; //error de tipos, en caso de fallo cambiar la "x" por un numero float
+    }
+    else{
+       WriteError (3); // AQUI NOS DA ERROR 
+    }
+    //WriteError (3); // SE ATRAPA EL ERROR A ESTE NIVEL
+   //return i; // ERROR ATRAPADO LA FUNCION NO TIENE RETORNO
+ }
+
+
+  int SetMsg () {
+   msg = new char[5];
+   msg[0] = 'E';
+   msg[1] = 'r';
+   msg[2] = 'r';
+   msg[3] = 'r';
+   msg[4] = msg[3];
+  // EN EL WRITE NO SE TIENE COMTEMPLADO EL METODO LEN, ATRAPA EL ERROR COMO METODO NO ENCONTRADO
+   //write(len(msg),1); //verificacion de métodos predefinidos... cambian el formato si es que lo definieron diferente
+
+ //verificar error de no existencia de retorno en funcion que si lo requiere
+ // NO TIRA ERROR SI NO HAY RETORNO
+ 
+ // SI SE VALIDA SI EL TIPO DE RETORNO ES DIFERENTE AL DEL METODO
+ //return "a"; 
+  
+ 
+ }
+
+  void SetPoints ()
+  {
+  int ii; // COMO LA VARIABLE i YA EXISTE GLOBLAL CAMBIE EL NOMBRE PARA TRABAJAR AQUI A LO INTERNO CON LAS DEMAS VALIDACIONESL SI SE DEJA COMO i SE ATRAPA ERROR DE VARIABLE YA DECLARADA
+ 
+  int[] pArr; // LOS ARREGLOS SON SOLO DE TIPO INT O CHAR POR LO QUE LE CAMBIE EL TIPO PARA FACILIDAD DE VALIDAR LAS SIGUIENTES LINEAS
+  pArr = new int[5];
+  ii = 0;
+  while (i < 5) { // DENTRO DEL WHILE ME TIRA QUE NO ENCONTRO EL METODO LEN EL ERROR SE ATRAPA PERO SE ENTIENDE QUE SE DEBE PERMITIR A ESTE NIVEL.
+  //pArr[i].x = i; //LOS ARREGLOS SOLO SON DE TIPO INT O CHAR POR LO QUE ESTA SINTAXIS ES INCORRECTA
+  //pArr[i].i = 3.14;// LOS ARREGLOS SOLO SON DE TIPO INT O CHAR POR LO QUE ESTA SINTAXIS ES INCORRECTA
+  i++;
+  }
+
+  }
+  void metodo(int x, char y, boolean z)
+  {
+    write("prueba de cadenas en print");
+  }
+
+  void Main ()
+  {
+  int a; 
+  Point point; // DECLARO ESTA VARIABLE YA QUE EL METODO GetX TIENE QUE LLEVAR DE PARAMEMTRO UNA VARIABLE DE LA CLASE Point, FACILITA LA VALIDACION
+  SetMsg();
+  SetPoints();
+  read(a);
+   if (a < nPoints) {
+      write(GetX(a, point));
+	
+    // SEGUN LA LOGICA QUE USAMOS Y LO VISTO EN LOS METODOS DE C# ESTA DECLARACION SI DARIA ERROR YA QUE ESTA DENTRO DEL MISMO METODO, POR LO QUE NOSOTROS ATRAPAMOS ESTO COMO UN ERROR
+    //char a; //no debería dar error porque es un contexto interno diferente al contexto local del Main
+     char m;
+     write(i,3);
+     metodo(10,m,true);
+    }
+    else{
+      WriteError();
+}
+   write('a',1); // NOS DA ERROR NO ACEPTA CARACTER ESPECIAL
+  }
+
+
+
+} // ESTE CODIGO ACTUAL SE EJECUTA DE MANERA CORRECTA
+
+
+
+
