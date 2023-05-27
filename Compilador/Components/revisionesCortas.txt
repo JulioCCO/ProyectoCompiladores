@@ -11,7 +11,7 @@ class AllProds
   }
 
   int retornaInt(){
-    
+   return 1;
   }
 
   Point point;
@@ -50,12 +50,15 @@ class AllProds
         write(arreglo[b], 2);
     }
 
-return 1 ;
   }
 
   int GetX (Point y, int m, char ju) 
   { 
-        //return y.y; 
+     string sasd;
+     sasd ="hola";
+     int j;
+     write("asdasd");        
+     return y.y; 
   }
 
   void SetX (int m, Point p2) {
@@ -91,6 +94,14 @@ return 1 ;
 
   }
   }
+
+
+
+
+
+
+
+
 
 
 

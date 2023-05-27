@@ -424,12 +424,111 @@ public class AContextual : AlphaParserBaseVisitor<object>
 
         tabla.OpenScope();
         Visit(context.block());
-        
+
+        MethodType metodo = (MethodType)tabla.currentMethod;
+        AlphaParser.ReturnStatementASTContext? returnAst = metodo?.returnStatement;
+
+        // si el metodo no es void y no tiene return statement
+        if (metodo.returnType != "void" && returnAst == null)
+        {
+            System.Diagnostics.Debug.WriteLine(
+                "Error en visit MethodDeclAST, el metodo no es void y no tiene return statement: " +
+                context.ident().GetText() + " " + obtenerCoordenadas(tok));
+            errorBuilder.AddError("Error en visit MethodDeclAST, el metodo no es void y no tiene return statement: " +
+                                  context.ident().GetText() + " " + obtenerCoordenadas(tok));
+        }
+        else
+        {
+            contextMethodReturn(returnAst);
+        }
+
+        if (metodo.returnType == "void" && returnAst != null)
+        {
+            System.Diagnostics.Debug.WriteLine(
+                "Error en visit MethodDeclAST, el metodo es void y tiene return statement: " +
+                context.ident().GetText() + " " + obtenerCoordenadas(tok));
+            errorBuilder.AddError("Error en visit MethodDeclAST, el metodo es void y tiene return statement: " +
+                                  context.ident().GetText() + " " + obtenerCoordenadas(tok));
+        }
+
         tabla.Sacar(tok.Text);
         tabla.CloseScope();
         tabla.currentMethod = null;
         return null;
     }
+
+    public object? contextMethodReturn(AlphaParser.ReturnStatementASTContext? context)
+    {
+        if (context == null)
+        {
+            System.Diagnostics.Debug.WriteLine("Error en visit MethodDeclAST, el metodo no tiene return statement");
+            return null;
+            
+        }
+        if (tabla.currentMethod?.returnType == "void")
+        {
+            if (context.RETURN() != null)
+            {
+                System.Diagnostics.Debug.WriteLine(
+                    "Error en visit ReturnStatementAST, los metodos void no retornan datos.");
+                errorBuilder.AddError("Error en visit ReturnStatementAST, los metodos void no retornan datos.");
+                return null;
+            }
+        }
+
+        else if (tabla.currentMethod?.returnType != "void")
+        {
+            if (context.RETURN() != null && context.expr() != null)
+            {
+                string? tipoReturn = (string)Visit(context.expr());
+                if (tipoReturn == null)
+                {
+                    System.Diagnostics.Debug.WriteLine(
+                        "Error en visit ReturnStatementAST, tipo de retorno incorrecto: " +
+                        " El tipo de return del metodo es: " +
+                        tabla.currentMethod.returnType +
+                        " y el tipo de retorno del return es: " + tipoReturn + " " +
+                        obtenerCoordenadas(context.Start));
+                    errorBuilder.AddError("Error en visit ReturnStatementAST, tipo de retorno incorrecto: " +
+                                          " El tipo de return del metodo es: " +
+                                          tabla.currentMethod.returnType +
+                                          " y el tipo de retorno del return es: " + tipoReturn + " " +
+                                          obtenerCoordenadas(context.Start));
+                }
+                else if (tabla.currentMethod.returnType == "void")
+                {
+                    System.Diagnostics.Debug.WriteLine(
+                        "Error en visit ReturnStatementAST, metodos void no retornan datos: " +
+                        context.expr().GetText() + " " + obtenerCoordenadas(context.Start));
+                    errorBuilder.AddError("Error en visit ReturnStatementAST, metodos void no retornan datos: " +
+                                          context.expr().GetText() + " " + obtenerCoordenadas(context.Start));
+                }
+                else if (tipoReturn.ToLower() != tabla.currentMethod.returnType)
+                {
+                    System.Diagnostics.Debug.WriteLine(
+                        "Error en visit ReturnStatementAST, tipo de retorno incorrecto: " +
+                        " El tipo de return del metodo es: " +
+                        tabla.currentMethod.returnType +
+                        " y el tipo de retorno del return es: " + tipoReturn + " " +
+                        obtenerCoordenadas(context.Start));
+                    errorBuilder.AddError("Error en visit ReturnStatementAST, tipo de retorno incorrecto: " +
+                                          " El tipo de return del metodo es: " +
+                                          tabla.currentMethod.returnType +
+                                          " y el tipo de retorno del return es: " + tipoReturn + " " +
+                                          obtenerCoordenadas(context.Start));
+                }
+            }
+            else
+            {
+                System.Diagnostics.Debug.WriteLine("Error en visit ReturnStatementAST, falta return.");
+                errorBuilder.AddError("Error en visit ReturnStatementAST, falta return.");
+                return null;
+            }
+        }
+
+        return null;
+    }
+
 
     /*
      * formPars : type ident (COMMA type ident)*    #FormParsAST;
@@ -887,66 +986,7 @@ public class AContextual : AlphaParserBaseVisitor<object>
      */
     public override object? VisitReturnStatementAST(AlphaParser.ReturnStatementASTContext context)
     {
-        if (tabla.currentMethod?.returnType == "void")
-        {
-            if (context.RETURN() != null)
-            {
-                System.Diagnostics.Debug.WriteLine(
-                    "Error en visit ReturnStatementAST, los metodos void no retornan datos.");
-                errorBuilder.AddError("Error en visit ReturnStatementAST, los metodos void no retornan datos.");
-                return null;
-            }
-        }
-
-        else if (tabla.currentMethod?.returnType != "void")
-        {
-            if (context.RETURN() != null && context.expr() != null)
-            {
-                string? tipoReturn = (string)Visit(context.expr());
-                if (tipoReturn == null)
-                {
-                    System.Diagnostics.Debug.WriteLine(
-                        "Error en visit ReturnStatementAST, tipo de retorno incorrecto: " +
-                        " El tipo de return del metodo es: " +
-                        tabla.currentMethod.returnType +
-                        " y el tipo de retorno del return es: " + tipoReturn + " " +
-                        obtenerCoordenadas(context.Start));
-                    errorBuilder.AddError("Error en visit ReturnStatementAST, tipo de retorno incorrecto: " +
-                                          " El tipo de return del metodo es: " +
-                                          tabla.currentMethod.returnType +
-                                          " y el tipo de retorno del return es: " + tipoReturn + " " +
-                                          obtenerCoordenadas(context.Start));
-                }
-                else if (tabla.currentMethod.returnType == "void")
-                {
-                    System.Diagnostics.Debug.WriteLine(
-                        "Error en visit ReturnStatementAST, metodos void no retornan datos: " +
-                        context.expr().GetText() + " " + obtenerCoordenadas(context.Start));
-                    errorBuilder.AddError("Error en visit ReturnStatementAST, metodos void no retornan datos: " +
-                                          context.expr().GetText() + " " + obtenerCoordenadas(context.Start));
-                }
-                else if (tipoReturn.ToLower() != tabla.currentMethod.returnType)
-                {
-                    System.Diagnostics.Debug.WriteLine(
-                        "Error en visit ReturnStatementAST, tipo de retorno incorrecto: " +
-                        " El tipo de return del metodo es: " +
-                        tabla.currentMethod.returnType +
-                        " y el tipo de retorno del return es: " + tipoReturn + " " +
-                        obtenerCoordenadas(context.Start));
-                    errorBuilder.AddError("Error en visit ReturnStatementAST, tipo de retorno incorrecto: " +
-                                          " El tipo de return del metodo es: " +
-                                          tabla.currentMethod.returnType +
-                                          " y el tipo de retorno del return es: " + tipoReturn + " " +
-                                          obtenerCoordenadas(context.Start));
-                }
-            }
-            else
-            {
-                System.Diagnostics.Debug.WriteLine("Error en visit ReturnStatementAST, falta return.");
-                errorBuilder.AddError("Error en visit ReturnStatementAST, falta return.");
-                return null;
-            }
-        }
+        tabla.currentMethod.returnStatement = (AlphaParser.ReturnStatementASTContext)context;
         return null;
     }
 

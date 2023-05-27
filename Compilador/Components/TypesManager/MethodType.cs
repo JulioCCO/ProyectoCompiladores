@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Antlr4.Runtime;
+using generated;
 
 namespace Compilador.Components.TypesManager;
 
@@ -9,6 +10,7 @@ public class MethodType : Type
     public readonly string type = "method";
     public readonly string returnType;
     public string paramsNames = "";
+    public AlphaParser.ReturnStatementASTContext? returnStatement = null;
 
     public LinkedList<Type> paramsTypes;
 
