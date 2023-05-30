@@ -3,18 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using Antlr4.Runtime;
 using CompiNF.Components.TypesManager;
-using Type = CompiNF.Components.TypesManager.Type;
 
 namespace CompiNF.Components;
 
 public class TablaSimbolos
 {
-    LinkedList<Object> tabla; // Lista de objetos de tipo Type
+    LinkedList<Object> tabla; // Lista de objetos de tipo TypeD
 
     public static int nivelActual;
 
-    public MethodType? currentMethod;
-    public ClassType? currentClass;
+    public MethodTypeD? currentMethod;
+    public ClassTypeD? currentClass;
 
     public TablaSimbolos()
     {
@@ -22,14 +21,14 @@ public class TablaSimbolos
         nivelActual = -1;
     }
 
-    public void Insertar(Type t)
+    public void Insertar(TypeD t)
     {
         tabla.AddLast(t);
     }
 
-    public Type? Buscar(string id)
+    public TypeD? Buscar(string id)
     {
-        foreach (Type i in tabla)
+        foreach (TypeD i in tabla)
         {
             if (i.token.Text.Equals(id))
             {
@@ -40,12 +39,12 @@ public class TablaSimbolos
         return null;
     }
 
-    public Type? BuscarCustomVar(string id)
+    public TypeD? BuscarCustomVar(string id)
     {
-        foreach (Type? i in tabla)
+        foreach (TypeD? i in tabla)
         {
             //if (i.token.Text.Equals(id) && i.nivel <= nivelActual)
-            if (i.token.Text.Equals(id) && i.GetType() == typeof(CustomType))
+            if (i.token.Text.Equals(id) && i.GetType() == typeof(CustomTypeD))
                 return i;
         }
 
@@ -60,7 +59,7 @@ public class TablaSimbolos
         // Busco la posicion del metodo en la tabla
         for (int i = 0; i < tabla.Count; i++)
         {
-            if (((Type)tabla.ElementAt(i)).token.Text.Equals(nombreMetodo))
+            if (((TypeD)tabla.ElementAt(i)).token.Text.Equals(nombreMetodo))
             {
                 posMethod = i;
             }
@@ -95,7 +94,7 @@ public class TablaSimbolos
         int posMethod = 0;
         for (int i = 0; i < tabla.Count; i++)
         {
-            if (((Type)tabla.ElementAt(i)).token.Text.Equals(currentMethod?.token.Text))
+            if (((TypeD)tabla.ElementAt(i)).token.Text.Equals(currentMethod?.token.Text))
             {
                 posMethod = i;
             }
@@ -112,7 +111,7 @@ public class TablaSimbolos
             {
                 if (j > posMethod)
                 {
-                    if (((Type)tabla.ElementAt(j)).token.Text.Equals(id))
+                    if (((TypeD)tabla.ElementAt(j)).token.Text.Equals(id))
                     {
                         found = true;
                         return found;
@@ -131,7 +130,7 @@ public class TablaSimbolos
 
     public void CloseScope()
     {
-        tabla.Remove(new Func<Type, bool>(n => n.nivel == nivelActual));
+        tabla.Remove(new Func<TypeD, bool>(n => n.nivel == nivelActual));
         nivelActual--;
     }
 
@@ -142,84 +141,84 @@ public class TablaSimbolos
         System.Diagnostics.Debug.WriteLine("----- INICIO TABLA ------");
         for (int i = 0; i < tabla.Count; i++)
         {
-            if (tabla.ElementAt(i).GetType() == typeof(BasicType))
+            if (tabla.ElementAt(i).GetType() == typeof(BasicTypeD))
             {
-                System.Diagnostics.Debug.WriteLine("Nombre: " + ((BasicType)tabla.ElementAt(i)).token.Text
-                                                              + " Nivel: " + ((BasicType)tabla.ElementAt(i)).nivel
-                                                              + " Tipo: " + ((BasicType)tabla.ElementAt(i)).type);
-                lista.Add("Nombre: " + ((BasicType)tabla.ElementAt(i)).token.Text
-                                     + " Nivel: " + ((BasicType)tabla.ElementAt(i)).nivel
-                                     + " Tipo: " + ((BasicType)tabla.ElementAt(i)).type + "\n");
+                System.Diagnostics.Debug.WriteLine("Nombre: " + ((BasicTypeD)tabla.ElementAt(i)).token.Text
+                                                              + " Nivel: " + ((BasicTypeD)tabla.ElementAt(i)).nivel
+                                                              + " Tipo: " + ((BasicTypeD)tabla.ElementAt(i)).type);
+                lista.Add("Nombre: " + ((BasicTypeD)tabla.ElementAt(i)).token.Text
+                                     + " Nivel: " + ((BasicTypeD)tabla.ElementAt(i)).nivel
+                                     + " Tipo: " + ((BasicTypeD)tabla.ElementAt(i)).type + "\n");
             }
-            else if (tabla.ElementAt(i).GetType() == typeof(ClassType))
+            else if (tabla.ElementAt(i).GetType() == typeof(ClassTypeD))
             {
-                System.Diagnostics.Debug.WriteLine("Nombre: " + ((ClassType)tabla.ElementAt(i)).token.Text
-                                                              + " Nivel: " + ((ClassType)tabla.ElementAt(i)).nivel
-                                                              + " Tipo: " + ((ClassType)tabla.ElementAt(i)).type);
-                lista.Add("Nombre: " + ((ClassType)tabla.ElementAt(i)).token.Text
-                                     + " Nivel: " + ((ClassType)tabla.ElementAt(i)).nivel
-                                     + " Tipo: " + ((ClassType)tabla.ElementAt(i)).type + "\n");
+                System.Diagnostics.Debug.WriteLine("Nombre: " + ((ClassTypeD)tabla.ElementAt(i)).token.Text
+                                                              + " Nivel: " + ((ClassTypeD)tabla.ElementAt(i)).nivel
+                                                              + " Tipo: " + ((ClassTypeD)tabla.ElementAt(i)).type);
+                lista.Add("Nombre: " + ((ClassTypeD)tabla.ElementAt(i)).token.Text
+                                     + " Nivel: " + ((ClassTypeD)tabla.ElementAt(i)).nivel
+                                     + " Tipo: " + ((ClassTypeD)tabla.ElementAt(i)).type + "\n");
             }
-            else if (tabla.ElementAt(i).GetType() == typeof(MethodType))
+            else if (tabla.ElementAt(i).GetType() == typeof(MethodTypeD))
             {
-                System.Diagnostics.Debug.WriteLine("Nombre: " + ((MethodType)tabla.ElementAt(i)).token.Text
-                                                              + " Nivel: " + ((MethodType)tabla.ElementAt(i)).nivel
-                                                              + " Tipo: " + ((MethodType)tabla.ElementAt(i)).type
+                System.Diagnostics.Debug.WriteLine("Nombre: " + ((MethodTypeD)tabla.ElementAt(i)).token.Text
+                                                              + " Nivel: " + ((MethodTypeD)tabla.ElementAt(i)).nivel
+                                                              + " Tipo: " + ((MethodTypeD)tabla.ElementAt(i)).type
                                                               + " Cantidad de parametros: " +
-                                                              ((MethodType)tabla.ElementAt(i)).cantParams
+                                                              ((MethodTypeD)tabla.ElementAt(i)).cantParams
                                                               + " Tipo de retorno: " +
-                                                              ((MethodType)tabla.ElementAt(i)).returnType);
-                lista.Add("Nombre: " + ((MethodType)tabla.ElementAt(i)).token.Text
-                                     + " Nivel: " + ((MethodType)tabla.ElementAt(i)).nivel
-                                     + " Tipo: " + ((MethodType)tabla.ElementAt(i)).type
+                                                              ((MethodTypeD)tabla.ElementAt(i)).returnType);
+                lista.Add("Nombre: " + ((MethodTypeD)tabla.ElementAt(i)).token.Text
+                                     + " Nivel: " + ((MethodTypeD)tabla.ElementAt(i)).nivel
+                                     + " Tipo: " + ((MethodTypeD)tabla.ElementAt(i)).type
                                      + " Cantidad de parametros: " +
-                                     ((MethodType)tabla.ElementAt(i)).cantParams
+                                     ((MethodTypeD)tabla.ElementAt(i)).cantParams
                                      + " Tipo de retorno: " +
-                                     ((MethodType)tabla.ElementAt(i)).returnType);
+                                     ((MethodTypeD)tabla.ElementAt(i)).returnType);
 
-                if (((MethodType)tabla.ElementAt(i)).paramsTypes.Count > 0)
+                if (((MethodTypeD)tabla.ElementAt(i)).paramsTypes.Count > 0)
                 {
-                    lista.Add(((MethodType)tabla.ElementAt(i)).imprimirParams());
+                    lista.Add(((MethodTypeD)tabla.ElementAt(i)).imprimirParams());
                 }
                 else
                 {
                     lista.Add("\n");
                 }
             }
-            else if (tabla.ElementAt(i).GetType() == typeof(ArrayType))
+            else if (tabla.ElementAt(i).GetType() == typeof(ArrayTypeD))
             {
-                System.Diagnostics.Debug.WriteLine("Nombre: " + ((ArrayType)tabla.ElementAt(i)).token.Text
-                                                              + " Nivel: " + ((ArrayType)tabla.ElementAt(i)).nivel
-                                                              + " Tipo: " + ((ArrayType)tabla.ElementAt(i)).type
+                System.Diagnostics.Debug.WriteLine("Nombre: " + ((ArrayTypeD)tabla.ElementAt(i)).token.Text
+                                                              + " Nivel: " + ((ArrayTypeD)tabla.ElementAt(i)).nivel
+                                                              + " Tipo: " + ((ArrayTypeD)tabla.ElementAt(i)).type
                                                               + " Tipo de dato: " +
-                                                              ((ArrayType)tabla.ElementAt(i)).dataType);
-                lista.Add("Nombre: " + ((ArrayType)tabla.ElementAt(i)).token.Text
-                                     + " Nivel: " + ((ArrayType)tabla.ElementAt(i)).nivel
-                                     + " Tipo: " + ((ArrayType)tabla.ElementAt(i)).type
+                                                              ((ArrayTypeD)tabla.ElementAt(i)).dataType);
+                lista.Add("Nombre: " + ((ArrayTypeD)tabla.ElementAt(i)).token.Text
+                                     + " Nivel: " + ((ArrayTypeD)tabla.ElementAt(i)).nivel
+                                     + " Tipo: " + ((ArrayTypeD)tabla.ElementAt(i)).type
                                      + " Tipo de dato: " +
-                                     ((ArrayType)tabla.ElementAt(i)).dataType + "\n");
+                                     ((ArrayTypeD)tabla.ElementAt(i)).dataType + "\n");
             }
-            else if (tabla.ElementAt(i).GetType() == typeof(CustomType))
+            else if (tabla.ElementAt(i).GetType() == typeof(CustomTypeD))
             {
-                System.Diagnostics.Debug.WriteLine("Nombre: " + ((CustomType)tabla.ElementAt(i)).token.Text
-                                                              + " Nivel: " + ((CustomType)tabla.ElementAt(i)).nivel
-                                                              + " Tipo: " + ((CustomType)tabla.ElementAt(i)).Type
+                System.Diagnostics.Debug.WriteLine("Nombre: " + ((CustomTypeD)tabla.ElementAt(i)).token.Text
+                                                              + " Nivel: " + ((CustomTypeD)tabla.ElementAt(i)).nivel
+                                                              + " Tipo: " + ((CustomTypeD)tabla.ElementAt(i)).Type
                                                               + " Tipo de dato: " +
-                                                              ((CustomType)tabla.ElementAt(i)).TypeOf);
-                lista.Add("Nombre: " + ((CustomType)tabla.ElementAt(i)).token.Text
-                                     + " Nivel: " + ((CustomType)tabla.ElementAt(i)).nivel
-                                     + " Tipo: " + ((CustomType)tabla.ElementAt(i)).Type
+                                                              ((CustomTypeD)tabla.ElementAt(i)).TypeOf);
+                lista.Add("Nombre: " + ((CustomTypeD)tabla.ElementAt(i)).token.Text
+                                     + " Nivel: " + ((CustomTypeD)tabla.ElementAt(i)).nivel
+                                     + " Tipo: " + ((CustomTypeD)tabla.ElementAt(i)).Type
                                      + " Tipo de dato: " +
-                                     ((CustomType)tabla.ElementAt(i)).TypeOf + "\n");
+                                     ((CustomTypeD)tabla.ElementAt(i)).TypeOf + "\n");
             }
-            else if (tabla.ElementAt(i).GetType() == typeof(UsingType))
+            else if (tabla.ElementAt(i).GetType() == typeof(UsingTypeD))
             {
-                System.Diagnostics.Debug.WriteLine("Nombre: " + ((UsingType)tabla.ElementAt(i)).token.Text
-                                                              + " Nivel: " + ((UsingType)tabla.ElementAt(i)).nivel
-                                                              + " Tipo: " + ((UsingType)tabla.ElementAt(i)).type);
-                lista.Add("Nombre: " + ((UsingType)tabla.ElementAt(i)).token.Text
-                                     + " Nivel: " + ((UsingType)tabla.ElementAt(i)).nivel
-                                     + " Tipo: " + ((UsingType)tabla.ElementAt(i)).type + "\n");
+                System.Diagnostics.Debug.WriteLine("Nombre: " + ((UsingTypeD)tabla.ElementAt(i)).token.Text
+                                                              + " Nivel: " + ((UsingTypeD)tabla.ElementAt(i)).nivel
+                                                              + " Tipo: " + ((UsingTypeD)tabla.ElementAt(i)).type);
+                lista.Add("Nombre: " + ((UsingTypeD)tabla.ElementAt(i)).token.Text
+                                     + " Nivel: " + ((UsingTypeD)tabla.ElementAt(i)).nivel
+                                     + " Tipo: " + ((UsingTypeD)tabla.ElementAt(i)).type + "\n");
             }
         }
 

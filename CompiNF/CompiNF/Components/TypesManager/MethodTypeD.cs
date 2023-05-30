@@ -4,7 +4,7 @@ using generated;
 
 namespace CompiNF.Components.TypesManager;
 
-public class MethodType : Type
+public class MethodTypeD : TypeD
 {
     public readonly int cantParams;
     public readonly string type = "method";
@@ -12,9 +12,9 @@ public class MethodType : Type
     public string paramsNames = "";
     public AlphaParser.ReturnStatementASTContext? returnStatement = null;
 
-    public LinkedList<Type> paramsTypes;
+    public LinkedList<TypeD> paramsTypes;
 
-    public MethodType(IToken t, int n, int cantParams, string r, LinkedList<Type> paramsList, ParserRuleContext c) : base(t, n, c)
+    public MethodTypeD(IToken t, int n, int cantParams, string r, LinkedList<TypeD> paramsList, ParserRuleContext c) : base(t, n, c)
     {
         this.cantParams = cantParams;
         this.returnType = r;
@@ -27,7 +27,7 @@ public class MethodType : Type
         System.Diagnostics.Debug.WriteLine("----- INICIO PARAMETROS ------");
         foreach (var child in paramsTypes)
         {
-            if (child is BasicType basicType)
+            if (child is BasicTypeD basicType)
             {
                 System.Diagnostics.Debug.WriteLine("Nombre: " + basicType.token.Text
                                                               + " Nivel: " + basicType.nivel
@@ -36,7 +36,7 @@ public class MethodType : Type
                                 + " Nivel: " + basicType.nivel
                                 + " Tipo: " + basicType.type + "\n");
             }
-            else if (child is CustomType customType)
+            else if (child is CustomTypeD customType)
             {
                 System.Diagnostics.Debug.WriteLine("Nombre: " + customType.token.Text
                                                               + " Nivel: " + customType.nivel
@@ -48,7 +48,7 @@ public class MethodType : Type
                                 + " Tipo de estructura:" + customType.Type + "\n");
                
             }
-            else if (child is ArrayType arrayType)
+            else if (child is ArrayTypeD arrayType)
             {
                 System.Diagnostics.Debug.WriteLine("Nombre: " + arrayType.token.Text
                                                               + " Nivel: " + arrayType.nivel

@@ -3,7 +3,7 @@ using Antlr4.Runtime;
 
 namespace CompiNF.Components.TypesManager;
 
-public class BasicType : Type
+public class BasicTypeD : TypeD
 {
     public enum Types
     {
@@ -17,7 +17,7 @@ public class BasicType : Type
 
     public Types type;
 
-    public BasicType(IToken t, Types bs, int n, ParserRuleContext c) : base(t, n, c)
+    public BasicTypeD(IToken t, Types bs, int n, ParserRuleContext c) : base(t, n, c)
     {
         type = bs;
     }

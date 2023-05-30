@@ -142,14 +142,15 @@
         <Compile Include="Components\MyErrorListener.cs" />
         <Compile Include="Components\MyErrorParsercs.cs" />
         <Compile Include="Components\TablaSimbolos.cs" />
-        <Compile Include="Components\TypesManager\ArrayType.cs" />
-        <Compile Include="Components\TypesManager\BasicType.cs" />
-        <Compile Include="Components\TypesManager\ClassType.cs" />
-        <Compile Include="Components\TypesManager\CustomType.cs" />
+        <Compile Include="Components\terceraEtapaPrueba.cs" />
+        <Compile Include="Components\TypesManager\ArrayTypeD.cs" />
+        <Compile Include="Components\TypesManager\BasicTypeD.cs" />
+        <Compile Include="Components\TypesManager\ClassTypeD.cs" />
+        <Compile Include="Components\TypesManager\CustomTypeD.cs" />
         <Compile Include="Components\TypesManager\ErrorBuilder.cs" />
-        <Compile Include="Components\TypesManager\MethodType.cs" />
-        <Compile Include="Components\TypesManager\Type.cs" />
-        <Compile Include="Components\TypesManager\UsingType.cs" />
+        <Compile Include="Components\TypesManager\MethodTypeD.cs" />
+        <Compile Include="Components\TypesManager\TypeD.cs" />
+        <Compile Include="Components\TypesManager\UsingTypeD.cs" />
         <Compile Include="Consola.xaml.cs">
           <DependentUpon>Consola.xaml</DependentUpon>
         </Compile>
@@ -187,7 +188,7 @@
       <Content Include="Components\prueba.txt" />
       <Content Include="Components\PruebaSintactica.txt" />
       <Content Include="Components\revisionesCortas.txt" />
-      <Compile Include="Components\CodeGen.cs" />
+      <Content Include="Components\CodeGen.txt" />
     </ItemGroup>
     <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
     <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

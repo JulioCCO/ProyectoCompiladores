@@ -2,10 +2,10 @@
 
 namespace CompiNF.Components.TypesManager;
 
-public class UsingType: Type
+public class UsingTypeD: TypeD
 {
     public readonly string type = "using";
-    public UsingType(IToken t,  int n, ParserRuleContext c) : base(t, n, c){}
+    public UsingTypeD(IToken t,  int n, ParserRuleContext c) : base(t, n, c){}
 
     public override string getType()
     {

@@ -5,7 +5,6 @@ using Antlr4.Runtime;
 using Compilador.TypesStructure;
 using generated;
 using CompiNF.Components.TypesManager;
-using Type = CompiNF.Components.TypesManager.Type;
 
 namespace CompiNF.Components;
 
@@ -13,7 +12,7 @@ public class AContextual : AlphaParserBaseVisitor<object>
 {
     public TablaSimbolos tabla; // tabla de simbolos global
     public ErrorBuilder errorBuilder = new ErrorBuilder();
-
+    public int contadorGlobal = 0;
     public AContextual()
     {
         tabla = new TablaSimbolos();
@@ -34,7 +33,7 @@ public class AContextual : AlphaParserBaseVisitor<object>
             tabla.OpenScope();
             IToken Tok = (IToken)Visit(context.ident());
             ;
-            ClassType cls = new ClassType(Tok, TablaSimbolos.nivelActual, context);
+            ClassTypeD cls = new ClassTypeD(Tok, TablaSimbolos.nivelActual, context);
             tabla.Insertar(cls);
             foreach (var child in context.children)
             {
@@ -64,8 +63,8 @@ public class AContextual : AlphaParserBaseVisitor<object>
         try
         {
             IToken Tok = (IToken)Visit(context.ident());
-            UsingType usingType = new UsingType(Tok, TablaSimbolos.nivelActual, context);
-            tabla.Insertar(usingType);
+            UsingTypeD usingTypeD = new UsingTypeD(Tok, TablaSimbolos.nivelActual, context);
+            tabla.Insertar(usingTypeD);
         }
         catch (Exception e)
         {
@@ -85,6 +84,7 @@ public class AContextual : AlphaParserBaseVisitor<object>
         int[] x, y, z;
         int x;
         Clase x;
+         int x, y, m, j;
     */
     public override object? VisitVarDeclAST(AlphaParser.VarDeclASTContext context)
     {
@@ -96,19 +96,19 @@ public class AContextual : AlphaParserBaseVisitor<object>
             var textoSinUltimosDosCaracteres =
                 context.type().GetText().Substring(0, context.type().GetText().Length - 2);
 
-            if (BasicType.isBasicType(context.type().GetText()) ==
+            if (BasicTypeD.isBasicType(context.type().GetText()) ==
                 true) // si es tipo basico ----------------------------------------------------------------
             {
                 foreach (var child in context.ident())
                 {
                     IToken Tok = (IToken)Visit(child);
-                    BasicType.Types varTipo = BasicType.showType(context.type().GetText());
-                    BasicType var = new BasicType(Tok, varTipo, TablaSimbolos.nivelActual, context);
+                    BasicTypeD.Types varTipo = BasicTypeD.showType(context.type().GetText());
+                    BasicTypeD var = new BasicTypeD(Tok, varTipo, TablaSimbolos.nivelActual, context);
                     if (tabla.currentClass != null) // es atributo de clase 
                     {
                         if (!tabla.currentClass.BuscarAtributo(var.token.Text))
                         {
-                            Type? tipo = tabla.Buscar(Tok.Text);
+                            TypeD? tipo = tabla.Buscar(Tok.Text);
                             if (tipo != null && tipo.nivel == 0)
                             {
                                 System.Diagnostics.Debug.WriteLine(
@@ -120,6 +120,10 @@ public class AContextual : AlphaParserBaseVisitor<object>
                             }
 
                             tabla.Insertar(var);
+                            child.declPointer = context;
+                            context.isLocal = true;
+                            context.indexVar = contadorGlobal;
+                            contadorGlobal++;
                             tabla.currentClass.attributes.AddLast(var);
                         }
                         else
@@ -132,7 +136,7 @@ public class AContextual : AlphaParserBaseVisitor<object>
                     }
                     else if (tabla.currentMethod != null) // es variable local de metodo
                     {
-                        Type? tipo = tabla.Buscar(Tok.Text);
+                        TypeD? tipo = tabla.Buscar(Tok.Text);
                         if (tipo != null)
                         {
                             if (tipo.nivel == 0) // es variable global
@@ -156,18 +160,25 @@ public class AContextual : AlphaParserBaseVisitor<object>
                                         "Error en visit VarDeclAST tipo basico, variable ya existe: " +
                                         Tok.Text + " " + obtenerCoordenadas(Tok));
                                 }
-
+                                child.declPointer = context;
+                                context.isLocal = true;
+                                context.indexVar = contadorGlobal;
+                                contadorGlobal++;
                                 tabla.Insertar(var);
                             }
                         }
                         else
                         {
+                            child.declPointer = context;
+                            context.isLocal = true;
+                            context.indexVar = contadorGlobal;
+                            contadorGlobal++;
                             tabla.Insertar(var);
                         }
                     }
                     else if (tabla.currentClass == null && tabla.currentMethod == null) // es variable global
                     {
-                        Type? tipo = tabla.Buscar(Tok.Text);
+                        TypeD? tipo = tabla.Buscar(Tok.Text);
                         if (tipo != null && tipo.nivel == 0)
                         {
                             System.Diagnostics.Debug.WriteLine(
@@ -178,6 +189,10 @@ public class AContextual : AlphaParserBaseVisitor<object>
                         }
                         else
                         {
+                            child.declPointer = context;
+                            context.isLocal = false;
+                            context.indexVar = contadorGlobal;
+                            contadorGlobal++;
                             tabla.Insertar(var);
                         }
                     }
@@ -185,9 +200,9 @@ public class AContextual : AlphaParserBaseVisitor<object>
             }
             else if (ultimasDosPosiciones.Equals("[]")) // si es arreglo
             {
-                ArrayType.Types type = ArrayType.showType(textoSinUltimosDosCaracteres);
+                ArrayTypeD.Types type = ArrayTypeD.showType(textoSinUltimosDosCaracteres);
 
-                if (type is ArrayType.Types.Error)
+                if (type is ArrayTypeD.Types.Error)
                 {
                     System.Diagnostics.Debug.WriteLine("Error en visit VarDeclAST, tipo recibido: " +
                                                        context.type().GetText() + " " +
@@ -209,7 +224,7 @@ public class AContextual : AlphaParserBaseVisitor<object>
                         else if (tabla.currentMethod != null) // es variable local de metodo
                         {
                             IToken tok = (IToken)Visit(child);
-                            Type? tipo = tabla.Buscar(tok.Text);
+                            TypeD? tipo = tabla.Buscar(tok.Text);
                             if (tipo != null && tipo.nivel <= TablaSimbolos.nivelActual)
                             {
                                 System.Diagnostics.Debug.WriteLine(
@@ -220,14 +235,18 @@ public class AContextual : AlphaParserBaseVisitor<object>
                             }
                             else
                             {
-                                ArrayType arr = new ArrayType(tok, TablaSimbolos.nivelActual, type, context);
+                                ArrayTypeD arr = new ArrayTypeD(tok, TablaSimbolos.nivelActual, type, context);
+                                child.declPointer = context;
+                                context.isLocal = true;
+                                context.indexVar = contadorGlobal;
+                                contadorGlobal++;
                                 tabla.Insertar(arr);
                             }
                         }
                         else if (tabla.currentClass == null && tabla.currentMethod == null) // es variable global
                         {
                             IToken tok = (IToken)Visit(child);
-                            Type? tipo = tabla.Buscar(tok.Text);
+                            TypeD? tipo = tabla.Buscar(tok.Text);
                             if (tipo != null)
                             {
                                 System.Diagnostics.Debug.WriteLine(
@@ -239,7 +258,11 @@ public class AContextual : AlphaParserBaseVisitor<object>
                             }
                             else
                             {
-                                ArrayType arr = new ArrayType(tok, TablaSimbolos.nivelActual, type, context);
+                                ArrayTypeD arr = new ArrayTypeD(tok, TablaSimbolos.nivelActual, type, context);
+                                child.declPointer = context;
+                                context.isLocal = false;
+                                context.indexVar = contadorGlobal;
+                                contadorGlobal++;
                                 tabla.Insertar(arr);
                             }
                         }
@@ -247,7 +270,7 @@ public class AContextual : AlphaParserBaseVisitor<object>
                 }
             }
             else if (tabla.Buscar(context.type().GetText()) != null &&
-                     tabla.Buscar(context.type().GetText()) is ClassType) // si es tipo compuesto
+                     tabla.Buscar(context.type().GetText()) is ClassTypeD) // si es tipo compuesto
             {
                 foreach (var child in context.ident())
                 {
@@ -258,7 +281,7 @@ public class AContextual : AlphaParserBaseVisitor<object>
                     }
                     else if (tabla.currentMethod != null) // si estoy en un metodo
                     {
-                        Type? tipo = tabla.Buscar(tok.Text);
+                        TypeD? tipo = tabla.Buscar(tok.Text);
                         if (tipo != null && tipo.nivel <= TablaSimbolos.nivelActual)
                         {
                             System.Diagnostics.Debug.WriteLine("Error en visit VarDeclAST, variable ya existe: " +
@@ -268,14 +291,18 @@ public class AContextual : AlphaParserBaseVisitor<object>
                         }
                         else
                         {
-                            CustomType var = new CustomType(tok, TablaSimbolos.nivelActual, context.type().GetText(),
+                            CustomTypeD var = new CustomTypeD(tok, TablaSimbolos.nivelActual, context.type().GetText(),
                                 context);
+                            child.declPointer = context;
+                            context.isLocal = true;
+                            context.indexVar = contadorGlobal;
+                            contadorGlobal++;
                             tabla.Insertar(var);
                         }
                     }
                     else if (tabla.currentClass == null && tabla.currentMethod == null) // es variable global
                     {
-                        Type? tipo = tabla.Buscar(tok.Text);
+                        TypeD? tipo = tabla.Buscar(tok.Text);
                         if (tipo != null)
                         {
                             System.Diagnostics.Debug.WriteLine("Error en visit VarDeclAST, variable ya existe: " +
@@ -285,8 +312,12 @@ public class AContextual : AlphaParserBaseVisitor<object>
                         }
                         else
                         {
-                            CustomType var = new CustomType(tok, TablaSimbolos.nivelActual, context.type().GetText(),
+                            CustomTypeD var = new CustomTypeD(tok, TablaSimbolos.nivelActual, context.type().GetText(),
                                 context);
+                            child.declPointer = context;
+                            context.isLocal = false;
+                            context.indexVar = contadorGlobal;
+                            contadorGlobal++;
                             tabla.Insertar(var);
                         }
                     }
@@ -328,7 +359,7 @@ public class AContextual : AlphaParserBaseVisitor<object>
             return null;
         }
 
-        ClassType cls = new ClassType(tok, TablaSimbolos.nivelActual, context);
+        ClassTypeD cls = new ClassTypeD(tok, TablaSimbolos.nivelActual, context);
         tabla.Insertar(cls);
         tabla.currentClass = cls; // para saber en que clase estoy
         tabla.OpenScope();
@@ -350,7 +381,7 @@ public class AContextual : AlphaParserBaseVisitor<object>
     public override object? VisitMethodDeclAST(AlphaParser.MethodDeclASTContext context)
     {
         IToken tok = (IToken)Visit(context.ident());
-        Type tipo = tabla.Buscar(tok.Text) as Type;
+        TypeD tipo = tabla.Buscar(tok.Text) as TypeD;
 
         if (tabla.Buscar(tok.Text) != null)
         {
@@ -363,31 +394,31 @@ public class AContextual : AlphaParserBaseVisitor<object>
             return null;
         }
 
-        LinkedList<Type> parametros = new LinkedList<Type>();
+        LinkedList<TypeD> parametros = new LinkedList<TypeD>();
 
         if (context.formPars() != null)
         {
             tabla.OpenScope();
-            parametros = (LinkedList<Type>)Visit(context.formPars());
+            parametros = (LinkedList<TypeD>)Visit(context.formPars());
             tabla.CloseScope();
         }
 
         if (context.type() != null) // Si tiene tipo 
         {
-            if (BasicType.isBasicType(context.type().GetText()) == true) // si es tipo basico
+            if (BasicTypeD.isBasicType(context.type().GetText()) == true) // si es tipo basico
             {
-                if (BasicType.showType(context.type().GetText()) != BasicType.Types.Error)
+                if (BasicTypeD.showType(context.type().GetText()) != BasicTypeD.Types.Error)
                 {
-                    MethodType method = new MethodType(tok, TablaSimbolos.nivelActual, parametros.Count,
+                    MethodTypeD method = new MethodTypeD(tok, TablaSimbolos.nivelActual, parametros.Count,
                         context.type().GetText(), parametros, context);
                     tabla.Insertar(method);
                     tabla.currentMethod = method;
                 }
             }
             else if (tabla.Buscar(context.type().GetText()) != null &&
-                     tabla.Buscar(context.type().GetText()) is ClassType) // si es tipo compuesto
+                     tabla.Buscar(context.type().GetText()) is ClassTypeD) // si es tipo compuesto
             {
-                MethodType method = new MethodType(tok, TablaSimbolos.nivelActual, parametros.Count,
+                MethodTypeD method = new MethodTypeD(tok, TablaSimbolos.nivelActual, parametros.Count,
                     context.type().GetText(), parametros, context);
                 tabla.Insertar(method);
                 tabla.currentMethod = method;
@@ -403,7 +434,7 @@ public class AContextual : AlphaParserBaseVisitor<object>
         }
         else if (context.VOID() != null) // si no tiene tipo, es void
         {
-            MethodType method = new MethodType(tok, TablaSimbolos.nivelActual, parametros.Count, "void", parametros,
+            MethodTypeD method = new MethodTypeD(tok, TablaSimbolos.nivelActual, parametros.Count, "void", parametros,
                 context);
             tabla.Insertar(method);
             tabla.currentMethod = method;
@@ -425,7 +456,7 @@ public class AContextual : AlphaParserBaseVisitor<object>
         tabla.OpenScope();
         Visit(context.block());
 
-        MethodType metodo = (MethodType)tabla.currentMethod;
+        MethodTypeD metodo = (MethodTypeD)tabla.currentMethod;
         AlphaParser.ReturnStatementASTContext? returnAst = metodo?.returnStatement;
 
         // si el metodo no es void y no tiene return statement
@@ -461,10 +492,9 @@ public class AContextual : AlphaParserBaseVisitor<object>
     {
         if (context == null)
         {
-            System.Diagnostics.Debug.WriteLine("Error en visit MethodDeclAST, el metodo no tiene return statement");
             return null;
-            
         }
+        
         if (tabla.currentMethod?.returnType == "void")
         {
             if (context.RETURN() != null)
@@ -537,7 +567,7 @@ public class AContextual : AlphaParserBaseVisitor<object>
      */
     public override object VisitFormParsAST(AlphaParser.FormParsASTContext context)
     {
-        LinkedList<Type> parametros = new LinkedList<Type>();
+        LinkedList<TypeD> parametros = new LinkedList<TypeD>();
 
         for (int i = 0; i < context.ident().Length; i++)
         {
@@ -548,32 +578,32 @@ public class AContextual : AlphaParserBaseVisitor<object>
                 context.type(i).GetText().Substring(0, context.type(i).GetText().Length - 2);
 
             IToken tok = (IToken)Visit(context.ident(i));
-            if (BasicType.isBasicType(context.type(i).GetText())) // si es tipo basico
+            if (BasicTypeD.isBasicType(context.type(i).GetText())) // si es tipo basico
             {
-                BasicType.Types varTipo = BasicType.showType(context.type(i).GetText());
-                BasicType var = new BasicType(tok, varTipo, TablaSimbolos.nivelActual, context);
+                BasicTypeD.Types varTipo = BasicTypeD.showType(context.type(i).GetText());
+                BasicTypeD var = new BasicTypeD(tok, varTipo, TablaSimbolos.nivelActual, context);
                 parametros.AddLast(var);
             }
             else if (tabla.Buscar(context.type(i).GetText()) != null &&
-                     tabla.Buscar(context.type(i).GetText()) is ClassType) // si es tipo compuesto
+                     tabla.Buscar(context.type(i).GetText()) is ClassTypeD) // si es tipo compuesto
             {
-                CustomType var = new CustomType(tok, TablaSimbolos.nivelActual, context.type(i).GetText(), context);
+                CustomTypeD var = new CustomTypeD(tok, TablaSimbolos.nivelActual, context.type(i).GetText(), context);
                 parametros.AddLast(var);
             }
             else if (ultimasDosPosiciones.Equals("[]")) // si es arreglo
             {
-                ArrayType.Types type = ArrayType.showType(textoSinUltimosDosCaracteres);
+                ArrayTypeD.Types type = ArrayTypeD.showType(textoSinUltimosDosCaracteres);
 
-                if (type is ArrayType.Types.Error)
+                if (type is ArrayTypeD.Types.Error)
                 {
                     System.Diagnostics.Debug.WriteLine("Error en visit formPars, tipo recibido: " +
                                                        context.type(i).GetText() + " " + obtenerCoordenadas(tok));
                     errorBuilder.AddError("Error en visit formPars, tipo recibido: " +
                                           context.type(i).GetText() + " " + obtenerCoordenadas(tok));
                 }
-                else if (type is ArrayType.Types.Int or ArrayType.Types.Char)
+                else if (type is ArrayTypeD.Types.Int or ArrayTypeD.Types.Char)
                 {
-                    ArrayType arr = new ArrayType(tok, TablaSimbolos.nivelActual, type, context);
+                    ArrayTypeD arr = new ArrayTypeD(tok, TablaSimbolos.nivelActual, type, context);
                     parametros.AddLast(arr);
                 }
             }
@@ -653,7 +683,7 @@ public class AContextual : AlphaParserBaseVisitor<object>
             (context.LEFT_PAREN() !=
              null) // si es una llamada a metodo ------------------------------------------------------------------------------------
         {
-            Type? type = tabla.Buscar(context.designator().GetText());
+            TypeD? type = tabla.Buscar(context.designator().GetText());
 
             if (context.designator().GetText() ==
                 "del") // si es del ------------------------------------------------------------------------------------
@@ -670,7 +700,7 @@ public class AContextual : AlphaParserBaseVisitor<object>
                 else
                 {
                     // lista de parametros del metodo
-                    LinkedList<Type> actParm = (LinkedList<Type>)Visit(context.actPars());
+                    LinkedList<TypeD> actParm = (LinkedList<TypeD>)Visit(context.actPars());
                     if (actParm.Count != 2)
                     {
                         System.Diagnostics.Debug.WriteLine(
@@ -681,7 +711,7 @@ public class AContextual : AlphaParserBaseVisitor<object>
                     }
                     else
                     {
-                        if (actParm.ElementAt(0) is ArrayType &&
+                        if (actParm.ElementAt(0) is ArrayTypeD &&
                             actParm.ElementAt(1).getType().Equals("Int"))
                         {
                         }
@@ -713,7 +743,7 @@ public class AContextual : AlphaParserBaseVisitor<object>
                 else
                 {
                     // lista de parametros del metodo
-                    LinkedList<Type> actParm = (LinkedList<Type>)Visit(context.actPars());
+                    LinkedList<TypeD> actParm = (LinkedList<TypeD>)Visit(context.actPars());
                     if (actParm.Count != 1)
                     {
                         System.Diagnostics.Debug.WriteLine(
@@ -724,7 +754,7 @@ public class AContextual : AlphaParserBaseVisitor<object>
                     }
                     else
                     {
-                        if (actParm.ElementAt(0) is ArrayType)
+                        if (actParm.ElementAt(0) is ArrayTypeD)
                         {
                         }
                         else
@@ -754,7 +784,7 @@ public class AContextual : AlphaParserBaseVisitor<object>
                 else
                 {
                     // lista de parametros del metodo
-                    LinkedList<Type> actParm = (LinkedList<Type>)Visit(context.actPars());
+                    LinkedList<TypeD> actParm = (LinkedList<TypeD>)Visit(context.actPars());
                     if (actParm.Count != 2)
                     {
                         System.Diagnostics.Debug.WriteLine(
@@ -780,13 +810,13 @@ public class AContextual : AlphaParserBaseVisitor<object>
                 }
             }
             else if
-                (type is MethodType method) // si es un metodo ------------------------------------------------------------------------------------
+                (type is MethodTypeD method) // si es un metodo ------------------------------------------------------------------------------------
             {
                 // TODO: Verificar que el metodo exista y que los parametros sean correctos
                 if (context.actPars() != null)
                 {
-                    LinkedList<Type> actParm = new LinkedList<Type>();
-                    actParm = (LinkedList<Type>)Visit(context.actPars());
+                    LinkedList<TypeD> actParm = new LinkedList<TypeD>();
+                    actParm = (LinkedList<TypeD>)Visit(context.actPars());
 
                     if (actParm.Count == method.cantParams)
                     {
@@ -1066,12 +1096,12 @@ public class AContextual : AlphaParserBaseVisitor<object>
      */
     public override object? VisitActParsAST(AlphaParser.ActParsASTContext context)
     {
-        LinkedList<Type> tipos = new LinkedList<Type>();
+        LinkedList<TypeD> tipos = new LinkedList<TypeD>();
         foreach (var child in context.expr())
         {
             string tipoB = (string)Visit(child);
 
-            Type? tipo = tabla.Buscar(child.GetText());
+            TypeD? tipo = tabla.Buscar(child.GetText());
             if (tipo != null)
             {
                 tipos.AddLast(tipo);
@@ -1079,7 +1109,7 @@ public class AContextual : AlphaParserBaseVisitor<object>
             else
             {
                 if (tipoB != null)
-                    tipos.AddLast(new BasicType(child.Start, BasicType.showType(tipoB.ToLower()),
+                    tipos.AddLast(new BasicTypeD(child.Start, BasicTypeD.showType(tipoB.ToLower()),
                         TablaSimbolos.nivelActual, context));
             }
         }
@@ -1244,8 +1274,6 @@ public class AContextual : AlphaParserBaseVisitor<object>
                 }
             }
         }
-
-        System.Diagnostics.Debug.WriteLine("TIPO TERM: " + tipo);
         return tipo;
     }
 
@@ -1258,37 +1286,36 @@ public class AContextual : AlphaParserBaseVisitor<object>
     public override object? VisitDesignatorFactorAST(AlphaParser.DesignatorFactorASTContext context)
     {
         string tipo = (string)Visit(context.designator());
-        System.Diagnostics.Debug.WriteLine("TIPO DESIGNATOR #DesignatorFactorAST: " + tipo);
 
         if (context.LEFT_PAREN() != null)
         {
             if (context.actPars() != null)
             {
-                LinkedList<Type?> tipos = (LinkedList<Type>)Visit(context.actPars());
-                Type? metodo = (Type)tabla.Buscar(context.designator().GetText());
-                if (metodo is MethodType)
+                LinkedList<TypeD?> tipos = (LinkedList<TypeD>)Visit(context.actPars());
+                TypeD? metodo = (TypeD)tabla.Buscar(context.designator().GetText());
+                if (metodo is MethodTypeD)
                 {
-                    if (((MethodType)metodo).cantParams == tipos.Count)
+                    if (((MethodTypeD)metodo).cantParams == tipos.Count)
                     {
                         // verificar que los tipos de los parametros sean los correctos
                         for (int i = 0; i < tipos.Count; i++)
                         {
-                            if (((MethodType)metodo).paramsTypes.ElementAt(i).getType() != tipos.ElementAt(i).getType())
+                            if (((MethodTypeD)metodo).paramsTypes.ElementAt(i).getType() != tipos.ElementAt(i).getType())
                             {
                                 System.Diagnostics.Debug.WriteLine("ERROR: TIPOS DE PARAMETROS INCORRECTOS:"
-                                                                   + ((MethodType)metodo).paramsTypes.ElementAt(i)
+                                                                   + ((MethodTypeD)metodo).paramsTypes.ElementAt(i)
                                                                    .getType()
                                                                    + " != " + tipos.ElementAt(i).getType() + " " +
                                                                    obtenerCoordenadas(context.Start));
                                 errorBuilder.AddError("ERROR: TIPOS DE PARAMETROS INCORRECTOS:"
-                                                      + ((MethodType)metodo).paramsTypes.ElementAt(i).getType()
+                                                      + ((MethodTypeD)metodo).paramsTypes.ElementAt(i).getType()
                                                       + " != " + tipos.ElementAt(i).getType() + " " +
                                                       obtenerCoordenadas(context.Start));
                                 return null;
                             }
                         }
 
-                        return ((MethodType)metodo).returnType;
+                        return ((MethodTypeD)metodo).returnType;
                     }
                     else
                     {
@@ -1314,10 +1341,10 @@ public class AContextual : AlphaParserBaseVisitor<object>
             }
             else
             {
-                Type? metodo = (Type)tabla.Buscar(context.designator().GetText());
-                if (metodo is MethodType)
+                TypeD? metodo = (TypeD)tabla.Buscar(context.designator().GetText());
+                if (metodo is MethodTypeD)
                 {
-                    return ((MethodType)metodo).returnType;
+                    return ((MethodTypeD)metodo).returnType;
                 }
                 else
                 {
@@ -1385,14 +1412,14 @@ public class AContextual : AlphaParserBaseVisitor<object>
     public override object? VisitNewFactorAST(AlphaParser.NewFactorASTContext context)
     {
         IToken ident = (IToken)Visit(context.type());
-        Type? tipo = tabla.Buscar(ident.Text);
-        if (tipo is ClassType)
+        TypeD? tipo = tabla.Buscar(ident.Text);
+        if (tipo is ClassTypeD)
         {
             return tipo.getType();
         }
 
-        ArrayType.Types? typo = ArrayType.showType(ident.Text);
-        if (typo != ArrayType.Types.Error)
+        ArrayTypeD.Types? typo = ArrayTypeD.showType(ident.Text);
+        if (typo != ArrayTypeD.Types.Error)
         {
             return typo.ToString();
         }
@@ -1421,22 +1448,21 @@ public class AContextual : AlphaParserBaseVisitor<object>
     public override object? VisitDesignatorAST(AlphaParser.DesignatorASTContext context)
     {
         IToken ident = (IToken)Visit(context.ident(0));
-        Type? tipo = tabla.Buscar(ident.Text);
+        TypeD? tipo = tabla.Buscar(ident.Text);
 
         if (context.ident().Length > 1) // Cuando es un atributo de una clase
         {
-            System.Diagnostics.Debug.WriteLine("Es un atributo de una clase");
-            Type? tipo1 = tabla.BuscarCustomVar(ident.Text);
+            TypeD? tipo1 = tabla.BuscarCustomVar(ident.Text);
 
             if (tipo1 != null)
             {
-                CustomType tipoCustom = (CustomType)tipo1;
-                ClassType classType = (ClassType)tabla.Buscar(tipoCustom.TypeOf);
-                if (classType != null)
+                CustomTypeD tipoCustom = (CustomTypeD)tipo1;
+                ClassTypeD classTypeD = (ClassTypeD)tabla.Buscar(tipoCustom.TypeOf);
+                if (classTypeD != null)
                 {
                     // cast to classtype
 
-                    foreach (var data in classType.attributes)
+                    foreach (var data in classTypeD.attributes)
                     {
                         if (data.token.Text.Equals(context.ident(1).GetText()))
                         {
@@ -1462,9 +1488,8 @@ public class AContextual : AlphaParserBaseVisitor<object>
             return null;
         }
 
-        if (tipo is ArrayType && context.expr().Length == 1) // cuando es un arreglo
+        if (tipo is ArrayTypeD && context.expr().Length == 1) // cuando es un arreglo
         {
-            System.Diagnostics.Debug.WriteLine("Es un arreglo");
 
             string tipoExp = (string)Visit(context.expr(0));
             if (tipoExp != null)
@@ -1500,7 +1525,7 @@ public class AContextual : AlphaParserBaseVisitor<object>
                 return "Int";
             }
 
-            if (tipo is ArrayType)
+            if (tipo is ArrayTypeD)
             {
                 return tipo.getType();
             }

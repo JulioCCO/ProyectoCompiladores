@@ -179,9 +179,14 @@ public partial class MainWindow
                     {
                         AContextual context = new AContextual();
                         string retornoDeProgram = (string)context.Visit(tree);
-                        // TerceraEtapa terceraEtapa = new TerceraEtapa();
-                        // terceraEtapa.Visit(tree);
-                        // Crear una instancia de la nueva ventana
+                        if (retornoDeProgram.Contains("Error"))
+                        {
+                            MessageBox.Show("Errores en la segunda etapa de compilación");
+                           
+                        }
+                        terceraEtapaPrueba tE = new terceraEtapaPrueba();
+                        tE.Visit(tree);
+                        
                         consola.SalidaConsola.Text =
                             "Compilación exitosa\n\n" + "Path del archivo:" +
                             txtPathPrincipal + "\n\n" + retornoDeProgram;

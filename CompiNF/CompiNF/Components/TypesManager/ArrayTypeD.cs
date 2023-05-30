@@ -2,7 +2,7 @@
 
 namespace CompiNF.Components.TypesManager;
 
-public class ArrayType : Type
+public class ArrayTypeD : TypeD
 {
     public enum Types
     {
@@ -15,7 +15,7 @@ public class ArrayType : Type
     public int size = 0;
     public Types dataType;
 
-    public ArrayType(IToken t, int n, Types dt, ParserRuleContext c) : base(t, n, c)
+    public ArrayTypeD(IToken t, int n, Types dt, ParserRuleContext c) : base(t, n, c)
     {
         dataType = dt;
     }

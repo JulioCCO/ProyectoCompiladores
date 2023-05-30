@@ -11,12 +11,12 @@ class AllProds
   }
 
   int retornaInt(){
-   return 1;
+  	return 1;
   }
 
   Point point;
 
-  void WriteError ()
+  void Writr ()
   {
     point = new Point;
     arreglo = new int[10];
@@ -67,7 +67,7 @@ class AllProds
           int camino; 
         }
         else {
-             WriteError(m);
+             Writr(m);
         }
         m = 43/4%4+12+m;
        
@@ -82,18 +82,37 @@ class AllProds
   {
     Point x3;
     int a;
-    WriteError();
+    Writr();
     prueba(x3, a);
     read(a);
     if (a < 0){
       write(prueba(x3, a));
     }
     else
-      WriteError(1);
+      Writr(1);
     write('n');
 
   }
   }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

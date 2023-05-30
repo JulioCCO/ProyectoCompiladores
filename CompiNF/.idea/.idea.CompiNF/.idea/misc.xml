@@ -6,7 +6,7 @@
         <PerGrammarGenerationSettings>
           <option name="fileName" value="$PROJECT_DIR$/CompiNF/Components/AlphaScanner.g4" />
           <option name="autoGen" value="true" />
-          <option name="outputDir" value="E:\Compi\CompiNetFramework\CompiNF\CompiNF\Components" />
+          <option name="outputDir" value="E:\Compi\Compilador\CompiNF\CompiNF\Components" />
           <option name="libDir" value="" />
           <option name="encoding" value="" />
           <option name="pkg" value="generated" />
@@ -16,7 +16,7 @@
         <PerGrammarGenerationSettings>
           <option name="fileName" value="$PROJECT_DIR$/CompiNF/Components/AlphaParser.g4" />
           <option name="autoGen" value="true" />
-          <option name="outputDir" value="E:\Compi\CompiNetFramework\CompiNF\CompiNF\Components" />
+          <option name="outputDir" value="E:\Compi\Compilador\CompiNF\CompiNF\Components" />
           <option name="libDir" value="" />
           <option name="encoding" value="" />
           <option name="pkg" value="generated" />

@@ -8,9 +8,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Antlr4.Runtime;
+using Type = System.Type;
 
-
-namespace Compilador.Components;
+namespace CompiNF.Components;
 
 public class TerceraEtapa: AlphaParserBaseVisitor<object>
 {
@@ -356,7 +356,7 @@ public class TerceraEtapa: AlphaParserBaseVisitor<object>
     
         // Obtener el tipo de la expresión
         
-        // Type exprType = exprContext.GetType();
+        // TypeD exprType = exprContext.GetType();
         Type exprType = GetTypeFromExpression(exprContext.GetType());
     
         if (exprType == typeof(int))

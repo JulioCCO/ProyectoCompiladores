@@ -2,13 +2,13 @@
 
 namespace CompiNF.Components.TypesManager;
 
-public abstract class Type
+public abstract class TypeD
 {
     public int nivel;
     public IToken token;
     public ParserRuleContext context;
 
-    protected Type(IToken token, int nivel, ParserRuleContext ctx)
+    protected TypeD(IToken token, int nivel, ParserRuleContext ctx)
     {
         this.nivel = nivel;
         this.token = token;

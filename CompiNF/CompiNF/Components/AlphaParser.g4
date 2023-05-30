@@ -9,7 +9,7 @@ program : (using)* CLASS ident LEFT_BRACE (varDecl | classDecl | methodDecl)* RI
     
 using : USING ident SEMICOLON                                                                   #UsingClassAST;
 
-varDecl locals [int indexVar=0]: type ident (COMMA ident)* SEMICOLON                            #VarDeclAST;
+varDecl locals [int indexVar=0, boolean isLocal=false]: type ident (COMMA ident)* SEMICOLON     #VarDeclAST;
 
 classDecl : CLASS ident LEFT_BRACE (varDecl)* RIGHT_BRACE                                       #ClassDeclAST;
 

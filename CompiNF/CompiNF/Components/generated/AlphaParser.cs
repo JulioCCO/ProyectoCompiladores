@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-// Generated from E:/Compi/CompiNetFramework/CompiNF/CompiNF/Components\AlphaParser.g4 by ANTLR 4.12.0
+// Generated from E:/Compi/Compilador/CompiNF/CompiNF/Components\AlphaParser.g4 by ANTLR 4.12.0
 
 // Unreachable code detected
 #pragma warning disable 0162
@@ -315,6 +315,7 @@ public partial class AlphaParser : Parser {
 
 	public partial class VarDeclContext : ParserRuleContext {
 		public int indexVar = 0;
+		public bool isLocal = false;
 		public VarDeclContext(ParserRuleContext parent, int invokingState)
 			: base(parent, invokingState)
 		{
@@ -325,6 +326,7 @@ public partial class AlphaParser : Parser {
 		public virtual void CopyFrom(VarDeclContext context) {
 			base.CopyFrom(context);
 			this.indexVar = context.indexVar;
+			this.isLocal = context.isLocal;
 		}
 	}
 	public partial class VarDeclASTContext : VarDeclContext {

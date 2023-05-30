@@ -3,12 +3,12 @@ using Antlr4.Runtime;
 
 namespace CompiNF.Components.TypesManager;
 
-public class ClassType : Type
+public class ClassTypeD : TypeD
 {
     public readonly string type = "class";
-    public LinkedList<Type> attributes = new LinkedList<Type>();
+    public LinkedList<TypeD> attributes = new LinkedList<TypeD>();
 
-    public ClassType(IToken t, int n, ParserRuleContext c) : base(t, n, c)
+    public ClassTypeD(IToken t, int n, ParserRuleContext c) : base(t, n, c)
     {
     }
 

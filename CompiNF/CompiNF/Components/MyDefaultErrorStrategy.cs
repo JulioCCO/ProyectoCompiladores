@@ -6,8 +6,7 @@ using Antlr4.Runtime;
 namespace CompiNF.Components;
 
 public class MyDefaultErrorStrategy : DefaultErrorStrategy
-{
-    // Decompiled with JetBrains decompiler
+{ // Decompiled with JetBrains decompiler
 // Type: Antlr4.Runtime.DefaultErrorStrategy
 // Assembly: Antlr4.Runtime.Standard, Version=4.12.0.0, Culture=neutral, PublicKeyToken=e78b2c5abd1fcb3f
 // MVID: 6CFA73E9-2155-4825-BA8B-B834E09CD96E

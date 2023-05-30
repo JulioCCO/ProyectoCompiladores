@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-// Generated from E:/Compi/CompiNetFramework/CompiNF/CompiNF/Components\AlphaScanner.g4 by ANTLR 4.12.0
+// Generated from E:/Compi/Compilador/CompiNF/CompiNF/Components\AlphaScanner.g4 by ANTLR 4.12.0
 
 // Unreachable code detected
 #pragma warning disable 0162
