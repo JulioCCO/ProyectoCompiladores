@@ -1,99 +1,89 @@
-class AllProds 
-{
-  int nPoints;
-  char exclaim;
-  int[] arreglo;
-  boolean test1;
-  int b;
- 
-   class Point {
-    int x, y,m, j;
-  }
 
-  int retornaInt(){
-  	return 1;
-  }
+class Principal {
 
-  Point point;
-
-  void Writr ()
-  {
-    point = new Point;
-    arreglo = new int[10];
-    int m;
-    m = 10;
-
-    int o;
-    o = 6;
-    add(arreglo, 1);
-    del(arreglo, 1);
-    len(arreglo);
-    o = len(arreglo);
-    boolean var1;
-    string str;
-    exclaim = (char) point.x;
-    test1 = true;
-    while( o< len(arreglo)){
-    	add(arreglo, 1);
-	 if(exclaim == 'a'){
-		len(arreglo);
-	 }
-    }
-
-    for(b;b<5;b++;){
-        write(arreglo[b]);
-    }
-    while (b >8) {
-        b--;
-        if (b < 3 && test1==true)  
-            break;
-        write(arreglo[b], 2);
-    }
-
-  }
-
-  int GetX (Point y, int m, char ju) 
-  { 
-     string sasd;
-     sasd ="hola";
-     int j;
-     write("asdasd");        
-     return y.y; 
-  }
-
-  void SetX (int m, Point p2) {
-        int[] arreglito;
-        if (m > -10 && m < 10) {
-          int camino; 
-        }
-        else {
-             Writr(m);
-        }
-        m = 43/4%4+12+m;
-       
-  }
-
-  int prueba(Point x, int w)
-  {
-      return x.x;
+	int y;
+    	int z; 
+	void metodo(){
+		int g;
+	}
+    	class Point{
+    		int p;
+    		int o;	
+    	}
     
-  }
-    void Main ()
-  {
-    Point x3;
-    int a;
-    Writr();
-    prueba(x3, a);
-    read(a);
-    if (a < 0){
-      write(prueba(x3, a));
-    }
-    else
-      Writr(1);
-    write('n');
+	void Main() {
+		int x;
+		double d;
+		d = 56.1;
+		x = 10+(1*2)*3;
+    		write(x);
+    	}
 
-  }
-  }
+	
+    
+
+ 
+
+    
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

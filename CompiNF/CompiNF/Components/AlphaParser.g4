@@ -9,7 +9,9 @@ program : (using)* CLASS ident LEFT_BRACE (varDecl | classDecl | methodDecl)* RI
     
 using : USING ident SEMICOLON                                                                   #UsingClassAST;
 
-varDecl locals [int indexVar=0, boolean isLocal=false]: type ident (COMMA ident)* SEMICOLON     #VarDeclAST;
+varDecl 
+locals [int indexVar=0, boolean isLocal=false]: 
+                                                        type ident (COMMA ident)* SEMICOLON     #VarDeclAST;
 
 classDecl : CLASS ident LEFT_BRACE (varDecl)* RIGHT_BRACE                                       #ClassDeclAST;
 
@@ -54,6 +56,7 @@ factor : designator (LEFT_PAREN actPars? RIGHT_PAREN)?                          
        | BOOL_CONST                                                                             #BoolFactorAST
        | NEW type                                                                               #NewFactorAST
        | LEFT_PAREN expr RIGHT_PAREN                                                            #ParenFactorAST;
+
 
 designator : ident (DOT ident | LEFT_BRACKET expr RIGHT_BRACKET)*                               #DesignatorAST;
 

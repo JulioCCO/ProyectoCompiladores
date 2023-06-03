@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Windows;
 using Antlr4.Runtime;
 using System.IO;
+using System.Reflection;
 using System.Windows.Controls;
 using CompiNF.Components;
 using generated;
@@ -16,6 +18,8 @@ public partial class MainWindow
     {
         public string txtPathPrincipal = "";
         public string txtPathSecundario = "";
+        public string txtPathTerciario = "";
+        
         MyErrorListener _errorListener = new MyErrorListener();
         MyErrorParser _errorParser = new MyErrorParser();
         MyDefaultErrorStrategy _errorStrategy = new MyDefaultErrorStrategy();
@@ -182,14 +186,32 @@ public partial class MainWindow
                         if (retornoDeProgram.Contains("Error"))
                         {
                             MessageBox.Show("Errores en la segunda etapa de compilación");
-                           
                         }
-                        terceraEtapaPrueba tE = new terceraEtapaPrueba();
-                        tE.Visit(tree);
-                        
+                        else
+                        {
+                            terceraEtapaPrueba tE = new terceraEtapaPrueba();
+                            Type pointType = (Type) tE.Visit(tree);
+                
+                            object ptInstance = Activator.CreateInstance(pointType, null);
+
+                            pointType.InvokeMember("Main",
+                                BindingFlags.InvokeMethod,
+                                null,
+                                ptInstance,
+                                new object[0]); 
+                            Process myProcess = new Process();
+                            myProcess.StartInfo.UseShellExecute = false;
+                            myProcess.StartInfo.FileName = @"../../bin/Debug/test.exe";
+                            myProcess.StartInfo.RedirectStandardOutput = true;
+                            myProcess.Start();
+                            
+                            txtPathTerciario = myProcess.StandardOutput.ReadToEnd();
+                            myProcess.WaitForExit();
+                        }
                         consola.SalidaConsola.Text =
                             "Compilación exitosa\n\n" + "Path del archivo:" +
-                            txtPathPrincipal + "\n\n" + retornoDeProgram;
+                            txtPathPrincipal + "\n\n" + retornoDeProgram
+                            + "\n\n" + "Tercera fase: \n" + txtPathTerciario;
                         // Mostrar la ventana
                         consola.Show();
                     }
