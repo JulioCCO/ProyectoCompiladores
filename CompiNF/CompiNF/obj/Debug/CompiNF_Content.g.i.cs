@@ -16,6 +16,7 @@
 [assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("components/generated/alphascanner.interp")]
 [assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("components/generated/alphascanner.tokens")]
 [assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("components/prueba.txt")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("components/pruebaleo.txt")]
 [assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("components/pruebasintactica.txt")]
 [assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("components/revisionescortas.txt")]
 [assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("components/codegen.txt")]

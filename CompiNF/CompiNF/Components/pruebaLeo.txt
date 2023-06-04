@@ -1,0 +1,11 @@
+class Program{
+
+ void Main(){
+int i;
+i=0;
+while(i<12){
+i=i+2;
+write(i);
+}
+}
+}

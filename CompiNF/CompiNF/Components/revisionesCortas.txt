@@ -1,31 +1,101 @@
 
 class Principal {
-
-	int y;
-    	int z; 
-	void metodo(){
-		int g;
+    	class Perro{
+		int portal;
 	}
-    	class Point{
-    		int p;
-    		int o;	
-    	}
-    
+	int data;
+	int data2;
 	void Main() {
 		int x;
+
 		double d;
 		d = 56.1;
 		x = 10+(1*2)*3;
-    		write(x);
+    		
+		//read(x);
+		int g;
+		g = 0;
+		while(g<10){
+			if(g == 2){
+				break;
+				write("Es dos");
+			}
+			g++;
+			write(g);
+		}
+		int i;
+		i =0;
+		for(i;i<10;i++;){
+			if(i == 2){
+				write("Es dos for");
+				break;
+			}
+			//write("sali");
+            		write(i);
+        	}
+		//write(x);
     	}
 
-	
-    
-
- 
-
-    
+	void metodo(){}
+    	class Point{
+		int variable;
+	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

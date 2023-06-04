@@ -186,6 +186,7 @@
       <Content Include="Components\generated\AlphaScanner.interp" />
       <Content Include="Components\generated\AlphaScanner.tokens" />
       <Content Include="Components\prueba.txt" />
+      <Content Include="Components\pruebaLeo.txt" />
       <Content Include="Components\PruebaSintactica.txt" />
       <Content Include="Components\revisionesCortas.txt" />
       <Content Include="Components\CodeGen.txt" />
