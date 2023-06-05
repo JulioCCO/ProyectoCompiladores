@@ -13,6 +13,7 @@ public class AContextual : AlphaParserBaseVisitor<object>
     public TablaSimbolos tabla; // tabla de simbolos global
     public ErrorBuilder errorBuilder = new ErrorBuilder();
     public int contadorGlobal = 0;
+
     public AContextual()
     {
         tabla = new TablaSimbolos();
@@ -160,6 +161,7 @@ public class AContextual : AlphaParserBaseVisitor<object>
                                         "Error en visit VarDeclAST tipo basico, variable ya existe: " +
                                         Tok.Text + " " + obtenerCoordenadas(Tok));
                                 }
+
                                 child.declPointer = context;
                                 context.isLocal = true;
                                 context.indexVar = contadorGlobal;
@@ -494,7 +496,7 @@ public class AContextual : AlphaParserBaseVisitor<object>
         {
             return null;
         }
-        
+
         if (tabla.currentMethod?.returnType == "void")
         {
             if (context.RETURN() != null)
@@ -1025,10 +1027,67 @@ public class AContextual : AlphaParserBaseVisitor<object>
      */
     public override object? VisitReadStatementAST(AlphaParser.ReadStatementASTContext context)
     {
-        Visit(context.designator());
+        string result = (string)Visit(context.designator());
+        if (result == null)
+        {
+            errorBuilder.AddError($"Error: La variable en el read:  \"{context.designator().GetText()}\" no existe."
+                                  + obtenerCoordenadas(context.Start));
+            return null;
+        }
+
+        //Abrimos la ventana de dialogo para ingresar el valor
+        Input input = new Input(context.designator().GetText());
+        input.ShowDialog();
+        string inputText = input.valorDeEntrada;
+
+        //Verificamos que el valor ingresado sea del tipo correcto
+        Type readType = verificarTipoRetorno(result.ToLower());
+        
+        if (readType != typeof(double) && readType != typeof(char) && readType != typeof(string) &&
+            readType != typeof(bool))
+        {
+            errorBuilder.AddError(
+                $"Error: El tipo de la variable \"{context.designator().GetText()}\" no es valido para un read."
+                + obtenerCoordenadas(context.Start));
+            return null;
+        }
+
+        // Intentar convertir a char
+   
+        if ((result.ToLower().Equals("char") && !(char.TryParse(inputText, out char charResult))) ||
+            (result.ToLower().Equals("boolean") && !(bool.TryParse(inputText, out bool boolResult))) ||
+            (result.ToLower().Equals("int") && !(int.TryParse(inputText, out int intResult))) ||
+            (result.ToLower().Equals("double") && !(double.TryParse(inputText, out double doubleResult))))
+        {
+            errorBuilder.AddError($"Error: El valor ingresado no es del tipo: {result.ToLower()}." +
+                                  obtenerCoordenadas(context.Start));
+            return null;
+        }
+        
+        context.data = inputText;
+
+        context.tipoDeDato = verificarTipoRetorno(result.ToLower());
+            
         return null;
     }
+    private Type verificarTipoRetorno(string tipo)
+    {
+        switch (tipo)
+        {
+            case "int":
+                return typeof(double);
+            case "char":
+                return typeof(char);
+            case "string":
+                return typeof(string);
+            case "boolean":
+                return typeof(bool);
+            case "double":
+                return typeof(double);
+        }
 
+        return null;
+    }
     /*
      * | WRITE LEFT_PAREN expr (COMMA (NUMBER|STRING_CONST))? RIGHT_PAREN SEMICOLON          #WriteStatementAST
      */
@@ -1274,6 +1333,7 @@ public class AContextual : AlphaParserBaseVisitor<object>
                 }
             }
         }
+
         return tipo;
     }
 
@@ -1300,7 +1360,8 @@ public class AContextual : AlphaParserBaseVisitor<object>
                         // verificar que los tipos de los parametros sean los correctos
                         for (int i = 0; i < tipos.Count; i++)
                         {
-                            if (((MethodTypeD)metodo).paramsTypes.ElementAt(i).getType() != tipos.ElementAt(i).getType())
+                            if (((MethodTypeD)metodo).paramsTypes.ElementAt(i).getType() !=
+                                tipos.ElementAt(i).getType())
                             {
                                 System.Diagnostics.Debug.WriteLine("ERROR: TIPOS DE PARAMETROS INCORRECTOS:"
                                                                    + ((MethodTypeD)metodo).paramsTypes.ElementAt(i)
@@ -1490,7 +1551,6 @@ public class AContextual : AlphaParserBaseVisitor<object>
 
         if (tipo is ArrayTypeD && context.expr().Length == 1) // cuando es un arreglo
         {
-
             string tipoExp = (string)Visit(context.expr(0));
             if (tipoExp != null)
             {

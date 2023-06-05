@@ -18,20 +18,23 @@ class Principal {
 		while(g<10){
 			if(g == 2){
 				break;
-				write("Es dos");
+				//write("Es dos");
 			}
 			g++;
-			write(g);
+			//write(g);
 		}
 		int i;
 		i =0;
+		char entrada;
+		read(entrada);
+		write(entrada);
 		for(i;i<10;i++;){
 			if(i == 2){
-				write("Es dos for");
+				//write("Es dos for");
 				break;
 			}
 			//write("sali");
-            		write(i);
+            		//write(i);
         	}
 		//write(x);
     	}
@@ -41,6 +44,23 @@ class Principal {
 		int variable;
 	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -123,6 +123,7 @@
             <SubType>Designer</SubType>
         </ApplicationDefinition>
         <Page Include="Consola.xaml" />
+        <Page Include="Input.xaml" />
         <Page Include="MainWindow.xaml">
             <Generator>MSBuild:Compile</Generator>
             <SubType>Designer</SubType>
@@ -153,6 +154,9 @@
         <Compile Include="Components\TypesManager\UsingTypeD.cs" />
         <Compile Include="Consola.xaml.cs">
           <DependentUpon>Consola.xaml</DependentUpon>
+        </Compile>
+        <Compile Include="Input.xaml.cs">
+          <DependentUpon>Input.xaml</DependentUpon>
         </Compile>
         <Compile Include="MainWindow.xaml.cs">
             <DependentUpon>MainWindow.xaml</DependentUpon>

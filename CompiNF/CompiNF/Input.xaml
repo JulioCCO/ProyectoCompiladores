@@ -1,0 +1,35 @@
+﻿<Window x:Class="CompiNF.Input"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:local="clr-namespace:CompiNF"
+        mc:Ignorable="d"
+        Background="Teal"
+        ResizeMode="NoResize"
+        Title="InputConsole" Height="140" Width="360">
+    <Grid>
+        
+        <TextBox
+            FontFamily="Consolas"
+            FontSize="14"
+            Name="Entrada"
+            HorizontalAlignment="Left"
+            Height="50"
+            Width="260"
+            Margin="10,25,0,0"
+            TextWrapping="Wrap" 
+            VerticalAlignment="Top" 
+            AcceptsTab="False" 
+            AcceptsReturn="True"
+        ></TextBox>
+        <Button Background="Linen" 
+                Content="Input"
+                Click="Aceptar_Click"
+                HorizontalAlignment="Right" 
+                Margin="10,30,13,10" 
+                VerticalAlignment="Top" 
+                Width="55"
+        />
+    </Grid>
+</Window>

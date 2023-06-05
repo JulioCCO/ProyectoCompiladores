@@ -765,6 +765,8 @@ public partial class AlphaParser : Parser {
 	}
 
 	public partial class StatementContext : ParserRuleContext {
+		public string data;
+		public Type tipoDeDato;
 		public StatementContext(ParserRuleContext parent, int invokingState)
 			: base(parent, invokingState)
 		{
@@ -774,6 +776,8 @@ public partial class AlphaParser : Parser {
 		public StatementContext() { }
 		public virtual void CopyFrom(StatementContext context) {
 			base.CopyFrom(context);
+			this.data = context.data;
+			this.tipoDeDato = context.tipoDeDato;
 		}
 	}
 	public partial class AssignStatementASTContext : StatementContext {

@@ -189,24 +189,24 @@ public partial class MainWindow
                         }
                         else
                         {
-                            terceraEtapaPrueba tE = new terceraEtapaPrueba();
-                            Type pointType = (Type) tE.Visit(tree);
+                            terceraEtapaPrueba tE = new terceraEtapaPrueba(); // Instancia de la tercera etapa
+                            Type pointType = (Type) tE.Visit(tree); // Se obtiene el tipo de la tercera etapa
                 
-                            object ptInstance = Activator.CreateInstance(pointType, null);
+                            object ptInstance = Activator.CreateInstance(pointType, null); // Se crea una instancia de la tercera etapa
 
-                            pointType.InvokeMember("Main",
+                            pointType.InvokeMember("Main", 
                                 BindingFlags.InvokeMethod,
                                 null,
                                 ptInstance,
-                                new object[0]); 
-                            Process myProcess = new Process();
-                            myProcess.StartInfo.UseShellExecute = false;
-                            myProcess.StartInfo.FileName = @"../../bin/Debug/test.exe";
-                            myProcess.StartInfo.RedirectStandardOutput = true;
-                            myProcess.Start();
+                                new object[0]); // Se invoca el método Main de la tercera etapa
+                            Process myProcess = new Process(); // Se crea un proceso para ejecutar el archivo de la tercera etapa
+                            myProcess.StartInfo.UseShellExecute = false; // Se configura el proceso
+                            myProcess.StartInfo.FileName = @"../../bin/Debug/test.exe"; // Se configura el proceso
+                            myProcess.StartInfo.RedirectStandardOutput = true; // Se configura el proceso
+                            myProcess.Start(); // Se inicia el proceso
                             
-                            txtPathTerciario = myProcess.StandardOutput.ReadToEnd();
-                            myProcess.WaitForExit();
+                            txtPathTerciario = myProcess.StandardOutput.ReadToEnd(); // Se lee la salida del proceso
+                            myProcess.WaitForExit(); // Se espera a que el proceso termine
                         }
                         consola.SalidaConsola.Text =
                             "Compilación exitosa\n\n" + "Path del archivo:" +

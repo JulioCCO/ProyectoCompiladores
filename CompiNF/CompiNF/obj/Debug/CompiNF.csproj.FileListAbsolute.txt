@@ -108,3 +108,5 @@ E:\Compi\Compilador\CompiNF\CompiNF\obj\Debug\CompiNF.csproj.CoreCompileInputs.c
 E:\Compi\Compilador\CompiNF\CompiNF\obj\Debug\CompiNF.csproj.CopyComplete
 E:\Compi\Compilador\CompiNF\CompiNF\obj\Debug\CompiNF.exe
 E:\Compi\Compilador\CompiNF\CompiNF\obj\Debug\CompiNF.pdb
+E:\Compi\Compilador\CompiNF\CompiNF\obj\Debug\Input.g.cs
+E:\Compi\Compilador\CompiNF\CompiNF\obj\Debug\Input.baml

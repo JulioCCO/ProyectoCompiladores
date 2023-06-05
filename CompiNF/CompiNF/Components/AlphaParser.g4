@@ -10,7 +10,7 @@ program : (using)* CLASS ident LEFT_BRACE (varDecl | classDecl | methodDecl)* RI
 using : USING ident SEMICOLON                                                                   #UsingClassAST;
 
 varDecl 
-locals [int indexVar=0, boolean isLocal=false]: 
+locals [int indexVar=0, bool isLocal=false]: 
                                                         type ident (COMMA ident)* SEMICOLON     #VarDeclAST;
 
 classDecl : CLASS ident LEFT_BRACE (varDecl)* RIGHT_BRACE                                       #ClassDeclAST;
@@ -21,7 +21,8 @@ formPars : type ident (COMMA type ident)*                                       
 
 type : ident array?                                                                             #TypeAST;                                 
 
-statement : designator (ASSIGN expr | LEFT_PAREN actPars? RIGHT_PAREN | INC | DEC) SEMICOLON    #AssignStatementAST
+statement locals [string data, Type tipoDeDato] : 
+            designator (ASSIGN expr | LEFT_PAREN actPars? RIGHT_PAREN | INC | DEC) SEMICOLON    #AssignStatementAST
           | IF LEFT_PAREN condition RIGHT_PAREN statement (ELSE statement)?                     #IfStatementAST
           | FOR LEFT_PAREN expr SEMICOLON condition? SEMICOLON statement? RIGHT_PAREN statement #ForStatementAST
           | WHILE LEFT_PAREN condition RIGHT_PAREN statement                                    #WhileStatementAST

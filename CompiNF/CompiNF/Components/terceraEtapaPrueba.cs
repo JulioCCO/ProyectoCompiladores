@@ -13,6 +13,7 @@ namespace CompiNF.Components;
 
 public class terceraEtapaPrueba : AlphaParserBaseVisitor<object>
 {
+    // ---------- FOR ----------
     // for exit label
     Label forExitLabel;
 
@@ -21,7 +22,9 @@ public class terceraEtapaPrueba : AlphaParserBaseVisitor<object>
 
     // for condition label
     bool isFor = false;
-
+    
+    // ---------- WHILE ----------
+    
     // while exit label
     Label whileExitLabel;
 
@@ -31,7 +34,7 @@ public class terceraEtapaPrueba : AlphaParserBaseVisitor<object>
     // while condition label
     bool isWhile = false;
 
-    // para saber de donde viene el padre
+    // para saber de donde viene el padre SI ES UNA CLASE O UN METODO
     bool currentFatherIsClass = false;
 
 
@@ -72,7 +75,7 @@ public class terceraEtapaPrueba : AlphaParserBaseVisitor<object>
         variablesGlobales = new Dictionary<string, FieldBuilder>();
         variablesLocales = new Dictionary<string, LocalBuilder>();
         clases = new Dictionary<string, TypeBuilder>();
-        //globalExitLabel = new Label();
+
 
 
         myAsmName.Name = "TestASM";
@@ -93,11 +96,10 @@ public class terceraEtapaPrueba : AlphaParserBaseVisitor<object>
         ctorIL.Emit(OpCodes.Call, objCtor);
         ctorIL.Emit(OpCodes.Ret);
 
-        //inicializar writeline para string
-
+        // Para la escritura en consola de los tipos de datos WRITEMI, WRITEMS, WRITEMB, WRITEMC
         writeMI = typeof(Console).GetMethod(
             "WriteLine",
-            new Type[] { typeof(double) });
+            new Type[] { typeof(double) }); // se usa para int y double
         writeMS = typeof(Console).GetMethod(
             "WriteLine",
             new Type[] { typeof(string) });
@@ -113,6 +115,7 @@ public class terceraEtapaPrueba : AlphaParserBaseVisitor<object>
     //program : (using)* CLASS ident LEFT_BRACE (varDecl | classDecl | methodDecl)* RIGHT_BRACE EOF   #ProgramClassAST;
     public override object VisitProgramClassAST(AlphaParser.ProgramClassASTContext context)
     {
+        // visitar los hijos
         foreach (var child in context.children)
         {
             Visit(child);
@@ -122,11 +125,12 @@ public class terceraEtapaPrueba : AlphaParserBaseVisitor<object>
         myAsmBldr.SetEntryPoint(pointMainBldr); // setEntryPoint cargar el metodo de entrada a la clase
         myAsmBldr.Save(asmFileName); //
 
-        // imprimiendo las listas
+        // imprimiendo las listas de variables globales y locales para ver si se guardaron bien
         Debug.WriteLine("Variables globales");
         foreach (var item in variablesGlobales)
         {
             Debug.WriteLine("Nombre: " + item.Key + " tipo: " + item.Value.FieldType);
+            
         }
 
         Debug.WriteLine("Variables locales");
@@ -134,7 +138,7 @@ public class terceraEtapaPrueba : AlphaParserBaseVisitor<object>
         {
             Debug.WriteLine("Nombre: " + item.Key + " tipo: " + item.Value.LocalType);
         }
-
+        Debug.WriteLine("\n");
         return pointType;
     }
 
@@ -147,7 +151,8 @@ public class terceraEtapaPrueba : AlphaParserBaseVisitor<object>
     //varDecl locals [int indexVar=0, boolean isLocal=false]: type ident (COMMA ident)* SEMICOLON     #VarDeclAST;
     public override object VisitVarDeclAST(AlphaParser.VarDeclASTContext context)
     {
-        if (currentFatherIsClass == true)
+        // si el padre es una clase
+        if (currentFatherIsClass)
         {
             foreach (var child in context.ident())
             {
@@ -160,7 +165,7 @@ public class terceraEtapaPrueba : AlphaParserBaseVisitor<object>
                 variablesGlobales.Add(nameGlobalVar, fieldB);
             }
         }
-        else
+        else // Si el padre es un metodo
         {
             bool iL = context.isLocal;
 
@@ -197,18 +202,19 @@ public class terceraEtapaPrueba : AlphaParserBaseVisitor<object>
         currentFatherIsClass = true;
         string className = context.ident().GetText();
 
-        // Crear el tipo de la clase
+        // Crear la clase
         myClassBldr = myModuleBldr.DefineType(className, TypeAttributes.Public);
-
 
         // Visitar las declaraciones de variables dentro de la clase
         foreach (var child in context.children)
         {
             Visit(child);
         }
-
+        
+        // Se crea el tipo de la clase
         myClassBldr.CreateType();
-
+        
+        // Se agrega la clase a la lista de clases
         clases.Add(className, myClassBldr);
         currentFatherIsClass = false;
         return null;
@@ -278,7 +284,8 @@ public class terceraEtapaPrueba : AlphaParserBaseVisitor<object>
 
         return result;
     }
-
+    
+    // Se verifica el tipo de retorno de los métodos para saber si es válido
     private Type verificarTipoRetorno(string tipo)
     {
         switch (tipo)
@@ -301,6 +308,7 @@ public class terceraEtapaPrueba : AlphaParserBaseVisitor<object>
     // type : ident array?  #TypeAST;
     public override object VisitTypeAST(AlphaParser.TypeASTContext context)
     {
+        // Se verifica el tipo de retorno
         return verificarTipoRetorno(context.ident().GetText());
     }
 
@@ -311,9 +319,9 @@ public class terceraEtapaPrueba : AlphaParserBaseVisitor<object>
 
         string name = context.designator().GetText();
 
-        if (context.expr() != null)
+        if (context.expr() != null) // si es una asignación -----------------------------------------------------------------------------------
         {
-            if (variablesLocales.ContainsKey(name))
+            if (variablesLocales.ContainsKey(name)) // si es una variable local
             {
                 //se obtiene el localbuilder de la variable local
                 LocalBuilder local = variablesLocales[name];
@@ -322,7 +330,7 @@ public class terceraEtapaPrueba : AlphaParserBaseVisitor<object>
                 //se guarda el valor en la variable local
                 currentIL.Emit(OpCodes.Stloc, local.LocalIndex);
             }
-            else if (variablesGlobales.ContainsKey(name))
+            else if (variablesGlobales.ContainsKey(name)) // si es una variable global
             {
                 //se obtiene el fieldbuilder de la variable global
                 FieldBuilder global = variablesGlobales[name];
@@ -332,9 +340,9 @@ public class terceraEtapaPrueba : AlphaParserBaseVisitor<object>
                 currentIL.Emit(OpCodes.Stsfld, global);
             }
         }
-        else if (context.INC() != null)
+        else if (context.INC() != null) // si es un incremento -----------------------------------------------------------------------------------
         {
-            if (variablesLocales.ContainsKey(name))
+            if (variablesLocales.ContainsKey(name)) // si es una variable local
             {
                 //se obtiene el localbuilder de la variable local
                 LocalBuilder local = variablesLocales[name];
@@ -349,7 +357,7 @@ public class terceraEtapaPrueba : AlphaParserBaseVisitor<object>
                 //se guarda el valor en la variable local
                 currentIL.Emit(OpCodes.Stloc, local.LocalIndex);
             }
-            else if (variablesGlobales.ContainsKey(name))
+            else if (variablesGlobales.ContainsKey(name)) // si es una variable global
             {
                 //se obtiene el fieldbuilder de la variable global
                 FieldBuilder global = variablesGlobales[name];
@@ -366,9 +374,9 @@ public class terceraEtapaPrueba : AlphaParserBaseVisitor<object>
             }
         }
 
-        else if (context.DEC() != null)
+        else if (context.DEC() != null) // si es un decremento -----------------------------------------------------------------------------------
         {
-            if (variablesLocales.ContainsKey(name))
+            if (variablesLocales.ContainsKey(name)) // si es una variable local
             {
                 //se obtiene el localbuilder de la variable local
                 LocalBuilder local = variablesLocales[name];
@@ -383,7 +391,7 @@ public class terceraEtapaPrueba : AlphaParserBaseVisitor<object>
                 //se guarda el valor en la variable local
                 currentIL.Emit(OpCodes.Stloc, local.LocalIndex);
             }
-            else if (variablesGlobales.ContainsKey(name))
+            else if (variablesGlobales.ContainsKey(name)) // si es una variable global
             {
                 //se obtiene el fieldbuilder de la variable global
                 FieldBuilder global = variablesGlobales[name];
@@ -417,7 +425,7 @@ public class terceraEtapaPrueba : AlphaParserBaseVisitor<object>
         // Visitar el statement del if
         Visit(context.statement(0));
 
-        if (context.ELSE() != null)
+        if (context.ELSE() != null) // si hay un else -----------------------------------------------------------------------------------
         {
             // Si hay un bloque de código else, definir la etiqueta para el salto al bloque de código else
             Label elseLabel = currentIL.DefineLabel();
@@ -445,26 +453,27 @@ public class terceraEtapaPrueba : AlphaParserBaseVisitor<object>
     public override object VisitForStatementAST(AlphaParser.ForStatementASTContext context)
     {
         isFor = true;
-        forIl = currentMethodBldr.GetILGenerator();
+        
+        forIl = currentMethodBldr.GetILGenerator(); // Obtener el ILGenerator del método actual
 
-        Label loopLabel = forIl.DefineLabel();
+        Label loopLabel = forIl.DefineLabel(); // Definir la etiqueta para el bucle for
 
-        forExitLabel = forIl.DefineLabel();
+        forExitLabel = forIl.DefineLabel(); // Definir la etiqueta para la salida del bucle for
 
-        forIl.MarkLabel(loopLabel);
+        forIl.MarkLabel(loopLabel); // Marcar la etiqueta para el bucle for
 
-        Visit(context.statement().Last());
+        Visit(context.statement().Last()); // Visitar el statement del for
 
-        if (context.statement().Length == 2)
+        if (context.statement().Length == 2) // Si hay un statement dentro del for
         {
-            Visit(context.statement().First());
+            Visit(context.statement().First()); // Visitar el statement del for
         }
 
-        Visit(context.condition());
+        Visit(context.condition()); // Visitar la condición del for
 
-        forIl.Emit(OpCodes.Brfalse, forExitLabel);
+        forIl.Emit(OpCodes.Brfalse, forExitLabel); // Salto a la etiqueta de salida del for
 
-        forIl.Emit(OpCodes.Br, loopLabel);
+        forIl.Emit(OpCodes.Br, loopLabel); // Salto a la etiqueta del bucle for
 
         // Marcar la etiqueta de salida del bucle while
         forIl.MarkLabel(forExitLabel);
@@ -501,7 +510,7 @@ public class terceraEtapaPrueba : AlphaParserBaseVisitor<object>
 
         // Marcar la etiqueta de salida del bucle while
         whileIl.MarkLabel(whileExitLabel);
-        
+
         isWhile = false;
         return null;
     }
@@ -509,14 +518,14 @@ public class terceraEtapaPrueba : AlphaParserBaseVisitor<object>
     // | BREAK SEMICOLON                                                                     #BreakStatementAST
     public override object VisitBreakStatementAST(AlphaParser.BreakStatementASTContext context)
     {
-        if (isFor)
+        if (isFor) // Si se está dentro de un bucle for
         {
-            forIl.Emit(OpCodes.Br, forExitLabel);
+            forIl.Emit(OpCodes.Br, forExitLabel); // Salto a la etiqueta de salida del bucle for
         }
 
-        if (isWhile)
+        if (isWhile) // Si se está dentro de un bucle while
         {
-            whileIl.Emit(OpCodes.Br, whileExitLabel);
+            whileIl.Emit(OpCodes.Br, whileExitLabel); // Salto a la etiqueta de salida del bucle while
         }
 
         return null;
@@ -526,7 +535,7 @@ public class terceraEtapaPrueba : AlphaParserBaseVisitor<object>
     public override object VisitReturnStatementAST(AlphaParser.ReturnStatementASTContext context)
     {
         // Verificar si hay una expresión de retorno
-        if (context.expr() != null)
+        if (context.expr() != null) 
         {
             // Visitar la expresión de retorno
             Visit(context.expr());
@@ -544,47 +553,47 @@ public class terceraEtapaPrueba : AlphaParserBaseVisitor<object>
     //  | READ LEFT_PAREN designator RIGHT_PAREN SEMICOLON                                    #ReadStatementAST   
     public override object VisitReadStatementAST(AlphaParser.ReadStatementASTContext context)
     {
-        // Obtener el generador de código IL actual
+        //read statement codegeneration
         ILGenerator currentIL = currentMethodBldr.GetILGenerator();
 
-        // Obtener el nombre de la designación
-        string designatorName = context.designator().GetText();
+        //Nombre del designator
+        string nombre = context.designator().GetText();
 
-        // Almacenar el valor leído en la designación
-        if (designatorName == "myInt")
+        //Verificamos el tipo de la variable ingresada
+        Type type = context.tipoDeDato;
+
+        if (type == typeof(int)) // Si es un entero
         {
-            // Llamar al método Console.ReadLine()
-            MethodInfo readLineMethod = typeof(Console).GetMethod("ReadLine", Type.EmptyTypes);
-            currentIL.EmitCall(OpCodes.Call, readLineMethod, null);
-
-            // Convertir el valor de cadena leído a entero
-            MethodInfo parseIntMethod = typeof(int).GetMethod("Parse", new[] { typeof(string) });
-            currentIL.EmitCall(OpCodes.Call, parseIntMethod, null);
-
-            // Declarar una variable local 'myInt'
-            LocalBuilder myIntLocal = currentIL.DeclareLocal(typeof(int));
-
-            // Almacenar el valor leído en la variable local 'myInt'
-            currentIL.Emit(OpCodes.Stloc, myIntLocal);
+            string doubleText = context.data + ".0";
+            double OutVal;
+            double.TryParse(doubleText, out OutVal);
+            currentIL.Emit(OpCodes.Ldc_R8, OutVal);
         }
-        else if (designatorName == "myString")
+        else if (type == typeof(double)) // Si es un double
         {
-            // Llamar al método Console.ReadLine()
-            MethodInfo readLineMethod = typeof(Console).GetMethod("ReadLine", Type.EmptyTypes);
-            currentIL.EmitCall(OpCodes.Call, readLineMethod, null);
-
-            // Declarar una variable local 'myString'
-            LocalBuilder myStringLocal = currentIL.DeclareLocal(typeof(string));
-
-            // Almacenar el valor leído en la variable local 'myString'
-            currentIL.Emit(OpCodes.Stloc, myStringLocal);
+            string doubleText = context.data;
+            double OutVal;
+            double.TryParse(doubleText, out OutVal);
+            currentIL.Emit(OpCodes.Ldc_R8, OutVal);
         }
-        else
+        else if (type == typeof(string)) // Si es un string
         {
-            // Designación no válida
-            // Puedes lanzar una excepción, mostrar un mensaje de error, etc.
+            currentIL.Emit(OpCodes.Ldstr, context.data); 
         }
-
+        else if (type == typeof(char)) // Si es un char
+        {
+            char convertirAChar = char.TryParse(context.data, out convertirAChar) ? convertirAChar : ' ';
+            currentIL.Emit(OpCodes.Ldc_I4_S, convertirAChar);
+        }
+        else if (type == typeof(bool)) // Si es un booleano
+        { 
+            int num = context.data.ToLower() == "true" ? 1 : 0;
+            currentIL.Emit(OpCodes.Ldc_I4, num);
+        }
+        
+        LocalBuilder local = variablesLocales[nombre];
+        currentIL.Emit(OpCodes.Stloc, local.LocalIndex);
+        
         return null;
     }
 
@@ -595,7 +604,7 @@ public class terceraEtapaPrueba : AlphaParserBaseVisitor<object>
         ILGenerator currentIL = currentMethodBldr.GetILGenerator();
 
 
-        Type exprType = (Type)Visit(context.expr());
+        Type exprType = (Type)Visit(context.expr()); // Obtener el tipo de la expresión
 
         if (exprType == typeof(double)) // Tanto para int como para double
         {
@@ -620,7 +629,7 @@ public class terceraEtapaPrueba : AlphaParserBaseVisitor<object>
     // | block                                                                               #BlockStatementAST
     public override object VisitBlockStatementAST(AlphaParser.BlockStatementASTContext context)
     {
-        Visit(context.block());
+        Visit(context.block()); // Visitar el bloque
         return null;
     }
 
@@ -633,7 +642,7 @@ public class terceraEtapaPrueba : AlphaParserBaseVisitor<object>
     // block : LEFT_BRACE (varDecl | statement)* RIGHT_BRACE      #BlockAST;
     public override object VisitBlockAST(AlphaParser.BlockASTContext context)
     {
-        foreach (var child in context.children)
+        foreach (var child in context.children) // Visitar cada hijo del bloque
         {
             Visit(child);
         }
@@ -650,10 +659,10 @@ public class terceraEtapaPrueba : AlphaParserBaseVisitor<object>
     // condition : condTerm (LOGICAL_OR condTerm)*                                                     #ConditionAST;
     public override object VisitConditionAST(AlphaParser.ConditionASTContext context)
     {
-        Visit(context.condTerm()[0]);
+        Visit(context.condTerm()[0]); // Visitar el primer condTerm
         for (int i = 1; i < context.condTerm().Length; i++)
         {
-            Visit(context.condTerm()[i]);
+            Visit(context.condTerm()[i]); // Visitar los demás condTerm
         }
 
         return null;
@@ -662,10 +671,10 @@ public class terceraEtapaPrueba : AlphaParserBaseVisitor<object>
     // condTerm : condFact (LOGICAL_AND condFact)*                                                     #CondTermAST;
     public override object VisitCondTermAST(AlphaParser.CondTermASTContext context)
     {
-        Visit(context.condFact()[0]);
-        for (int i = 1; i < context.condFact().Length; i++)
+        Visit(context.condFact()[0]); // Visitar el primer condFact
+        for (int i = 1; i < context.condFact().Length; i++) 
         {
-            Visit(context.condFact()[i]);
+            Visit(context.condFact()[i]); // Visitar los demás condFact
         }
 
         return null;
@@ -674,9 +683,9 @@ public class terceraEtapaPrueba : AlphaParserBaseVisitor<object>
     //condFact : expr relop expr                                                                      #CondFactAST;
     public override object VisitCondFactAST(AlphaParser.CondFactASTContext context)
     {
-        Visit(context.expr()[0]);
-        Visit(context.expr()[1]);
-        Visit(context.relop());
+        Visit(context.expr()[0]); // Visitar el primer expr
+        Visit(context.expr()[1]); // Visitar el segundo expr
+        Visit(context.relop()); // Visitar el relop
         return null;
     }
 
@@ -691,9 +700,9 @@ public class terceraEtapaPrueba : AlphaParserBaseVisitor<object>
     {
         Type typeTerm = null;
 
-        if (context.cast() == null)
+        if (context.cast() == null) // Si no hay cast
         {
-            typeTerm = (Type)Visit(context.term(0));
+            typeTerm = (Type)Visit(context.term(0)); 
 
             if (context.term().Length > 1)
             {
@@ -712,10 +721,10 @@ public class terceraEtapaPrueba : AlphaParserBaseVisitor<object>
     // term : factor (mulop factor)*                                                                   #TermAST;
     public override object VisitTermAST(AlphaParser.TermASTContext context)
     {
-        Type typeFact = (Type)Visit(context.factor(0));
+        Type typeFact = (Type)Visit(context.factor(0)); // Visitar el primer factor
         if (context.factor().Length > 1)
         {
-            for (int i = 1; i < context.factor().Length; i++)
+            for (int i = 1; i < context.factor().Length; i++) // Visitar los demás factores
             {
                 Visit(context.factor(i));
                 Visit(context.mulop(i - 1));
@@ -729,9 +738,9 @@ public class terceraEtapaPrueba : AlphaParserBaseVisitor<object>
     public override object VisitDesignatorFactorAST(AlphaParser.DesignatorFactorASTContext context)
     {
         //factor
-        Type typeDesignator = (Type)Visit(context.designator());
+        Type typeDesignator = (Type)Visit(context.designator()); // Visitar el designator
 
-        if (context.actPars() != null)
+        if (context.actPars() != null) // Si hay actPars
         {
             Visit(context.actPars());
         }
@@ -742,9 +751,9 @@ public class terceraEtapaPrueba : AlphaParserBaseVisitor<object>
     // | CHAR_CONST                                                                             #CharFactorAST
     public override object VisitCharFactorAST(AlphaParser.CharFactorASTContext context)
     {
-        ILGenerator currentIL = currentMethodBldr.GetILGenerator();
+        ILGenerator currentIL = currentMethodBldr.GetILGenerator(); // Obtener el ILGenerator del método actual
 
-        currentIL.Emit(OpCodes.Ldc_I4_S, context.CHAR_CONST().GetText()[1]);
+        currentIL.Emit(OpCodes.Ldc_I4_S, context.CHAR_CONST().GetText()[1]); // Cargar el char en la pila
 
         return typeof(char);
     }
@@ -752,8 +761,8 @@ public class terceraEtapaPrueba : AlphaParserBaseVisitor<object>
     // | STRING_CONST                                                                           #StringFactorAST
     public override object VisitStringFactorAST(AlphaParser.StringFactorASTContext context)
     {
-        ILGenerator currentIL = currentMethodBldr.GetILGenerator();
-        currentIL.Emit(OpCodes.Ldstr, context.STRING_CONST().GetText());
+        ILGenerator currentIL = currentMethodBldr.GetILGenerator(); // Obtener el ILGenerator del método actual
+        currentIL.Emit(OpCodes.Ldstr, context.STRING_CONST().GetText()); // Cargar el string en la pila
 
         return typeof(string);
     }
@@ -761,12 +770,12 @@ public class terceraEtapaPrueba : AlphaParserBaseVisitor<object>
     //  | (MINUS)? INT_CONST                                                                     #IntFactorAST   
     public override object VisitIntFactorAST(AlphaParser.IntFactorASTContext context)
     {
-        ILGenerator currentIL = currentMethodBldr.GetILGenerator();
+        ILGenerator currentIL = currentMethodBldr.GetILGenerator(); // Obtener el ILGenerator del método actual
 
         string doubleText = context.INT_CONST().GetText() + ".0";
         double OutVal;
-        double.TryParse(doubleText, out OutVal);
-        currentIL.Emit(OpCodes.Ldc_R8, OutVal);
+        double.TryParse(doubleText, out OutVal); // Convertir el string a double
+        currentIL.Emit(OpCodes.Ldc_R8, OutVal); // Cargar el int en la pila
 
         return typeof(double);
     }
@@ -774,22 +783,22 @@ public class terceraEtapaPrueba : AlphaParserBaseVisitor<object>
     //  | (MINUS)? DOUBLE_CONST                                                                  #DoubleFactorAST    
     public override object VisitDoubleFactorAST(AlphaParser.DoubleFactorASTContext context)
     {
-        ILGenerator currentIL = currentMethodBldr.GetILGenerator();
+        ILGenerator currentIL = currentMethodBldr.GetILGenerator(); // Obtener el ILGenerator del método actual
 
         string doubleText = context.DOUBLE_CONST().GetText();
         double OutVal;
-        double.TryParse(doubleText, out OutVal);
-        currentIL.Emit(OpCodes.Ldc_R8, OutVal);
+        double.TryParse(doubleText, out OutVal); // Convertir el string a double
+        currentIL.Emit(OpCodes.Ldc_R8, OutVal); // Cargar el double en la pila
 
         return typeof(double);
     }
 
-    //  | BOOL_CONST                                                                             #BoolFactorAST
+    //  | BOOL_CONST                                                     #BoolFactorAST
     public override object VisitBoolFactorAST(AlphaParser.BoolFactorASTContext context)
     {
-        ILGenerator currentIL = currentMethodBldr.GetILGenerator();
-        int num = context.BOOL_CONST().GetText() == "true" ? 1 : 0;
-        currentIL.Emit(OpCodes.Ldc_I4, num);
+        ILGenerator currentIL = currentMethodBldr.GetILGenerator(); // Obtener el ILGenerator del método actual
+        int num = context.BOOL_CONST().GetText() == "true" ? 1 : 0; // Convertir el string a int
+        currentIL.Emit(OpCodes.Ldc_I4, num); // Cargar el bool en la pila
 
         return typeof(bool);
     }
@@ -809,61 +818,63 @@ public class terceraEtapaPrueba : AlphaParserBaseVisitor<object>
     // designator : ident (DOT ident | LEFT_BRACKET expr RIGHT_BRACKET)*                               #DesignatorAST;
     public override object VisitDesignatorAST(AlphaParser.DesignatorASTContext context)
     {
-        ILGenerator currentIL = currentMethodBldr.GetILGenerator();
-
-        bool flag = false;
+        ILGenerator currentIL = currentMethodBldr.GetILGenerator(); // Obtener el ILGenerator del método actual
+        
+        string nombre = context.ident(0).GetText(); // Obtener el nombre del identificador
+        
+        bool estado = false;
 
         if (context.ident().Length == 1)
         {
-            if (variablesLocales.ContainsKey(context.ident(0).GetText()))
+            if (variablesLocales.TryGetValue(nombre, out var locale))
             {
-                currentIL.Emit(OpCodes.Ldloc, variablesLocales[context.ident(0).GetText()]);
-                flag = true;
+                if (locale != null) currentIL.Emit(OpCodes.Ldloc, locale); // Cargar la variable local en la pila
+                estado = true;
             }
             else
-                currentIL.Emit(OpCodes.Ldsfld, variablesGlobales[context.ident(0).GetText()]);
+                currentIL.Emit(OpCodes.Ldsfld, variablesGlobales[nombre]); // Cargar la variable global en la pila
         }
 
-        return flag
-            ? variablesLocales[context.ident(0).GetText()].LocalType
-            : variablesGlobales[context.ident(0).GetText()].FieldType;
+        return estado
+            ? variablesLocales[nombre].LocalType // Retornar el tipo de la variable local
+            : variablesGlobales[nombre].FieldType; // Retornar el tipo de la variable global
     }
 
     // relop : EQUALS | NOT_EQUALS | GREATER_THAN | GREATER_OR_EQUALS | LESS_THAN | LESS_OR_EQUALS;
     public override object VisitRelop(AlphaParser.RelopContext context)
     {
-        ILGenerator currentIL = currentMethodBldr.GetILGenerator();
+        ILGenerator currentIL = currentMethodBldr.GetILGenerator(); // Obtener el ILGenerator del método actual
 
-        if (context.LESS_THAN() != null)
-            currentIL.Emit(OpCodes.Clt);
+        if (context.LESS_THAN() != null) // Si es menor que
+            currentIL.Emit(OpCodes.Clt); // Comparar si es menor que
 
-        else if (context.LESS_OR_EQUALS() != null)
+        else if (context.LESS_OR_EQUALS() != null) // Si es menor o igual que
         {
-            currentIL.Emit(OpCodes.Cgt);
-            currentIL.Emit(OpCodes.Ldc_I4_0);
-            currentIL.Emit(OpCodes.Ceq);
+            currentIL.Emit(OpCodes.Cgt); // Comparar si es mayor que
+            currentIL.Emit(OpCodes.Ldc_I4_0); // Cargar 0 en la pila
+            currentIL.Emit(OpCodes.Ceq); // Comparar si es igual
         }
 
-        else if (context.GREATER_THAN() != null)
-            currentIL.Emit(OpCodes.Cgt);
+        else if (context.GREATER_THAN() != null) // Si es mayor que
+            currentIL.Emit(OpCodes.Cgt); // Comparar si es mayor que
 
-        else if (context.GREATER_OR_EQUALS() != null)
+        else if (context.GREATER_OR_EQUALS() != null) // Si es mayor o igual que
         {
-            currentIL.Emit(OpCodes.Clt);
-            currentIL.Emit(OpCodes.Ldc_I4_0);
-            currentIL.Emit(OpCodes.Ceq);
+            currentIL.Emit(OpCodes.Clt); // Comparar si es menor que
+            currentIL.Emit(OpCodes.Ldc_I4_0); // Cargar 0 en la pila
+            currentIL.Emit(OpCodes.Ceq); // Comparar si es igual
         }
 
-        else if (context.EQUALS() != null)
+        else if (context.EQUALS() != null) // Si es igual que
         {
-            currentIL.Emit(OpCodes.Ceq);
+            currentIL.Emit(OpCodes.Ceq); // Comparar si es igual
         }
 
-        else if (context.NOT_EQUALS() != null)
+        else if (context.NOT_EQUALS() != null) // Si es diferente que
         {
-            currentIL.Emit(OpCodes.Ceq);
-            currentIL.Emit(OpCodes.Ldc_I4_0);
-            currentIL.Emit(OpCodes.Ceq);
+            currentIL.Emit(OpCodes.Ceq); // Comparar si es igual
+            currentIL.Emit(OpCodes.Ldc_I4_0); // Cargar 0 en la pila
+            currentIL.Emit(OpCodes.Ceq);    // Comparar si es igual
         }
 
         return null;
@@ -872,11 +883,11 @@ public class terceraEtapaPrueba : AlphaParserBaseVisitor<object>
     // addop : PLUS | MINUSEXP;
     public override object VisitAddop(AlphaParser.AddopContext context)
     {
-        ILGenerator currentIL = currentMethodBldr.GetILGenerator();
-        if (context.PLUS() != null)
-            currentIL.Emit(OpCodes.Add);
-        else if (context.MINUSEXP() != null)
-            currentIL.Emit(OpCodes.Sub);
+        ILGenerator currentIL = currentMethodBldr.GetILGenerator(); // Obtener el ILGenerator del método actual
+        if (context.PLUS() != null) // Si es suma
+            currentIL.Emit(OpCodes.Add); // Sumar
+        else if (context.MINUSEXP() != null) // Si es resta
+            currentIL.Emit(OpCodes.Sub); // Restar
 
         return null;
     }
@@ -884,14 +895,14 @@ public class terceraEtapaPrueba : AlphaParserBaseVisitor<object>
     // mulop : MULT | DIV | MOD;
     public override object VisitMulop(AlphaParser.MulopContext context)
     {
-        ILGenerator currentIL = currentMethodBldr.GetILGenerator();
+        ILGenerator currentIL = currentMethodBldr.GetILGenerator(); // Obtener el ILGenerator del método actual
         if (context.MULT() != null)
-            currentIL.Emit(OpCodes.Mul);
+            currentIL.Emit(OpCodes.Mul); // Multiplicar
         else if (context.DIV() != null)
-            currentIL.Emit(OpCodes.Div);
+            currentIL.Emit(OpCodes.Div); // Dividir
         else if (context.MOD() != null)
         {
-            currentIL.Emit(OpCodes.Rem);
+            currentIL.Emit(OpCodes.Rem); // Modulo
         }
 
         return null;
@@ -900,7 +911,7 @@ public class terceraEtapaPrueba : AlphaParserBaseVisitor<object>
     // ident locals [ParserRuleContext declPointer = null]: IDENTIFIER                                   #IdentAST;
     public override object VisitIdentAST(AlphaParser.IdentASTContext context)
     {
-        return context.IDENTIFIER().GetText();
+        return context.IDENTIFIER().GetText(); // Retornar el nombre del identificador
     }
 
     // array : LEFT_BRACKET INT_CONST? RIGHT_BRACKET                                                     #ArrayAST;
